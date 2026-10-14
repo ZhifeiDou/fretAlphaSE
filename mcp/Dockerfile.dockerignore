@@ -1,0 +1,16 @@
+**
+!LICENSE.pdf
+!mcp/
+!mcp/package.json
+!mcp/package-lock.json
+!mcp/webpack.config.cjs
+!mcp/src/
+!mcp/src/**
+!fret-electron/
+!fret-electron/app/
+!fret-electron/app/parser/
+!fret-electron/app/parser/**
+!fret-electron/support/
+!fret-electron/support/**
+!fret-electron/analysis/
+!fret-electron/analysis/**

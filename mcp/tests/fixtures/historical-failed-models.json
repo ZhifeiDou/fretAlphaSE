@@ -1,0 +1,3674 @@
+{
+  "description": "Exact 16 failed jobs from the bounded 2026-10-04 historical audit; original inputs and reports are not corrected in place.",
+  "audit": {
+    "path": "C:\\Cawl\\smoking_record\\nl2repo-stable-baselines3-20261004-cli-r2\\evidence\\fret-usage-timeout-audit-20261004-2120.json",
+    "sha256": "sha256:5b1a258113f66dbf563d35f532b4490454b6128ae67b1f9ec56b27e93e6f3186"
+  },
+  "cases": [
+    {
+      "component": "WrapperRetrieval",
+      "provenance": {
+        "archive": "C:\\Cawl\\smoking_record\\nl2repo-stable-baselines3-20261004-cli-r2\\evidence\\approver-48-ses_ef8453dbaffemqdgYm9q0XtKme.json",
+        "archive_sha256": "sha256:3b7702ed42808851c2e9fff8040e4a01154c90f858f407bfcdda37198f96172b",
+        "session_id": "ses_ef8453dbaffemqdgYm9q0XtKme",
+        "message_id": "msg_107bdea8c001jmsXKs5Ems6kRr",
+        "part_id": "prt_107be05fa0016J3FmZnKNGxaaD",
+        "tool": "MCP_FRET_get_analysis",
+        "tool_input": {
+          "job_id": "738815b1-c7ce-45a1-bb03-a0a5ea8b4f86"
+        },
+        "raw_output_sha256": "sha256:0053a9569c3cab12d03ba89def6ee2ec5f17a5f30e8cbdf524683f78ea70495a",
+        "resource_binding": null,
+        "diagnostic_locations": "Historical formalization locations are preserved verbatim (including null); backend locations refer only to the preserved generated Lustre and stdout, not to FRETish source."
+      },
+      "original": {
+        "job_id": "738815b1-c7ce-45a1-bb03-a0a5ea8b4f86",
+        "request_id": "7be76b6b-f44a-5728-8996-66d8f9ea1156",
+        "input_digest": "sha256:c5f4163a515507d98940a44eeebb9faf8570ed1a2a619e20e252dbe5bd0e1980",
+        "status": "completed",
+        "phase": "finished",
+        "created_at": "2026-10-04T16:27:29.194Z",
+        "finished_at": "2026-10-04T16:27:29.622Z",
+        "report_digest": "sha256:534aa9d25f6218f0c5f1c3f5d75e21dc5de99cfeddc4f900eca2506a862b5a34",
+        "report": {
+          "schema_version": 1,
+          "input_digest": "sha256:c5f4163a515507d98940a44eeebb9faf8570ed1a2a619e20e252dbe5bd0e1980",
+          "result": "invalid",
+          "contract_result": null,
+          "environment_result": null,
+          "requested_ids": [
+            "SRS-12-01:absence_result"
+          ],
+          "analyzed_ids": [],
+          "diagnostics": [
+            {
+              "id": "SRS-12-01:absence_result",
+              "code": "invalid",
+              "message": "extraneous input '!' expecting {'(', '-', ID, NUMBER}"
+            }
+          ],
+          "formalization": {
+            "representations": [
+              "pt-lustre",
+              "pt-smv",
+              "ft-inf",
+              "ft-fin"
+            ],
+            "time_basis": "discrete_steps",
+            "results": [
+              {
+                "id": "SRS-12-01:absence_result",
+                "status": "invalid",
+                "formulas": [],
+                "explanation": null,
+                "diagnostics": [
+                  {
+                    "code": "syntax_error",
+                    "message": "extraneous input '!' expecting {'(', '-', ID, NUMBER}",
+                    "location": {
+                      "line": 1,
+                      "column": 55
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "toolchain": {
+            "fret": "sha256:c45764cc1cc48928217709c243e3b800bddd47101d81254862dd1fdc4ac37ce4",
+            "adapter": "0.2.0",
+            "kind2": "kind2 v2.2.0",
+            "z3": "Z3 version 4.14.1 - 64 bit"
+          },
+          "time_model": {
+            "kind": "discrete_steps",
+            "description": "Each step observes the inputs and result of one completed unwrap_wrapper invocation; this logical observation model adds no physical duration or call-completion bound."
+          },
+          "assumption_ids": [],
+          "guarantee_ids": [
+            "SRS-12-01:absence_result"
+          ],
+          "variable_mapping": {
+            "fret_v_0": "has_wrapper",
+            "fret_v_1": "returned_none"
+          },
+          "checks": [],
+          "diagnosis": {
+            "status": "not_run",
+            "conflicts": [],
+            "message": null
+          }
+        },
+        "error": null,
+        "input": {
+          "request_id": "7be76b6b-f44a-5728-8996-66d8f9ea1156",
+          "component": "WrapperRetrieval",
+          "requirements": [
+            {
+              "id": "SRS-12-01:absence_result",
+              "fretish": "WrapperRetrieval shall always satisfy returned_none = !has_wrapper.",
+              "kind": "guarantee",
+              "source_refs": [
+                "SRS-12-01@sha256:7b137d7f442bd486c8657e437d8aeb0981c186fc9812526547e457557336e22d#statement"
+              ]
+            }
+          ],
+          "variables": [
+            {
+              "name": "has_wrapper",
+              "type": "bool",
+              "role": "input",
+              "meaning": "The supplied environment wrapper chain contains the specified wrapper class."
+            },
+            {
+              "name": "returned_none",
+              "type": "bool",
+              "role": "output",
+              "meaning": "The unwrap_wrapper result is None."
+            }
+          ],
+          "time_model": {
+            "kind": "discrete_steps",
+            "description": "Each step observes the inputs and result of one completed unwrap_wrapper invocation; this logical observation model adds no physical duration or call-completion bound."
+          },
+          "options": {
+            "timeout_ms": 60000,
+            "diagnose": true
+          }
+        }
+      }
+    },
+    {
+      "component": "StickyActionEnv",
+      "provenance": {
+        "archive": "C:\\Cawl\\smoking_record\\nl2repo-stable-baselines3-20261004-cli-r2\\evidence\\approver-49-ses_ef8443a1dffe8FrAighZ9RAB9y.json",
+        "archive_sha256": "sha256:913b8993dbb0948ba0b52d6152eeb7a286bdfec0954d6d933df2178667921926",
+        "session_id": "ses_ef8443a1dffe8FrAighZ9RAB9y",
+        "message_id": "msg_107c11a07001rIekc2dr74gzf9",
+        "part_id": "prt_107c12c1b001Fui640w7djwhmH",
+        "tool": "MCP_FRET_get_analysis",
+        "tool_input": {
+          "job_id": "c9bdff3e-7452-493e-9a00-8dfc77b8fe4c"
+        },
+        "raw_output_sha256": "sha256:7e483623936752e620a068c4f9841d4cd9a1b592fecf899a79ed648d3309da1d",
+        "resource_binding": null,
+        "diagnostic_locations": "Historical formalization locations are preserved verbatim (including null); backend locations refer only to the preserved generated Lustre and stdout, not to FRETish source."
+      },
+      "original": {
+        "job_id": "c9bdff3e-7452-493e-9a00-8dfc77b8fe4c",
+        "request_id": "d2ced656-ff6b-5aec-847c-39793f6af59f",
+        "input_digest": "sha256:49275ada800bdb59d66e166a56ca70510aba3fe7b300cc9e2286a84a3a0da22f",
+        "status": "completed",
+        "phase": "finished",
+        "created_at": "2026-10-04T16:30:50.484Z",
+        "finished_at": "2026-10-04T16:30:50.870Z",
+        "report_digest": "sha256:e23198c54e3a69e55a9da43c79e3a5c999799ef075d1cd802ebd2a87d8ac0b59",
+        "report": {
+          "schema_version": 1,
+          "input_digest": "sha256:49275ada800bdb59d66e166a56ca70510aba3fe7b300cc9e2286a84a3a0da22f",
+          "result": "invalid",
+          "contract_result": null,
+          "environment_result": null,
+          "requested_ids": [
+            "SRS-9-01:allowed_actions",
+            "SRS-9-01:zero_repeat_probability",
+            "SRS-9-01:certain_repeat_probability"
+          ],
+          "analyzed_ids": [],
+          "diagnostics": [
+            {
+              "id": "SRS-9-01:zero_repeat_probability",
+              "code": "invalid",
+              "message": "mismatched input 'whenever' expecting SHALL"
+            },
+            {
+              "id": "SRS-9-01:certain_repeat_probability",
+              "code": "invalid",
+              "message": "mismatched input 'whenever' expecting SHALL"
+            }
+          ],
+          "formalization": {
+            "representations": [
+              "pt-lustre",
+              "pt-smv",
+              "ft-inf",
+              "ft-fin"
+            ],
+            "time_basis": "discrete_steps",
+            "results": [
+              {
+                "id": "SRS-9-01:allowed_actions",
+                "status": "formalized",
+                "formulas": [
+                  {
+                    "representation": "pt-lustre",
+                    "formula": "O(((executed_action = previous_action) or (executed_action = intended_action)))"
+                  },
+                  {
+                    "representation": "pt-smv",
+                    "formula": "(O ((executed_action = previous_action) | (executed_action = intended_action)))"
+                  },
+                  {
+                    "representation": "ft-inf",
+                    "formula": "(F ((executed_action = previous_action) | (executed_action = intended_action)))"
+                  },
+                  {
+                    "representation": "ft-fin",
+                    "formula": "((! LAST) U ((executed_action = previous_action) | (executed_action = intended_action)))"
+                  }
+                ],
+                "explanation": {
+                  "format": "html",
+                  "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: first point in the interval.<br>REQUIRED BEHAVIOR: for every trigger, <b><i>(executed_action = previous_action | executed_action = intended_action)</i></b> must hold at some time point between (and including) the trigger and the end of the interval."
+                },
+                "diagnostics": []
+              },
+              {
+                "id": "SRS-9-01:zero_repeat_probability",
+                "status": "invalid",
+                "formulas": [],
+                "explanation": null,
+                "diagnostics": [
+                  {
+                    "code": "syntax_error",
+                    "message": "mismatched input 'whenever' expecting SHALL",
+                    "location": {
+                      "line": 1,
+                      "column": 17
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "SRS-9-01:certain_repeat_probability",
+                "status": "invalid",
+                "formulas": [],
+                "explanation": null,
+                "diagnostics": [
+                  {
+                    "code": "syntax_error",
+                    "message": "mismatched input 'whenever' expecting SHALL",
+                    "location": {
+                      "line": 1,
+                      "column": 17
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "toolchain": {
+            "fret": "sha256:c45764cc1cc48928217709c243e3b800bddd47101d81254862dd1fdc4ac37ce4",
+            "adapter": "0.2.0",
+            "kind2": "kind2 v2.2.0",
+            "z3": "Z3 version 4.14.1 - 64 bit"
+          },
+          "time_model": {
+            "kind": "discrete_steps",
+            "description": "One logical observation per completed step call, pairing configured probability and intended/previous actions with the executed action; no physical timing or probabilistic trace measure is asserted."
+          },
+          "assumption_ids": [],
+          "guarantee_ids": [
+            "SRS-9-01:allowed_actions",
+            "SRS-9-01:zero_repeat_probability",
+            "SRS-9-01:certain_repeat_probability"
+          ],
+          "variable_mapping": {
+            "fret_v_0": "repeat_probability",
+            "fret_v_1": "previous_action",
+            "fret_v_2": "intended_action",
+            "fret_v_3": "executed_action"
+          },
+          "checks": [],
+          "diagnosis": {
+            "status": "not_run",
+            "conflicts": [],
+            "message": null
+          }
+        },
+        "error": null,
+        "input": {
+          "request_id": "d2ced656-ff6b-5aec-847c-39793f6af59f",
+          "component": "StickyActionEnv",
+          "requirements": [
+            {
+              "id": "SRS-9-01:allowed_actions",
+              "fretish": "StickyActionEnv shall satisfy executed_action = previous_action | executed_action = intended_action.",
+              "kind": "guarantee",
+              "source_refs": [
+                "SRS-9-01@sha256:0afd51f42a2c448817317c895ac055e0c6ef2a2fe86d4b058a1deabe6c2c8bc9#statement"
+              ]
+            },
+            {
+              "id": "SRS-9-01:zero_repeat_probability",
+              "fretish": "StickyActionEnv whenever repeat_probability = 0 shall satisfy executed_action = intended_action.",
+              "kind": "guarantee",
+              "source_refs": [
+                "SRS-9-01@sha256:0afd51f42a2c448817317c895ac055e0c6ef2a2fe86d4b058a1deabe6c2c8bc9#statement"
+              ]
+            },
+            {
+              "id": "SRS-9-01:certain_repeat_probability",
+              "fretish": "StickyActionEnv whenever repeat_probability = 1 shall satisfy executed_action = previous_action.",
+              "kind": "guarantee",
+              "source_refs": [
+                "SRS-9-01@sha256:0afd51f42a2c448817317c895ac055e0c6ef2a2fe86d4b058a1deabe6c2c8bc9#statement"
+              ]
+            }
+          ],
+          "variables": [
+            {
+              "name": "repeat_probability",
+              "type": "real",
+              "role": "input",
+              "meaning": "Configured sticky-action selection probability."
+            },
+            {
+              "name": "previous_action",
+              "type": "int",
+              "role": "input",
+              "meaning": "Previous action available for repetition at this observed step; history extraction is outside this projection."
+            },
+            {
+              "name": "intended_action",
+              "type": "int",
+              "role": "input",
+              "meaning": "Intended new action supplied to step."
+            },
+            {
+              "name": "executed_action",
+              "type": "int",
+              "role": "output",
+              "meaning": "Action executed at the observed step."
+            }
+          ],
+          "time_model": {
+            "kind": "discrete_steps",
+            "description": "One logical observation per completed step call, pairing configured probability and intended/previous actions with the executed action; no physical timing or probabilistic trace measure is asserted."
+          },
+          "options": {
+            "timeout_ms": 60000,
+            "diagnose": true
+          }
+        }
+      }
+    },
+    {
+      "component": "TrainingProgress",
+      "provenance": {
+        "archive": "C:\\Cawl\\smoking_record\\nl2repo-stable-baselines3-20261004-cli-r2\\evidence\\approver-50-ses_ef8429b4dffecwRON4FnKUanMr.json",
+        "archive_sha256": "sha256:f08f65975aff9b07addb4d0b88fd89569b155e0b98c71cbfe2971869b280d012",
+        "session_id": "ses_ef8429b4dffecwRON4FnKUanMr",
+        "message_id": "msg_107c475ae001AH39aCKdFFhytA",
+        "part_id": "prt_107c48711001uFaIP9qFH4LpyD",
+        "tool": "MCP_FRET_get_analysis",
+        "tool_input": {
+          "job_id": "21233fcb-bf3e-48b0-8e51-a1c4dcc63315"
+        },
+        "raw_output_sha256": "sha256:65d19d506d7cf94ce0bec0113cd83d47c91b8517e4b0412c6ea88c360647eadd",
+        "resource_binding": null,
+        "diagnostic_locations": "Historical formalization locations are preserved verbatim (including null); backend locations refer only to the preserved generated Lustre and stdout, not to FRETish source."
+      },
+      "original": {
+        "job_id": "21233fcb-bf3e-48b0-8e51-a1c4dcc63315",
+        "request_id": "656298bd-1b8d-5f06-966a-06f6035c045e",
+        "input_digest": "sha256:9671798b65a707581bed7b06d42caa8fe23d8d743be6f23b57581cb717fda1d0",
+        "status": "completed",
+        "phase": "finished",
+        "created_at": "2026-10-04T16:34:38.010Z",
+        "finished_at": "2026-10-04T16:34:38.465Z",
+        "report_digest": "sha256:5133b6485d02f8c0c57d2bee569ed88b67c9b0ecb90d8bd895dfcd547fcea35e",
+        "report": {
+          "schema_version": 1,
+          "input_digest": "sha256:9671798b65a707581bed7b06d42caa8fe23d8d743be6f23b57581cb717fda1d0",
+          "result": "error",
+          "contract_result": null,
+          "environment_result": null,
+          "requested_ids": [
+            "SRS-10-08:remaining_fraction"
+          ],
+          "analyzed_ids": [],
+          "diagnostics": [
+            {
+              "id": null,
+              "code": "backend_error",
+              "message": "Kind 2 exited with 3: Expected both arguments of operator to be of same integer type but found real and int"
+            }
+          ],
+          "formalization": {
+            "representations": [
+              "pt-lustre",
+              "pt-smv",
+              "ft-inf",
+              "ft-fin"
+            ],
+            "time_basis": "discrete_steps",
+            "results": [
+              {
+                "id": "SRS-10-08:remaining_fraction",
+                "status": "formalized",
+                "formulas": [
+                  {
+                    "representation": "pt-lustre",
+                    "formula": "H(((total > 0) => (remaining = (1 - (current / total)))))"
+                  },
+                  {
+                    "representation": "pt-smv",
+                    "formula": "(H ((total > 0) -> (remaining = (1 - (current / total)))))"
+                  },
+                  {
+                    "representation": "ft-inf",
+                    "formula": "(G ((total > 0) -> (remaining = (1 - (current / total)))))"
+                  },
+                  {
+                    "representation": "ft-fin",
+                    "formula": "(LAST V ((total > 0) -> (remaining = (1 - (current / total)))))"
+                  }
+                ],
+                "explanation": {
+                  "format": "html",
+                  "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(total > 0)</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(remaining = 1 - current / total)</i></b> also holds at the same time point."
+                },
+                "diagnostics": []
+              }
+            ]
+          },
+          "toolchain": {
+            "fret": "sha256:c45764cc1cc48928217709c243e3b800bddd47101d81254862dd1fdc4ac37ce4",
+            "adapter": "0.2.0",
+            "kind2": "kind2 v2.2.0",
+            "z3": "Z3 version 4.14.1 - 64 bit"
+          },
+          "time_model": {
+            "kind": "discrete_steps",
+            "description": "Each logical step is one completed call to the progress update; no physical-time sampling or deadline is introduced."
+          },
+          "assumption_ids": [],
+          "guarantee_ids": [
+            "SRS-10-08:remaining_fraction"
+          ],
+          "variable_mapping": {
+            "fret_v_0": "current",
+            "fret_v_1": "total",
+            "fret_v_2": "remaining"
+          },
+          "checks": [
+            {
+              "name": "FretContract.lus",
+              "requirement_ids": [
+                "SRS-10-08:remaining_fraction"
+              ],
+              "result": "ERROR",
+              "environment_result": null,
+              "lustre": "--Historically\nnode H(X:bool) returns (Y:bool);\nlet\n    Y = X -> (X and (pre Y));\ntel\n\n--Y since inclusive X\nnode SI(X,Y: bool) returns (Z:bool);\nlet\nZ = Y and (X or (false -> pre Z));\ntel\n\n--Y since X\nnode S(X,Y: bool) returns (Z:bool);\nlet\nZ = X or (Y and (false -> pre Z));\ntel\n\n--Y triggered X\nnode T(X,Y: bool) returns(Z:bool);\nlet\nZ = (X and (Y or (true -> pre Z)));\ntel\n\n--Once\nnode O(X:bool) returns (Y:bool);\nlet\n Y = X or (false -> pre Y);\ntel\n\n--Timed Once: less than or equal to N\nnode OTlore( N: int; X: bool) returns (Y: bool);\n    var C:int;\nlet\n    C = if X then 0\n        else (-1 -> pre C + (if pre C <0 then 0 else 1));\n\n    Y = 0 <= C and C <= N;\ntel\n\n--Timed Once: general case\nnode OT( L: int;  R: int; X: bool) returns (Y: bool);\nvar  D:bool;\nlet\n  D=delay(X, R);\n  Y=OTlore(L-R, D);\ntel\n\n-- Timed Historically: general case\nnode HT( L: int;  R: int; X: bool) returns (Y: bool);\nlet\n  Y = not OT(L, R, not X);\ntel\n\n-- Timed Since: general case\nnode ST( L: int;  R: int; X: bool; Y: bool)  returns (Z: bool);\nlet\n  Z = S(X, Y) and OT(L, R, X);\ntel\n\n-- Timed Since Inclusive: general case\nnode SIT( L: int;  R: int; X: bool; Y: bool) returns (Z: bool);\nlet\n  Z = SI(X, Y) and OT(L, R, X);\ntel\n\n-- Timed Triggered: general case\nnode TT( L: int;  R: int; X: bool; Y: bool)  returns (Z: bool);\nlet\n  Z = T(X, Y) or HT(L, R, X);\ntel\n\n-- Pre for integers, with an initial value at FTP\nnode preInt(InitialValue, X: int) returns (Y:int);\nlet\n  Y = InitialValue -> pre X;\ntel\n\n-- Pre for reals, with an initial value at FTP\nnode preReal(InitialValue, X: real) returns (Y:real);\nlet\n  Y = InitialValue -> pre X;\ntel\n\n-- Pre for booleans, with an initial value at FTP\nnode preBool(InitialValue, X: bool) returns (Y:bool);\nlet\n  Y = InitialValue -> pre X;\ntel\n\n-- The equivalent of LTL's Y in Lustre.\nnode YtoPre(X: bool) returns (Y:bool);\nlet\n  Y = false -> pre X;\ntel\n\n-- The equivalent of LTL's Z in Lustre.\nnode ZtoPre(X: bool) returns (Y:bool);\nlet\n  Y = true -> pre X;\ntel\n\n-- Absolute value for reals\nnode absReal(x:real) returns(y: real);\nlet\n  y = if (x >= 0.0) then x else -x;\ntel\n\n-- Absolute value for integers\nnode absInt(x:int) returns(y: int);\nlet\n  y = if (x >= 0) then x else -x;\ntel\n\n-- Maximum value between two reals\nnode maxReal (a : real; b : real)\nreturns (z : real);\nlet\n  z = (if (((a) >= (b))) then (a) else (b));\ntel\n\n-- Maximum value between two integers\nnode maxInt (a : int; b : int)\nreturns (z : int);\nlet\n  z = (if (((a) >= (b))) then (a) else (b));\ntel\n\n-- Minimum value between two integers\nnode minInt (a : int; b : int)\nreturns (z : int);\nlet\n  z = (if (((a) <= (b))) then (a) else (b));\ntel\n\n-- Minimum value between two reals\nnode minReal (a : real; b : real)\nreturns (z : real);\nlet\n  z = (if (((a) <= (b))) then (a) else (b));\ntel\n\nnode delay(X:bool;  R:int) returns(Y:bool);\nlet\n\n  Y = X;\ntel\n\n\nnode imported FretContract( fret_v_0:real ; fret_v_1:real ) returns ( fret_v_2:real  );\n(*@contract\n\n\n\n\nvar __FTP : bool = true -> false;\n\n\n\n(* fret_r_0  *)\n\n\nguarantee \"fret_r_0\" H(((fret_v_1 > 0) => (fret_v_2 = (1 - (fret_v_0 / fret_v_1)))));\n\n\r\n*)\n",
+              "lustre_digest": "sha256:ddcc6e16b14171e2c86df05577de07bd6cede5748d8f2ea2a3435668ba40ebe2",
+              "command": [
+                "kind2",
+                "--lus_main",
+                "FretContract",
+                "-json",
+                "--enable",
+                "CONTRACTCK",
+                "--timeout",
+                "60",
+                "/var/lib/fret-mcp/work/21233fcb-bf3e-48b0-8e51-a1c4dcc63315/FretContract.lus"
+              ],
+              "stdout": "[\n{\n  \"objectType\" : \"log\",\n  \"level\" : \"info\",\n  \"source\" : \"parse\",\n  \"value\" : \"kind2 v2.2.0\"\n}\n,\n{\n  \"objectType\" : \"kind2Options\",\n  \"enabled\" :\n  [\n    \"contractck\"\n  ],\n  \"timeout\" : 60.000000,\n  \"bmcMax\" : 0,\n  \"compositional\" : false,\n  \"modular\" : false\n}\n,\n{\n  \"objectType\" : \"log\",\n  \"level\" : \"error\",\n  \"source\" : \"parse\",\n  \"file\" : \"/var/lib/fret-mcp/work/21233fcb-bf3e-48b0-8e51-a1c4dcc63315/FretContract.lus\",\n  \"line\" : 163,\n  \"column\" : 26,\n  \"value\" : \"Expected both arguments of operator to be of same integer type but found real and int\"\n}\n]\n",
+              "stderr": "",
+              "exit_code": 3,
+              "counterexample": {
+                "contract": null,
+                "environment": null
+              }
+            }
+          ],
+          "diagnosis": {
+            "status": "not_run",
+            "conflicts": [],
+            "message": null
+          }
+        },
+        "error": null,
+        "input": {
+          "request_id": "656298bd-1b8d-5f06-966a-06f6035c045e",
+          "component": "TrainingProgress",
+          "requirements": [
+            {
+              "id": "SRS-10-08:remaining_fraction",
+              "fretish": "whenever total > 0 TrainingProgress shall immediately satisfy remaining = 1 - current / total.",
+              "kind": "guarantee",
+              "source_refs": [
+                "SRS-10-08@sha256:e80be4e5a502a81aa7d4fc5e80563e61be4442b2da0c746e0692039cee101a86#statement",
+                "SRS-10-08@sha256:e80be4e5a502a81aa7d4fc5e80563e61be4442b2da0c746e0692039cee101a86#source_refs[1].quote"
+              ]
+            }
+          ],
+          "variables": [
+            {
+              "name": "current",
+              "type": "real",
+              "role": "input",
+              "meaning": "Current timestep argument of one progress update."
+            },
+            {
+              "name": "total",
+              "type": "real",
+              "role": "input",
+              "meaning": "Total timestep argument of one progress update."
+            },
+            {
+              "name": "remaining",
+              "type": "real",
+              "role": "output",
+              "meaning": "Progress remaining computed by that update."
+            }
+          ],
+          "time_model": {
+            "kind": "discrete_steps",
+            "description": "Each logical step is one completed call to the progress update; no physical-time sampling or deadline is introduced."
+          },
+          "options": {
+            "timeout_ms": 60000,
+            "diagnose": true
+          }
+        }
+      }
+    },
+    {
+      "component": "CallbackLifecycle",
+      "provenance": {
+        "archive": "C:\\Cawl\\smoking_record\\nl2repo-stable-baselines3-20261004-cli-r2\\evidence\\approver-51-ses_ef83ac644ffepYxRWFiAC2RX0s.json",
+        "archive_sha256": "sha256:6fe955e5ca644fa05eec391abc6d2d89544c1d7709510eb76928e4a8542d75e7",
+        "session_id": "ses_ef83ac644ffepYxRWFiAC2RX0s",
+        "message_id": "msg_107c738210017hVRwQY0Gaa2Bg",
+        "part_id": "prt_107c75387001y4Rp5ckV4Iq50H",
+        "tool": "MCP_FRET_get_analysis",
+        "tool_input": {
+          "job_id": "37d00a8e-5f4c-4ceb-bed9-a7db18f29d35"
+        },
+        "raw_output_sha256": "sha256:574d1f9b763189a89bfbaade49f1c512614868deaa4dc51406af2c1b0bb853fa",
+        "resource_binding": null,
+        "diagnostic_locations": "Historical formalization locations are preserved verbatim (including null); backend locations refer only to the preserved generated Lustre and stdout, not to FRETish source."
+      },
+      "original": {
+        "job_id": "37d00a8e-5f4c-4ceb-bed9-a7db18f29d35",
+        "request_id": "6f9c1423-781e-55e4-a62a-e0317c9112ef",
+        "input_digest": "sha256:d7d9472eec19ccfe6d80a09851e4bbc41d87b2783ba2341ca4be6c9a558db028",
+        "status": "completed",
+        "phase": "finished",
+        "created_at": "2026-10-04T16:37:38.145Z",
+        "finished_at": "2026-10-04T16:37:38.541Z",
+        "report_digest": "sha256:a368391ee51c763bb263176143c2362bf0d61813d8dc01b9b9c4636089036406",
+        "report": {
+          "schema_version": 1,
+          "input_digest": "sha256:d7d9472eec19ccfe6d80a09851e4bbc41d87b2783ba2341ca4be6c9a558db028",
+          "result": "invalid",
+          "contract_result": null,
+          "environment_result": null,
+          "requested_ids": [
+            "SRS-13-03:lifecycle_dispatch"
+          ],
+          "analyzed_ids": [],
+          "diagnostics": [
+            {
+              "id": "SRS-13-03:lifecycle_dispatch",
+              "code": "invalid",
+              "message": "no viable alternative at input '(lifecycle_event implies'"
+            }
+          ],
+          "formalization": {
+            "representations": [
+              "pt-lustre",
+              "pt-smv",
+              "ft-inf",
+              "ft-fin"
+            ],
+            "time_basis": "discrete_steps",
+            "results": [
+              {
+                "id": "SRS-13-03:lifecycle_dispatch",
+                "status": "invalid",
+                "formulas": [],
+                "explanation": null,
+                "diagnostics": [
+                  {
+                    "code": "syntax_error",
+                    "message": "no viable alternative at input '(lifecycle_event implies'",
+                    "location": {
+                      "line": 1,
+                      "column": 57
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "toolchain": {
+            "fret": "sha256:c45764cc1cc48928217709c243e3b800bddd47101d81254862dd1fdc4ac37ce4",
+            "adapter": "0.2.0",
+            "kind2": "kind2 v2.2.0",
+            "z3": "Z3 version 4.14.1 - 64 bit"
+          },
+          "time_model": {
+            "kind": "discrete_steps",
+            "description": "Each step is a training lifecycle dispatch observation, not a physical-time interval."
+          },
+          "assumption_ids": [],
+          "guarantee_ids": [
+            "SRS-13-03:lifecycle_dispatch"
+          ],
+          "variable_mapping": {
+            "fret_v_0": "lifecycle_event",
+            "fret_v_1": "hook_called"
+          },
+          "checks": [],
+          "diagnosis": {
+            "status": "not_run",
+            "conflicts": [],
+            "message": null
+          }
+        },
+        "error": null,
+        "input": {
+          "request_id": "6f9c1423-781e-55e4-a62a-e0317c9112ef",
+          "component": "CallbackLifecycle",
+          "requirements": [
+            {
+              "id": "SRS-13-03:lifecycle_dispatch",
+              "fretish": "CallbackLifecycle shall always satisfy (lifecycle_event implies hook_called).",
+              "kind": "guarantee",
+              "source_refs": [
+                "SRS-13-03@sha256:1bc7026d43763c36bb1349ad7ba17e69af7e7983ddff19ad215ee0a62d628852#statement"
+              ]
+            }
+          ],
+          "variables": [
+            {
+              "name": "lifecycle_event",
+              "type": "bool",
+              "role": "input",
+              "meaning": "A training or rollout start/end event occurs in this dispatch observation."
+            },
+            {
+              "name": "hook_called",
+              "type": "bool",
+              "role": "output",
+              "meaning": "The corresponding public lifecycle callback is invoked at this dispatch."
+            }
+          ],
+          "time_model": {
+            "kind": "discrete_steps",
+            "description": "Each step is a training lifecycle dispatch observation, not a physical-time interval."
+          },
+          "options": {
+            "timeout_ms": 60000,
+            "diagnose": true
+          }
+        }
+      }
+    },
+    {
+      "component": "EventComposition",
+      "provenance": {
+        "archive": "C:\\Cawl\\smoking_record\\nl2repo-stable-baselines3-20261004-cli-r2\\evidence\\approver-51-ses_ef835bdd2ffeDt53M2pCNEa6tM.json",
+        "archive_sha256": "sha256:ec340f0f9a3eec43f4aabed8d7f36855fc05c49fcfd1e66b665ee53079a72955",
+        "session_id": "ses_ef835bdd2ffeDt53M2pCNEa6tM",
+        "message_id": "msg_107cc75fc001OzCzkV9fTLRD80",
+        "part_id": "prt_107cc865c001Jx18VuqvAzd4A8",
+        "tool": "MCP_FRET_get_analysis",
+        "tool_input": {
+          "job_id": "d85dc31c-aaf6-4fa8-9d17-231a46bd6845"
+        },
+        "raw_output_sha256": "sha256:bef066caf18aa968e75ef655a236442a3fa6240bed10a58df2e483f2725c5296",
+        "resource_binding": null,
+        "diagnostic_locations": "Historical formalization locations are preserved verbatim (including null); backend locations refer only to the preserved generated Lustre and stdout, not to FRETish source."
+      },
+      "original": {
+        "job_id": "d85dc31c-aaf6-4fa8-9d17-231a46bd6845",
+        "request_id": "6af3e80f-f3d0-54d3-bd59-6dea1d9c3652",
+        "input_digest": "sha256:a236ddcd458f119f6e707720aa3cc802be48fec864f481ae2d9396042c39eece",
+        "status": "completed",
+        "phase": "finished",
+        "created_at": "2026-10-04T16:43:22.376Z",
+        "finished_at": "2026-10-04T16:43:22.773Z",
+        "report_digest": "sha256:d84a34957bc9821d1101f7b1d158eac0c8901a5cfd6eb976f1acbdea88cc40e9",
+        "report": {
+          "schema_version": 1,
+          "input_digest": "sha256:a236ddcd458f119f6e707720aa3cc802be48fec864f481ae2d9396042c39eece",
+          "result": "invalid",
+          "contract_result": null,
+          "environment_result": null,
+          "requested_ids": [
+            "SRS-13-06:trigger_child",
+            "SRS-13-06:return_child"
+          ],
+          "analyzed_ids": [],
+          "diagnostics": [
+            {
+              "id": "SRS-13-06:trigger_child",
+              "code": "invalid",
+              "message": "no viable alternative at input '((child_present and'"
+            },
+            {
+              "id": "SRS-13-06:return_child",
+              "code": "invalid",
+              "message": "no viable alternative at input '((child_present and'"
+            }
+          ],
+          "formalization": {
+            "representations": [
+              "pt-lustre",
+              "pt-smv",
+              "ft-inf",
+              "ft-fin"
+            ],
+            "time_basis": "discrete_steps",
+            "results": [
+              {
+                "id": "SRS-13-06:trigger_child",
+                "status": "invalid",
+                "formulas": [],
+                "explanation": null,
+                "diagnostics": [
+                  {
+                    "code": "syntax_error",
+                    "message": "no viable alternative at input '((child_present and'",
+                    "location": {
+                      "line": 1,
+                      "column": 55
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "SRS-13-06:return_child",
+                "status": "invalid",
+                "formulas": [],
+                "explanation": null,
+                "diagnostics": [
+                  {
+                    "code": "syntax_error",
+                    "message": "no viable alternative at input '((child_present and'",
+                    "location": {
+                      "line": 1,
+                      "column": 55
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "toolchain": {
+            "fret": "sha256:c45764cc1cc48928217709c243e3b800bddd47101d81254862dd1fdc4ac37ce4",
+            "adapter": "0.2.0",
+            "kind2": "kind2 v2.2.0",
+            "z3": "Z3 version 4.14.1 - 64 bit"
+          },
+          "time_model": {
+            "kind": "discrete_steps",
+            "description": "Each step observes an event callback dispatch and its return, not physical time."
+          },
+          "assumption_ids": [],
+          "guarantee_ids": [
+            "SRS-13-06:trigger_child",
+            "SRS-13-06:return_child"
+          ],
+          "variable_mapping": {
+            "fret_v_0": "child_present",
+            "fret_v_1": "event_dispatch",
+            "fret_v_2": "child_result",
+            "fret_v_3": "child_called",
+            "fret_v_4": "event_result"
+          },
+          "checks": [],
+          "diagnosis": {
+            "status": "not_run",
+            "conflicts": [],
+            "message": null
+          }
+        },
+        "error": null,
+        "input": {
+          "request_id": "6af3e80f-f3d0-54d3-bd59-6dea1d9c3652",
+          "component": "EventComposition",
+          "requirements": [
+            {
+              "id": "SRS-13-06:trigger_child",
+              "fretish": "EventComposition shall always satisfy ((child_present and event_dispatch) implies child_called).",
+              "kind": "guarantee",
+              "source_refs": [
+                "SRS-13-06@sha256:d3cb6aea91c5a46fa8e52f74c4bdbe81b98acaf5199d3cc2f17c5ad70caf3909#statement"
+              ]
+            },
+            {
+              "id": "SRS-13-06:return_child",
+              "fretish": "EventComposition shall always satisfy ((child_present and event_dispatch) implies (event_result = child_result)).",
+              "kind": "guarantee",
+              "source_refs": [
+                "SRS-13-06@sha256:d3cb6aea91c5a46fa8e52f74c4bdbe81b98acaf5199d3cc2f17c5ad70caf3909#statement"
+              ]
+            }
+          ],
+          "variables": [
+            {
+              "name": "child_present",
+              "type": "bool",
+              "role": "input",
+              "meaning": "An event child callback is configured."
+            },
+            {
+              "name": "event_dispatch",
+              "type": "bool",
+              "role": "input",
+              "meaning": "_on_event is being dispatched."
+            },
+            {
+              "name": "child_result",
+              "type": "bool",
+              "role": "input",
+              "meaning": "Boolean returned by the configured child's on_step."
+            },
+            {
+              "name": "child_called",
+              "type": "bool",
+              "role": "output",
+              "meaning": "The child's on_step is invoked in this dispatch."
+            },
+            {
+              "name": "event_result",
+              "type": "bool",
+              "role": "output",
+              "meaning": "Boolean returned by _on_event."
+            }
+          ],
+          "time_model": {
+            "kind": "discrete_steps",
+            "description": "Each step observes an event callback dispatch and its return, not physical time."
+          },
+          "options": {
+            "timeout_ms": 60000,
+            "diagnose": true
+          }
+        }
+      }
+    },
+    {
+      "component": "ListComposition",
+      "provenance": {
+        "archive": "C:\\Cawl\\smoking_record\\nl2repo-stable-baselines3-20261004-cli-r2\\evidence\\approver-51-ses_ef835bdd2ffeDt53M2pCNEa6tM.json",
+        "archive_sha256": "sha256:ec340f0f9a3eec43f4aabed8d7f36855fc05c49fcfd1e66b665ee53079a72955",
+        "session_id": "ses_ef835bdd2ffeDt53M2pCNEa6tM",
+        "message_id": "msg_107ce316d001LuO8Le1sKqliaS",
+        "part_id": "prt_107ce4698001ik4V11Srimg95o",
+        "tool": "MCP_FRET_get_analysis",
+        "tool_input": {
+          "job_id": "44101d17-73fa-48b3-8066-903c05f24723"
+        },
+        "raw_output_sha256": "sha256:3516156d85f02bb5ed6b7fc16cdf3745ee81087089cced74aa2168c0a0fdd7a5",
+        "resource_binding": null,
+        "diagnostic_locations": "Historical formalization locations are preserved verbatim (including null); backend locations refer only to the preserved generated Lustre and stdout, not to FRETish source."
+      },
+      "original": {
+        "job_id": "44101d17-73fa-48b3-8066-903c05f24723",
+        "request_id": "1c5edb8d-d8b3-5432-9bb3-4f462a1ba63a",
+        "input_digest": "sha256:213a30e493176da950926fd70bd5599fa7280a76d58289c9f346e0ecdb0cfa7a",
+        "status": "completed",
+        "phase": "finished",
+        "created_at": "2026-10-04T16:45:15.869Z",
+        "finished_at": "2026-10-04T16:45:16.242Z",
+        "report_digest": "sha256:38d5c495de80f50f4b953c9c1d092ad840a8a11c3a6d2fef4063d15d89f78afe",
+        "report": {
+          "schema_version": 1,
+          "input_digest": "sha256:213a30e493176da950926fd70bd5599fa7280a76d58289c9f346e0ecdb0cfa7a",
+          "result": "invalid",
+          "contract_result": null,
+          "environment_result": null,
+          "requested_ids": [
+            "SRS-13-07:any_false_stops"
+          ],
+          "analyzed_ids": [],
+          "diagnostics": [
+            {
+              "id": "SRS-13-07:any_false_stops",
+              "code": "invalid",
+              "message": "no viable alternative at input '((list_step and'"
+            }
+          ],
+          "formalization": {
+            "representations": [
+              "pt-lustre",
+              "pt-smv",
+              "ft-inf",
+              "ft-fin"
+            ],
+            "time_basis": "discrete_steps",
+            "results": [
+              {
+                "id": "SRS-13-07:any_false_stops",
+                "status": "invalid",
+                "formulas": [],
+                "explanation": null,
+                "diagnostics": [
+                  {
+                    "code": "syntax_error",
+                    "message": "no viable alternative at input '((list_step and'",
+                    "location": {
+                      "line": 1,
+                      "column": 50
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "toolchain": {
+            "fret": "sha256:c45764cc1cc48928217709c243e3b800bddd47101d81254862dd1fdc4ac37ce4",
+            "adapter": "0.2.0",
+            "kind2": "kind2 v2.2.0",
+            "z3": "Z3 version 4.14.1 - 64 bit"
+          },
+          "time_model": {
+            "kind": "discrete_steps",
+            "description": "Each step is one whole list-step dispatch observation after all child returns."
+          },
+          "assumption_ids": [],
+          "guarantee_ids": [
+            "SRS-13-07:any_false_stops"
+          ],
+          "variable_mapping": {
+            "fret_v_0": "list_step",
+            "fret_v_1": "any_child_false",
+            "fret_v_2": "list_result"
+          },
+          "checks": [],
+          "diagnosis": {
+            "status": "not_run",
+            "conflicts": [],
+            "message": null
+          }
+        },
+        "error": null,
+        "input": {
+          "request_id": "1c5edb8d-d8b3-5432-9bb3-4f462a1ba63a",
+          "component": "ListComposition",
+          "requirements": [
+            {
+              "id": "SRS-13-07:any_false_stops",
+              "fretish": "ListComposition shall always satisfy ((list_step and any_child_false) implies !list_result).",
+              "kind": "guarantee",
+              "source_refs": [
+                "SRS-13-07@sha256:a0319584d66d88043666faab826d11359d1b370fdb710fb73d1a1706f7e9fa33#statement"
+              ]
+            }
+          ],
+          "variables": [
+            {
+              "name": "list_step",
+              "type": "bool",
+              "role": "input",
+              "meaning": "A callback-list step dispatch is occurring."
+            },
+            {
+              "name": "any_child_false",
+              "type": "bool",
+              "role": "input",
+              "meaning": "At least one invoked member returned False in this dispatch."
+            },
+            {
+              "name": "list_result",
+              "type": "bool",
+              "role": "output",
+              "meaning": "The list step's returned boolean."
+            }
+          ],
+          "time_model": {
+            "kind": "discrete_steps",
+            "description": "Each step is one whole list-step dispatch observation after all child returns."
+          },
+          "options": {
+            "timeout_ms": 60000,
+            "diagnose": true
+          }
+        }
+      }
+    },
+    {
+      "component": "VecMonitorReset",
+      "provenance": {
+        "archive": "C:\\Cawl\\smoking_record\\nl2repo-stable-baselines3-20261004-cli-r2\\evidence\\approver-54-ses_ef81b4e40ffe8kbKGGq60IUCBs.json",
+        "archive_sha256": "sha256:2c2e3d1d6a22a6dac24d491e6964f40955db7afb33847cf371aec68014d99f80",
+        "session_id": "ses_ef81b4e40ffe8kbKGGq60IUCBs",
+        "message_id": "msg_107e78dea001pZQ3gZtECivxwQ",
+        "part_id": "prt_107e7ac3b001xgtNRoitRYisLL",
+        "tool": "read_mcp_resource",
+        "tool_input": {
+          "server": "MCP_ARTIFACT",
+          "uri": "artifact://review-evidence/sha256:0ae1ddfc32ef9b854603f12d1f9cbd89d501dc14b478e4e88068cc2f3606dd55/formal/sha256:841b57ba5d1c0aa823a5576d40b5859a7c11772ef354bc1808ef3120b12d6b0c/fret_results/2"
+        },
+        "raw_output_sha256": "sha256:c9a855323d24b7180973c6a7704ce4d48759f19cc08b93d6de97ecd38cf4e013",
+        "resource_binding": {
+          "record_digest": "sha256:0ae1ddfc32ef9b854603f12d1f9cbd89d501dc14b478e4e88068cc2f3606dd55",
+          "evidence_digest": "sha256:841b57ba5d1c0aa823a5576d40b5859a7c11772ef354bc1808ef3120b12d6b0c",
+          "candidate_comment_id": 337,
+          "repository_revision": "8a63aa61e7da0364857ddeabd321ca7074a7a7e5",
+          "path": "/fret_results/2"
+        },
+        "diagnostic_locations": "Historical formalization locations are preserved verbatim (including null); backend locations refer only to the preserved generated Lustre and stdout, not to FRETish source."
+      },
+      "original": {
+        "job_id": "af912ce3-80d9-4c8c-95f9-d2a69e5edd5f",
+        "request_id": "27232503-fe19-5872-a6e6-8d6d4b40b590",
+        "input_digest": "sha256:e7244c0de971c5c997202f1327630ce009562d278fbd9268b6ad9e42ee1eea35",
+        "status": "completed",
+        "phase": "finished",
+        "created_at": "2026-10-04T16:47:48.499Z",
+        "finished_at": "2026-10-04T16:47:48.908Z",
+        "report_digest": "sha256:c01fdf44c921827b9d4075ff1fe7c82f0ae66af3795b931adab4624073226536",
+        "report": {
+          "schema_version": 1,
+          "input_digest": "sha256:e7244c0de971c5c997202f1327630ce009562d278fbd9268b6ad9e42ee1eea35",
+          "result": "error",
+          "contract_result": null,
+          "environment_result": null,
+          "requested_ids": [
+            "SRS-18-11:clear_counters"
+          ],
+          "analyzed_ids": [],
+          "diagnostics": [
+            {
+              "id": null,
+              "code": "backend_error",
+              "message": "Kind 2 exited with 3: Cannot unify type real with inferred type int"
+            }
+          ],
+          "formalization": {
+            "representations": [
+              "pt-lustre",
+              "pt-smv",
+              "ft-inf",
+              "ft-fin"
+            ],
+            "time_basis": "discrete_steps",
+            "results": [
+              {
+                "id": "SRS-18-11:clear_counters",
+                "status": "formalized",
+                "formulas": [
+                  {
+                    "representation": "pt-lustre",
+                    "formula": "(H((episode_return = 0)) and H((episode_length = 0)))"
+                  },
+                  {
+                    "representation": "pt-smv",
+                    "formula": "((H (episode_return = 0)) & (H (episode_length = 0)))"
+                  },
+                  {
+                    "representation": "ft-inf",
+                    "formula": "(G ((episode_return = 0) & (episode_length = 0)))"
+                  },
+                  {
+                    "representation": "ft-fin",
+                    "formula": "(LAST V ((episode_return = 0) & (episode_length = 0)))"
+                  }
+                ],
+                "explanation": {
+                  "format": "html",
+                  "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: first point in the interval.<br>REQUIRED BEHAVIOR: for every trigger, <b><i>(( ( episode_return = 0 ) & ( episode_length = 0 ) ))</i></b> must hold at all time points between (and including) the trigger and the end of the interval."
+                },
+                "diagnostics": []
+              }
+            ]
+          },
+          "toolchain": {
+            "fret": "sha256:c45764cc1cc48928217709c243e3b800bddd47101d81254862dd1fdc4ac37ce4",
+            "adapter": "0.2.0",
+            "kind2": "kind2 v2.2.0",
+            "z3": "Z3 version 4.14.1 - 64 bit"
+          },
+          "time_model": {
+            "kind": "discrete_steps",
+            "description": "Each step observes a completed VecMonitor.reset call for an arbitrary environment; no physical sampling period or reset frequency is prescribed."
+          },
+          "assumption_ids": [],
+          "guarantee_ids": [
+            "SRS-18-11:clear_counters"
+          ],
+          "variable_mapping": {
+            "fret_v_0": "episode_return",
+            "fret_v_1": "episode_length"
+          },
+          "checks": [
+            {
+              "name": "FretContract.lus",
+              "requirement_ids": [
+                "SRS-18-11:clear_counters"
+              ],
+              "result": "ERROR",
+              "environment_result": null,
+              "lustre": "--Historically\nnode H(X:bool) returns (Y:bool);\nlet\n    Y = X -> (X and (pre Y));\ntel\n\n--Y since inclusive X\nnode SI(X,Y: bool) returns (Z:bool);\nlet\nZ = Y and (X or (false -> pre Z));\ntel\n\n--Y since X\nnode S(X,Y: bool) returns (Z:bool);\nlet\nZ = X or (Y and (false -> pre Z));\ntel\n\n--Y triggered X\nnode T(X,Y: bool) returns(Z:bool);\nlet\nZ = (X and (Y or (true -> pre Z)));\ntel\n\n--Once\nnode O(X:bool) returns (Y:bool);\nlet\n Y = X or (false -> pre Y);\ntel\n\n--Timed Once: less than or equal to N\nnode OTlore( N: int; X: bool) returns (Y: bool);\n    var C:int;\nlet\n    C = if X then 0\n        else (-1 -> pre C + (if pre C <0 then 0 else 1));\n\n    Y = 0 <= C and C <= N;\ntel\n\n--Timed Once: general case\nnode OT( L: int;  R: int; X: bool) returns (Y: bool);\nvar  D:bool;\nlet\n  D=delay(X, R);\n  Y=OTlore(L-R, D);\ntel\n\n-- Timed Historically: general case\nnode HT( L: int;  R: int; X: bool) returns (Y: bool);\nlet\n  Y = not OT(L, R, not X);\ntel\n\n-- Timed Since: general case\nnode ST( L: int;  R: int; X: bool; Y: bool)  returns (Z: bool);\nlet\n  Z = S(X, Y) and OT(L, R, X);\ntel\n\n-- Timed Since Inclusive: general case\nnode SIT( L: int;  R: int; X: bool; Y: bool) returns (Z: bool);\nlet\n  Z = SI(X, Y) and OT(L, R, X);\ntel\n\n-- Timed Triggered: general case\nnode TT( L: int;  R: int; X: bool; Y: bool)  returns (Z: bool);\nlet\n  Z = T(X, Y) or HT(L, R, X);\ntel\n\n-- Pre for integers, with an initial value at FTP\nnode preInt(InitialValue, X: int) returns (Y:int);\nlet\n  Y = InitialValue -> pre X;\ntel\n\n-- Pre for reals, with an initial value at FTP\nnode preReal(InitialValue, X: real) returns (Y:real);\nlet\n  Y = InitialValue -> pre X;\ntel\n\n-- Pre for booleans, with an initial value at FTP\nnode preBool(InitialValue, X: bool) returns (Y:bool);\nlet\n  Y = InitialValue -> pre X;\ntel\n\n-- The equivalent of LTL's Y in Lustre.\nnode YtoPre(X: bool) returns (Y:bool);\nlet\n  Y = false -> pre X;\ntel\n\n-- The equivalent of LTL's Z in Lustre.\nnode ZtoPre(X: bool) returns (Y:bool);\nlet\n  Y = true -> pre X;\ntel\n\n-- Absolute value for reals\nnode absReal(x:real) returns(y: real);\nlet\n  y = if (x >= 0.0) then x else -x;\ntel\n\n-- Absolute value for integers\nnode absInt(x:int) returns(y: int);\nlet\n  y = if (x >= 0) then x else -x;\ntel\n\n-- Maximum value between two reals\nnode maxReal (a : real; b : real)\nreturns (z : real);\nlet\n  z = (if (((a) >= (b))) then (a) else (b));\ntel\n\n-- Maximum value between two integers\nnode maxInt (a : int; b : int)\nreturns (z : int);\nlet\n  z = (if (((a) >= (b))) then (a) else (b));\ntel\n\n-- Minimum value between two integers\nnode minInt (a : int; b : int)\nreturns (z : int);\nlet\n  z = (if (((a) <= (b))) then (a) else (b));\ntel\n\n-- Minimum value between two reals\nnode minReal (a : real; b : real)\nreturns (z : real);\nlet\n  z = (if (((a) <= (b))) then (a) else (b));\ntel\n\nnode delay(X:bool;  R:int) returns(Y:bool);\nlet\n\n  Y = X;\ntel\n\n\nnode imported FretContract() returns ( fret_v_0:real ;  fret_v_1:int  );\n(*@contract\n\n\n\n\nvar __FTP : bool = true -> false;\n\n\n\n(* fret_r_0  *)\n\n\nguarantee \"fret_r_0\" (H((fret_v_0 = 0)) and H((fret_v_1 = 0)));\n\n\r\n*)\n",
+              "lustre_digest": "sha256:41f7838f5a64f97d102efc5a27f0333ccba31844940ed9b777104d3db55413a4",
+              "command": [
+                "kind2",
+                "--lus_main",
+                "FretContract",
+                "-json",
+                "--enable",
+                "CONTRACTCK",
+                "--timeout",
+                "60",
+                "/var/lib/fret-mcp/work/af912ce3-80d9-4c8c-95f9-d2a69e5edd5f/FretContract.lus"
+              ],
+              "stdout": "[\n{\n  \"objectType\" : \"log\",\n  \"level\" : \"info\",\n  \"source\" : \"parse\",\n  \"value\" : \"kind2 v2.2.0\"\n}\n,\n{\n  \"objectType\" : \"kind2Options\",\n  \"enabled\" :\n  [\n    \"contractck\"\n  ],\n  \"timeout\" : 60.000000,\n  \"bmcMax\" : 0,\n  \"compositional\" : false,\n  \"modular\" : false\n}\n,\n{\n  \"objectType\" : \"log\",\n  \"level\" : \"error\",\n  \"source\" : \"parse\",\n  \"file\" : \"/var/lib/fret-mcp/work/af912ce3-80d9-4c8c-95f9-d2a69e5edd5f/FretContract.lus\",\n  \"line\" : 163,\n  \"column\" : 26,\n  \"value\" : \"Cannot unify type real with inferred type int\"\n}\n]\n",
+              "stderr": "",
+              "exit_code": 3,
+              "counterexample": {
+                "contract": null,
+                "environment": null
+              }
+            }
+          ],
+          "diagnosis": {
+            "status": "not_run",
+            "conflicts": [],
+            "message": null
+          }
+        },
+        "error": null,
+        "input": {
+          "component": "VecMonitorReset",
+          "requirements": [
+            {
+              "id": "SRS-18-11:clear_counters",
+              "fretish": "VecMonitorReset shall always satisfy ((episode_return = 0) & (episode_length = 0)).",
+              "kind": "guarantee",
+              "source_refs": [
+                "SRS-18-11@sha256:213f10edf87da70271d501fef96df39c3d0eea14d200c958a81d4580d890c6af#statement"
+              ]
+            }
+          ],
+          "variables": [
+            {
+              "name": "episode_return",
+              "type": "real",
+              "role": "output",
+              "meaning": "Episode return counter after each reset for an arbitrary monitored environment."
+            },
+            {
+              "name": "episode_length",
+              "type": "int",
+              "role": "output",
+              "meaning": "Episode length counter after each reset for an arbitrary monitored environment."
+            }
+          ],
+          "time_model": {
+            "kind": "discrete_steps",
+            "description": "Each step observes a completed VecMonitor.reset call for an arbitrary environment; no physical sampling period or reset frequency is prescribed."
+          },
+          "options": {
+            "timeout_ms": 60000,
+            "diagnose": true
+          },
+          "request_id": "27232503-fe19-5872-a6e6-8d6d4b40b590"
+        }
+      }
+    },
+    {
+      "component": "ResultsFilter",
+      "provenance": {
+        "archive": "C:\\Cawl\\smoking_record\\nl2repo-stable-baselines3-20261004-cli-r2\\evidence\\approver-54-ses_ef81b4e40ffe8kbKGGq60IUCBs.json",
+        "archive_sha256": "sha256:2c2e3d1d6a22a6dac24d491e6964f40955db7afb33847cf371aec68014d99f80",
+        "session_id": "ses_ef81b4e40ffe8kbKGGq60IUCBs",
+        "message_id": "msg_107e78dea001pZQ3gZtECivxwQ",
+        "part_id": "prt_107e7ac4f001bDU4GKBTx1ZupU",
+        "tool": "read_mcp_resource",
+        "tool_input": {
+          "server": "MCP_ARTIFACT",
+          "uri": "artifact://review-evidence/sha256:0ae1ddfc32ef9b854603f12d1f9cbd89d501dc14b478e4e88068cc2f3606dd55/formal/sha256:841b57ba5d1c0aa823a5576d40b5859a7c11772ef354bc1808ef3120b12d6b0c/fret_results/5"
+        },
+        "raw_output_sha256": "sha256:748b7ad88262a76076f52acc0f9d24ab71de2456e9491c7fe8467df92a8da6d0",
+        "resource_binding": {
+          "record_digest": "sha256:0ae1ddfc32ef9b854603f12d1f9cbd89d501dc14b478e4e88068cc2f3606dd55",
+          "evidence_digest": "sha256:841b57ba5d1c0aa823a5576d40b5859a7c11772ef354bc1808ef3120b12d6b0c",
+          "candidate_comment_id": 337,
+          "repository_revision": "8a63aa61e7da0364857ddeabd321ca7074a7a7e5",
+          "path": "/fret_results/5"
+        },
+        "diagnostic_locations": "Historical formalization locations are preserved verbatim (including null); backend locations refer only to the preserved generated Lustre and stdout, not to FRETish source."
+      },
+      "original": {
+        "job_id": "2aaa1ac5-fe0d-4f0e-ae84-f6cd3c18540f",
+        "request_id": "e71ca7d1-6376-548a-baec-f4c96c3cc034",
+        "input_digest": "sha256:2b7f85754752b2c6819c474b8b8a6d3fe2777df4993ffb84a4e1f7baf111616b",
+        "status": "completed",
+        "phase": "finished",
+        "created_at": "2026-10-04T16:51:32.658Z",
+        "finished_at": "2026-10-04T16:51:33.106Z",
+        "report_digest": "sha256:d10e85e193746fa3011e1b399ec18f04fdc5b6bcc4e401a5158ac2c2fd366a70",
+        "report": {
+          "schema_version": 1,
+          "input_digest": "sha256:2b7f85754752b2c6819c474b8b8a6d3fe2777df4993ffb84a4e1f7baf111616b",
+          "result": "invalid",
+          "contract_result": null,
+          "environment_result": null,
+          "requested_ids": [
+            "SRS-18-19:strict_cutoff",
+            "SRS-18-19:no_cutoff"
+          ],
+          "analyzed_ids": [],
+          "diagnostics": [
+            {
+              "id": "SRS-18-19:strict_cutoff",
+              "code": "invalid",
+              "message": "mismatched input '<' expecting ')'"
+            }
+          ],
+          "formalization": {
+            "representations": [
+              "pt-lustre",
+              "pt-smv",
+              "ft-inf",
+              "ft-fin"
+            ],
+            "time_basis": "discrete_steps",
+            "results": [
+              {
+                "id": "SRS-18-19:strict_cutoff",
+                "status": "invalid",
+                "formulas": [],
+                "explanation": null,
+                "diagnostics": [
+                  {
+                    "code": "syntax_error",
+                    "message": "mismatched input '<' expecting ')'",
+                    "location": {
+                      "line": 1,
+                      "column": 99
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "SRS-18-19:no_cutoff",
+                "status": "formalized",
+                "formulas": [
+                  {
+                    "representation": "pt-lustre",
+                    "formula": "H((not (cutoff_supplied) => passes_timestep_filter))"
+                  },
+                  {
+                    "representation": "pt-smv",
+                    "formula": "(H ((! cutoff_supplied) -> passes_timestep_filter))"
+                  },
+                  {
+                    "representation": "ft-inf",
+                    "formula": "(G ((! cutoff_supplied) -> passes_timestep_filter))"
+                  },
+                  {
+                    "representation": "ft-fin",
+                    "formula": "(LAST V ((! cutoff_supplied) -> passes_timestep_filter))"
+                  }
+                ],
+                "explanation": {
+                  "format": "html",
+                  "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: first point in the interval.<br>REQUIRED BEHAVIOR: for every trigger, <b><i>(( ! cutoff_supplied => passes_timestep_filter ))</i></b> must hold at all time points between (and including) the trigger and the end of the interval."
+                },
+                "diagnostics": []
+              }
+            ]
+          },
+          "toolchain": {
+            "fret": "sha256:c45764cc1cc48928217709c243e3b800bddd47101d81254862dd1fdc4ac37ce4",
+            "adapter": "0.2.0",
+            "kind2": "kind2 v2.2.0",
+            "z3": "Z3 version 4.14.1 - 64 bit"
+          },
+          "time_model": {
+            "kind": "discrete_steps",
+            "description": "Each step observes timestep-filter eligibility for an arbitrary result point in a plot_results call; no walltime bound is introduced."
+          },
+          "assumption_ids": [],
+          "guarantee_ids": [
+            "SRS-18-19:strict_cutoff",
+            "SRS-18-19:no_cutoff"
+          ],
+          "variable_mapping": {
+            "fret_v_0": "cutoff_supplied",
+            "fret_v_1": "point_timesteps",
+            "fret_v_2": "cutoff",
+            "fret_v_3": "passes_timestep_filter"
+          },
+          "checks": [],
+          "diagnosis": {
+            "status": "not_run",
+            "conflicts": [],
+            "message": null
+          }
+        },
+        "error": null,
+        "input": {
+          "component": "ResultsFilter",
+          "requirements": [
+            {
+              "id": "SRS-18-19:strict_cutoff",
+              "fretish": "ResultsFilter shall always satisfy (cutoff_supplied => (passes_timestep_filter = (point_timesteps < cutoff))).",
+              "kind": "guarantee",
+              "source_refs": [
+                "SRS-18-19@sha256:66e187f9deccacff7f4e76178d7bbffebe050f04c0ee29dc3e3ba15f601982f8#statement"
+              ]
+            },
+            {
+              "id": "SRS-18-19:no_cutoff",
+              "fretish": "ResultsFilter shall always satisfy (!cutoff_supplied => passes_timestep_filter).",
+              "kind": "guarantee",
+              "source_refs": [
+                "SRS-18-19@sha256:66e187f9deccacff7f4e76178d7bbffebe050f04c0ee29dc3e3ba15f601982f8#statement"
+              ]
+            }
+          ],
+          "variables": [
+            {
+              "name": "cutoff_supplied",
+              "type": "bool",
+              "role": "input",
+              "meaning": "num_timesteps is supplied rather than None."
+            },
+            {
+              "name": "point_timesteps",
+              "type": "int",
+              "role": "input",
+              "meaning": "Candidate point's cumulative timestep count."
+            },
+            {
+              "name": "cutoff",
+              "type": "int",
+              "role": "input",
+              "meaning": "The supplied num_timesteps cutoff; unused when None."
+            },
+            {
+              "name": "passes_timestep_filter",
+              "type": "bool",
+              "role": "output",
+              "meaning": "The candidate point passes the requested timestep cutoff."
+            }
+          ],
+          "time_model": {
+            "kind": "discrete_steps",
+            "description": "Each step observes timestep-filter eligibility for an arbitrary result point in a plot_results call; no walltime bound is introduced."
+          },
+          "options": {
+            "timeout_ms": 60000,
+            "diagnose": true
+          },
+          "request_id": "e71ca7d1-6376-548a-baec-f4c96c3cc034"
+        }
+      }
+    },
+    {
+      "component": "RunningMeanStdMoments",
+      "provenance": {
+        "archive": "C:\\Cawl\\smoking_record\\nl2repo-stable-baselines3-20261004-cli-r2\\evidence\\approver-58-ses_ef807e4baffevhfhalxjbVtDPZ.json",
+        "archive_sha256": "sha256:ac6ae94b17f6075f625572bc63c74a99f2988c690376506bf1d2e75064223002",
+        "session_id": "ses_ef807e4baffevhfhalxjbVtDPZ",
+        "message_id": "msg_107feab73001SIL6RGs0oFFUtP",
+        "part_id": "prt_107febd53001Gg1HAvP0Vo2egT",
+        "tool": "MCP_FRET_get_analysis",
+        "tool_input": {
+          "job_id": "d7ba46c2-9ad2-4c54-8804-fe3f55aa833f"
+        },
+        "raw_output_sha256": "sha256:c0449be1e9ce88e643750452749b43ea79aac9ea2fc379680c7bafaa5c989916",
+        "resource_binding": null,
+        "diagnostic_locations": "Historical formalization locations are preserved verbatim (including null); backend locations refer only to the preserved generated Lustre and stdout, not to FRETish source."
+      },
+      "original": {
+        "job_id": "d7ba46c2-9ad2-4c54-8804-fe3f55aa833f",
+        "request_id": "0a884432-da86-5c1c-bb7d-bdbdb6382255",
+        "input_digest": "sha256:e6dbd41809b6964013ff79e9551dd87f40ffe309c3a9710aef8c36e0123fadef",
+        "status": "completed",
+        "phase": "finished",
+        "created_at": "2026-10-04T17:36:12.028Z",
+        "finished_at": "2026-10-04T17:36:12.437Z",
+        "report_digest": "sha256:663c9d9b166297f511325338b757a3ec72c7116747d6f854e369fad6e2d59e76",
+        "report": {
+          "schema_version": 1,
+          "input_digest": "sha256:e6dbd41809b6964013ff79e9551dd87f40ffe309c3a9710aef8c36e0123fadef",
+          "result": "error",
+          "contract_result": null,
+          "environment_result": null,
+          "requested_ids": [
+            "SRS-23-04:combined_count",
+            "SRS-23-04:combined_moments"
+          ],
+          "analyzed_ids": [],
+          "diagnostics": [
+            {
+              "id": null,
+              "code": "backend_error",
+              "message": "Kind 2 exited with 3: Cannot unify type real with inferred type int"
+            }
+          ],
+          "formalization": {
+            "representations": [
+              "pt-lustre",
+              "pt-smv",
+              "ft-inf",
+              "ft-fin"
+            ],
+            "time_basis": "discrete_steps",
+            "results": [
+              {
+                "id": "SRS-23-04:combined_count",
+                "status": "formalized",
+                "formulas": [
+                  {
+                    "representation": "pt-lustre",
+                    "formula": "H((moments_return => (new_count = (old_count + batch_count))))"
+                  },
+                  {
+                    "representation": "pt-smv",
+                    "formula": "(H (moments_return -> (new_count = (old_count + batch_count))))"
+                  },
+                  {
+                    "representation": "ft-inf",
+                    "formula": "(G (moments_return -> (new_count = (old_count + batch_count))))"
+                  },
+                  {
+                    "representation": "ft-fin",
+                    "formula": "(LAST V (moments_return -> (new_count = (old_count + batch_count))))"
+                  }
+                ],
+                "explanation": {
+                  "format": "html",
+                  "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(moments_return)</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(new_count = old_count + batch_count)</i></b> also holds at the same time point."
+                },
+                "diagnostics": []
+              },
+              {
+                "id": "SRS-23-04:combined_moments",
+                "status": "formalized",
+                "formulas": [
+                  {
+                    "representation": "pt-lustre",
+                    "formula": "H(((moments_return and ((old_count + batch_count) <> 0)) => ((new_mean = (old_mean + (((batch_mean - old_mean) * batch_count) / (old_count + batch_count)))) and (new_variance = ((((old_count * old_variance) + (batch_count * batch_variance)) + (((((batch_mean - old_mean) * (batch_mean - old_mean)) * old_count) * batch_count) / (old_count + batch_count))) / (old_count + batch_count))))))"
+                  },
+                  {
+                    "representation": "pt-smv",
+                    "formula": "(H ((moments_return & ((old_count + batch_count) != 0)) -> ((new_mean = (old_mean + (((batch_mean - old_mean) * batch_count) / (old_count + batch_count)))) & (new_variance = ((((old_count * old_variance) + (batch_count * batch_variance)) + (((((batch_mean - old_mean) * (batch_mean - old_mean)) * old_count) * batch_count) / (old_count + batch_count))) / (old_count + batch_count))))))"
+                  },
+                  {
+                    "representation": "ft-inf",
+                    "formula": "(G ((moments_return & ((old_count + batch_count) != 0)) -> ((new_mean = (old_mean + (((batch_mean - old_mean) * batch_count) / (old_count + batch_count)))) & (new_variance = ((((old_count * old_variance) + (batch_count * batch_variance)) + (((((batch_mean - old_mean) * (batch_mean - old_mean)) * old_count) * batch_count) / (old_count + batch_count))) / (old_count + batch_count))))))"
+                  },
+                  {
+                    "representation": "ft-fin",
+                    "formula": "(LAST V ((moments_return & ((old_count + batch_count) != 0)) -> ((new_mean = (old_mean + (((batch_mean - old_mean) * batch_count) / (old_count + batch_count)))) & (new_variance = ((((old_count * old_variance) + (batch_count * batch_variance)) + (((((batch_mean - old_mean) * (batch_mean - old_mean)) * old_count) * batch_count) / (old_count + batch_count))) / (old_count + batch_count))))))"
+                  }
+                ],
+                "explanation": {
+                  "format": "html",
+                  "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(moments_return & ( old_count + batch_count != 0 ))</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(new_mean = old_mean + ( batch_mean - old_mean ) * batch_count / ( old_count + batch_count ) & new_variance = ( old_count * old_variance + batch_count * batch_variance + ( batch_mean - old_mean ) * ( batch_mean - old_mean ) * old_count * batch_count / ( old_count + batch_count ) ) / ( old_count + batch_count ))</i></b> also holds at the same time point."
+                },
+                "diagnostics": []
+              }
+            ]
+          },
+          "toolchain": {
+            "fret": "sha256:c45764cc1cc48928217709c243e3b800bddd47101d81254862dd1fdc4ac37ce4",
+            "adapter": "0.2.0",
+            "kind2": "kind2 v2.2.0",
+            "z3": "Z3 version 4.14.1 - 64 bit"
+          },
+          "time_model": {
+            "kind": "discrete_steps",
+            "description": "Logical observations of completed update_from_moments calls with pre/post-call count snapshots; no physical timing is imposed."
+          },
+          "assumption_ids": [],
+          "guarantee_ids": [
+            "SRS-23-04:combined_count",
+            "SRS-23-04:combined_moments"
+          ],
+          "variable_mapping": {
+            "fret_v_0": "moments_return",
+            "fret_v_1": "old_count",
+            "fret_v_2": "batch_count",
+            "fret_v_3": "new_count",
+            "fret_v_4": "old_mean",
+            "fret_v_5": "batch_mean",
+            "fret_v_6": "new_mean",
+            "fret_v_7": "old_variance",
+            "fret_v_8": "batch_variance",
+            "fret_v_9": "new_variance"
+          },
+          "checks": [
+            {
+              "name": "FretContract.lus",
+              "requirement_ids": [
+                "SRS-23-04:combined_count",
+                "SRS-23-04:combined_moments"
+              ],
+              "result": "ERROR",
+              "environment_result": null,
+              "lustre": "--Historically\nnode H(X:bool) returns (Y:bool);\nlet\n    Y = X -> (X and (pre Y));\ntel\n\n--Y since inclusive X\nnode SI(X,Y: bool) returns (Z:bool);\nlet\nZ = Y and (X or (false -> pre Z));\ntel\n\n--Y since X\nnode S(X,Y: bool) returns (Z:bool);\nlet\nZ = X or (Y and (false -> pre Z));\ntel\n\n--Y triggered X\nnode T(X,Y: bool) returns(Z:bool);\nlet\nZ = (X and (Y or (true -> pre Z)));\ntel\n\n--Once\nnode O(X:bool) returns (Y:bool);\nlet\n Y = X or (false -> pre Y);\ntel\n\n--Timed Once: less than or equal to N\nnode OTlore( N: int; X: bool) returns (Y: bool);\n    var C:int;\nlet\n    C = if X then 0\n        else (-1 -> pre C + (if pre C <0 then 0 else 1));\n\n    Y = 0 <= C and C <= N;\ntel\n\n--Timed Once: general case\nnode OT( L: int;  R: int; X: bool) returns (Y: bool);\nvar  D:bool;\nlet\n  D=delay(X, R);\n  Y=OTlore(L-R, D);\ntel\n\n-- Timed Historically: general case\nnode HT( L: int;  R: int; X: bool) returns (Y: bool);\nlet\n  Y = not OT(L, R, not X);\ntel\n\n-- Timed Since: general case\nnode ST( L: int;  R: int; X: bool; Y: bool)  returns (Z: bool);\nlet\n  Z = S(X, Y) and OT(L, R, X);\ntel\n\n-- Timed Since Inclusive: general case\nnode SIT( L: int;  R: int; X: bool; Y: bool) returns (Z: bool);\nlet\n  Z = SI(X, Y) and OT(L, R, X);\ntel\n\n-- Timed Triggered: general case\nnode TT( L: int;  R: int; X: bool; Y: bool)  returns (Z: bool);\nlet\n  Z = T(X, Y) or HT(L, R, X);\ntel\n\n-- Pre for integers, with an initial value at FTP\nnode preInt(InitialValue, X: int) returns (Y:int);\nlet\n  Y = InitialValue -> pre X;\ntel\n\n-- Pre for reals, with an initial value at FTP\nnode preReal(InitialValue, X: real) returns (Y:real);\nlet\n  Y = InitialValue -> pre X;\ntel\n\n-- Pre for booleans, with an initial value at FTP\nnode preBool(InitialValue, X: bool) returns (Y:bool);\nlet\n  Y = InitialValue -> pre X;\ntel\n\n-- The equivalent of LTL's Y in Lustre.\nnode YtoPre(X: bool) returns (Y:bool);\nlet\n  Y = false -> pre X;\ntel\n\n-- The equivalent of LTL's Z in Lustre.\nnode ZtoPre(X: bool) returns (Y:bool);\nlet\n  Y = true -> pre X;\ntel\n\n-- Absolute value for reals\nnode absReal(x:real) returns(y: real);\nlet\n  y = if (x >= 0.0) then x else -x;\ntel\n\n-- Absolute value for integers\nnode absInt(x:int) returns(y: int);\nlet\n  y = if (x >= 0) then x else -x;\ntel\n\n-- Maximum value between two reals\nnode maxReal (a : real; b : real)\nreturns (z : real);\nlet\n  z = (if (((a) >= (b))) then (a) else (b));\ntel\n\n-- Maximum value between two integers\nnode maxInt (a : int; b : int)\nreturns (z : int);\nlet\n  z = (if (((a) >= (b))) then (a) else (b));\ntel\n\n-- Minimum value between two integers\nnode minInt (a : int; b : int)\nreturns (z : int);\nlet\n  z = (if (((a) <= (b))) then (a) else (b));\ntel\n\n-- Minimum value between two reals\nnode minReal (a : real; b : real)\nreturns (z : real);\nlet\n  z = (if (((a) <= (b))) then (a) else (b));\ntel\n\nnode delay(X:bool;  R:int) returns(Y:bool);\nlet\n\n  Y = X;\ntel\n\n\nnode imported FretContract( fret_v_0:bool ; fret_v_1:real ; fret_v_2:real ; fret_v_4:real ; fret_v_5:real ; fret_v_7:real ; fret_v_8:real ) returns ( fret_v_3:real ;  fret_v_6:real ;  fret_v_9:real  );\n(*@contract\n\n\n\n\nvar __FTP : bool = true -> false;\n\n\n\n(* fret_r_0  *)\n\n\nguarantee \"fret_r_0\" H((fret_v_0 => (fret_v_3 = (fret_v_1 + fret_v_2))));\n\n(* fret_r_1  *)\n\n\nguarantee \"fret_r_1\" H(((fret_v_0 and ((fret_v_1 + fret_v_2) <> 0)) => ((fret_v_6 = (fret_v_4 + (((fret_v_5 - fret_v_4) * fret_v_2) / (fret_v_1 + fret_v_2)))) and (fret_v_9 = ((((fret_v_1 * fret_v_7) + (fret_v_2 * fret_v_8)) + (((((fret_v_5 - fret_v_4) * (fret_v_5 - fret_v_4)) * fret_v_1) * fret_v_2) / (fret_v_1 + fret_v_2))) / (fret_v_1 + fret_v_2))))));\n\n\r\n*)\n",
+              "lustre_digest": "sha256:b85b5f96e6db4281ce5ca07edd86e54e4ea6f17eea2bad38d82b335531fefa91",
+              "command": [
+                "kind2",
+                "--lus_main",
+                "FretContract",
+                "-json",
+                "--enable",
+                "CONTRACTCK",
+                "--timeout",
+                "60",
+                "/var/lib/fret-mcp/work/d7ba46c2-9ad2-4c54-8804-fe3f55aa833f/FretContract.lus"
+              ],
+              "stdout": "[\n{\n  \"objectType\" : \"log\",\n  \"level\" : \"info\",\n  \"source\" : \"parse\",\n  \"value\" : \"kind2 v2.2.0\"\n}\n,\n{\n  \"objectType\" : \"kind2Options\",\n  \"enabled\" :\n  [\n    \"contractck\"\n  ],\n  \"timeout\" : 60.000000,\n  \"bmcMax\" : 0,\n  \"compositional\" : false,\n  \"modular\" : false\n}\n,\n{\n  \"objectType\" : \"log\",\n  \"level\" : \"error\",\n  \"source\" : \"parse\",\n  \"file\" : \"/var/lib/fret-mcp/work/d7ba46c2-9ad2-4c54-8804-fe3f55aa833f/FretContract.lus\",\n  \"line\" : 168,\n  \"column\" : 40,\n  \"value\" : \"Cannot unify type real with inferred type int\"\n}\n]\n",
+              "stderr": "",
+              "exit_code": 3,
+              "counterexample": {
+                "contract": null,
+                "environment": null
+              }
+            }
+          ],
+          "diagnosis": {
+            "status": "not_run",
+            "conflicts": [],
+            "message": null
+          }
+        },
+        "error": null,
+        "input": {
+          "request_id": "0a884432-da86-5c1c-bb7d-bdbdb6382255",
+          "component": "RunningMeanStdMoments",
+          "requirements": [
+            {
+              "id": "SRS-23-04:combined_count",
+              "fretish": "whenever moments_return RunningMeanStdMoments shall immediately satisfy new_count = old_count + batch_count.",
+              "kind": "guarantee",
+              "source_refs": [
+                "SRS-23-04@sha256:461785d89da47d7ac14dc8e184de0f44dd8a0850542e71c4649841aac60699f3#statement",
+                "SRS-23-04@sha256:461785d89da47d7ac14dc8e184de0f44dd8a0850542e71c4649841aac60699f3#source_refs[1].quote"
+              ]
+            },
+            {
+              "id": "SRS-23-04:combined_moments",
+              "fretish": "whenever moments_return & (old_count + batch_count != 0) RunningMeanStdMoments shall immediately satisfy new_mean = old_mean + (batch_mean - old_mean) * batch_count / (old_count + batch_count) & new_variance = (old_count * old_variance + batch_count * batch_variance + (batch_mean - old_mean) * (batch_mean - old_mean) * old_count * batch_count / (old_count + batch_count)) / (old_count + batch_count).",
+              "kind": "guarantee",
+              "source_refs": [
+                "SRS-23-04@sha256:461785d89da47d7ac14dc8e184de0f44dd8a0850542e71c4649841aac60699f3#statement",
+                "SRS-23-04@sha256:461785d89da47d7ac14dc8e184de0f44dd8a0850542e71c4649841aac60699f3#source_refs[1].quote"
+              ]
+            }
+          ],
+          "variables": [
+            {
+              "name": "moments_return",
+              "type": "bool",
+              "role": "input",
+              "meaning": "Observation of completed update_from_moments call."
+            },
+            {
+              "name": "old_count",
+              "type": "real",
+              "role": "input",
+              "meaning": "Pre-call accumulated sample count."
+            },
+            {
+              "name": "batch_count",
+              "type": "real",
+              "role": "input",
+              "meaning": "Supplied batch sample count."
+            },
+            {
+              "name": "new_count",
+              "type": "real",
+              "role": "output",
+              "meaning": "Post-call accumulated sample count."
+            },
+            {
+              "name": "old_mean",
+              "type": "real",
+              "role": "input",
+              "meaning": "One pre-call mean component."
+            },
+            {
+              "name": "batch_mean",
+              "type": "real",
+              "role": "input",
+              "meaning": "Corresponding supplied batch-mean component."
+            },
+            {
+              "name": "new_mean",
+              "type": "real",
+              "role": "output",
+              "meaning": "Corresponding post-call mean component."
+            },
+            {
+              "name": "old_variance",
+              "type": "real",
+              "role": "input",
+              "meaning": "One pre-call variance component."
+            },
+            {
+              "name": "batch_variance",
+              "type": "real",
+              "role": "input",
+              "meaning": "Corresponding supplied batch-variance component."
+            },
+            {
+              "name": "new_variance",
+              "type": "real",
+              "role": "output",
+              "meaning": "Corresponding post-call variance component."
+            }
+          ],
+          "time_model": {
+            "kind": "discrete_steps",
+            "description": "Logical observations of completed update_from_moments calls with pre/post-call count snapshots; no physical timing is imposed."
+          },
+          "options": {
+            "timeout_ms": 60000,
+            "diagnose": true
+          }
+        }
+      }
+    },
+    {
+      "component": "RMSpropTFLikeNumerics",
+      "provenance": {
+        "archive": "C:\\Cawl\\smoking_record\\nl2repo-stable-baselines3-20261004-cli-r2\\evidence\\approver-58-ses_ef7db6b05ffeyaEGTJaqvXfrOk.json",
+        "archive_sha256": "sha256:c358d470cee7f4e3b0a24e2c0aca5aa7d2c9967944918b929b6b46a534cb93bf",
+        "session_id": "ses_ef7db6b05ffeyaEGTJaqvXfrOk",
+        "message_id": "msg_10827acd8001CKoorq3csQCdQm",
+        "part_id": "prt_10827c811001EKAvLaNzEcpvvb",
+        "tool": "MCP_FRET_get_analysis",
+        "tool_input": {
+          "job_id": "76b84558-b0a2-4e6f-85b1-824b7af11d98"
+        },
+        "raw_output_sha256": "sha256:48529990b7b437f5db4b83c6d0c4f466a9d97d6e95f761a98d3fb7aa9cc39dc9",
+        "resource_binding": null,
+        "diagnostic_locations": "Historical formalization locations are preserved verbatim (including null); backend locations refer only to the preserved generated Lustre and stdout, not to FRETish source."
+      },
+      "original": {
+        "job_id": "76b84558-b0a2-4e6f-85b1-824b7af11d98",
+        "request_id": "c3a961ad-7ac0-5f8b-b60e-3811f1d9d91b",
+        "input_digest": "sha256:e24c9972a01f3679eb71b942ce4230a7a952d3a8e65bafda3766bd3f4faa9b98",
+        "status": "completed",
+        "phase": "finished",
+        "created_at": "2026-10-04T18:22:26.617Z",
+        "finished_at": "2026-10-04T18:22:27.178Z",
+        "report_digest": "sha256:49fef7446536b0be5a1cc569f812c7498badf5956d31d79d92dcbf4368357baa",
+        "report": {
+          "schema_version": 1,
+          "input_digest": "sha256:e24c9972a01f3679eb71b942ce4230a7a952d3a8e65bafda3766bd3f4faa9b98",
+          "result": "error",
+          "contract_result": null,
+          "environment_result": null,
+          "requested_ids": [
+            "SRS-23-08:ones_initialization",
+            "SRS-23-08:closure_return",
+            "SRS-23-08:no_closure_return",
+            "SRS-23-08:squared_gradient_update",
+            "SRS-23-08:gradient_average_update",
+            "SRS-23-08:uncentered_denominator",
+            "SRS-23-08:centered_denominator",
+            "SRS-23-08:plain_parameter_update",
+            "SRS-23-08:momentum_parameter_update"
+          ],
+          "analyzed_ids": [],
+          "diagnostics": [
+            {
+              "id": null,
+              "code": "backend_error",
+              "message": "Kind 2 exited with 3: Expected both arguments of operator to be of same integer type but found real and int"
+            }
+          ],
+          "formalization": {
+            "representations": [
+              "pt-lustre",
+              "pt-smv",
+              "ft-inf",
+              "ft-fin"
+            ],
+            "time_basis": "discrete_steps",
+            "results": [
+              {
+                "id": "SRS-23-08:ones_initialization",
+                "status": "formalized",
+                "formulas": [
+                  {
+                    "representation": "pt-lustre",
+                    "formula": "H((initializing_squared_average => (squared_average_initial = 1)))"
+                  },
+                  {
+                    "representation": "pt-smv",
+                    "formula": "(H (initializing_squared_average -> (squared_average_initial = 1)))"
+                  },
+                  {
+                    "representation": "ft-inf",
+                    "formula": "(G (initializing_squared_average -> (squared_average_initial = 1)))"
+                  },
+                  {
+                    "representation": "ft-fin",
+                    "formula": "(LAST V (initializing_squared_average -> (squared_average_initial = 1)))"
+                  }
+                ],
+                "explanation": {
+                  "format": "html",
+                  "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(initializing_squared_average)</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(squared_average_initial = 1)</i></b> also holds at the same time point."
+                },
+                "diagnostics": []
+              },
+              {
+                "id": "SRS-23-08:closure_return",
+                "status": "formalized",
+                "formulas": [
+                  {
+                    "representation": "pt-lustre",
+                    "formula": "H(((step_return and closure_provided) => ((returned_loss = closure_loss) and not (returns_none))))"
+                  },
+                  {
+                    "representation": "pt-smv",
+                    "formula": "(H ((step_return & closure_provided) -> ((returned_loss = closure_loss) & (! returns_none))))"
+                  },
+                  {
+                    "representation": "ft-inf",
+                    "formula": "(G ((step_return & closure_provided) -> ((returned_loss = closure_loss) & (! returns_none))))"
+                  },
+                  {
+                    "representation": "ft-fin",
+                    "formula": "(LAST V ((step_return & closure_provided) -> ((returned_loss = closure_loss) & (! returns_none))))"
+                  }
+                ],
+                "explanation": {
+                  "format": "html",
+                  "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(step_return & closure_provided)</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(returned_loss = closure_loss & ! returns_none)</i></b> also holds at the same time point."
+                },
+                "diagnostics": []
+              },
+              {
+                "id": "SRS-23-08:no_closure_return",
+                "status": "formalized",
+                "formulas": [
+                  {
+                    "representation": "pt-lustre",
+                    "formula": "H(((step_return and not (closure_provided)) => returns_none))"
+                  },
+                  {
+                    "representation": "pt-smv",
+                    "formula": "(H ((step_return & (! closure_provided)) -> returns_none))"
+                  },
+                  {
+                    "representation": "ft-inf",
+                    "formula": "(G ((step_return & (! closure_provided)) -> returns_none))"
+                  },
+                  {
+                    "representation": "ft-fin",
+                    "formula": "(LAST V ((step_return & (! closure_provided)) -> returns_none))"
+                  }
+                ],
+                "explanation": {
+                  "format": "html",
+                  "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(step_return & ! closure_provided)</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(returns_none)</i></b> also holds at the same time point."
+                },
+                "diagnostics": []
+              },
+              {
+                "id": "SRS-23-08:squared_gradient_update",
+                "status": "formalized",
+                "formulas": [
+                  {
+                    "representation": "pt-lustre",
+                    "formula": "H((step_return => ((effective_gradient = (raw_gradient + (weight_decay * old_parameter))) and (squared_average = ((alpha * old_squared_average) + (((1 - alpha) * effective_gradient) * effective_gradient))))))"
+                  },
+                  {
+                    "representation": "pt-smv",
+                    "formula": "(H (step_return -> ((effective_gradient = (raw_gradient + (weight_decay * old_parameter))) & (squared_average = ((alpha * old_squared_average) + (((1 - alpha) * effective_gradient) * effective_gradient))))))"
+                  },
+                  {
+                    "representation": "ft-inf",
+                    "formula": "(G (step_return -> ((effective_gradient = (raw_gradient + (weight_decay * old_parameter))) & (squared_average = ((alpha * old_squared_average) + (((1 - alpha) * effective_gradient) * effective_gradient))))))"
+                  },
+                  {
+                    "representation": "ft-fin",
+                    "formula": "(LAST V (step_return -> ((effective_gradient = (raw_gradient + (weight_decay * old_parameter))) & (squared_average = ((alpha * old_squared_average) + (((1 - alpha) * effective_gradient) * effective_gradient))))))"
+                  }
+                ],
+                "explanation": {
+                  "format": "html",
+                  "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(step_return)</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(effective_gradient = raw_gradient + weight_decay * old_parameter & squared_average = alpha * old_squared_average + ( 1 - alpha ) * effective_gradient * effective_gradient)</i></b> also holds at the same time point."
+                },
+                "diagnostics": []
+              },
+              {
+                "id": "SRS-23-08:gradient_average_update",
+                "status": "formalized",
+                "formulas": [
+                  {
+                    "representation": "pt-lustre",
+                    "formula": "H(((step_return and centered) => (gradient_average = ((alpha * old_gradient_average) + ((1 - alpha) * effective_gradient)))))"
+                  },
+                  {
+                    "representation": "pt-smv",
+                    "formula": "(H ((step_return & centered) -> (gradient_average = ((alpha * old_gradient_average) + ((1 - alpha) * effective_gradient)))))"
+                  },
+                  {
+                    "representation": "ft-inf",
+                    "formula": "(G ((step_return & centered) -> (gradient_average = ((alpha * old_gradient_average) + ((1 - alpha) * effective_gradient)))))"
+                  },
+                  {
+                    "representation": "ft-fin",
+                    "formula": "(LAST V ((step_return & centered) -> (gradient_average = ((alpha * old_gradient_average) + ((1 - alpha) * effective_gradient)))))"
+                  }
+                ],
+                "explanation": {
+                  "format": "html",
+                  "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(step_return & centered)</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(gradient_average = alpha * old_gradient_average + ( 1 - alpha ) * effective_gradient)</i></b> also holds at the same time point."
+                },
+                "diagnostics": []
+              },
+              {
+                "id": "SRS-23-08:uncentered_denominator",
+                "status": "formalized",
+                "formulas": [
+                  {
+                    "representation": "pt-lustre",
+                    "formula": "H((((step_return and not (centered)) and ((squared_average + eps) >= 0)) => ((denominator >= 0) and ((denominator * denominator) = (squared_average + eps)))))"
+                  },
+                  {
+                    "representation": "pt-smv",
+                    "formula": "(H (((step_return & (! centered)) & ((squared_average + eps) >= 0)) -> ((denominator >= 0) & ((denominator * denominator) = (squared_average + eps)))))"
+                  },
+                  {
+                    "representation": "ft-inf",
+                    "formula": "(G (((step_return & (! centered)) & ((squared_average + eps) >= 0)) -> ((denominator >= 0) & ((denominator * denominator) = (squared_average + eps)))))"
+                  },
+                  {
+                    "representation": "ft-fin",
+                    "formula": "(LAST V (((step_return & (! centered)) & ((squared_average + eps) >= 0)) -> ((denominator >= 0) & ((denominator * denominator) = (squared_average + eps)))))"
+                  }
+                ],
+                "explanation": {
+                  "format": "html",
+                  "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(step_return & ! centered & ( squared_average + eps >= 0 ))</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(denominator >= 0 & denominator * denominator = squared_average + eps)</i></b> also holds at the same time point."
+                },
+                "diagnostics": []
+              },
+              {
+                "id": "SRS-23-08:centered_denominator",
+                "status": "formalized",
+                "formulas": [
+                  {
+                    "representation": "pt-lustre",
+                    "formula": "H((((step_return and centered) and (((squared_average - (gradient_average * gradient_average)) + eps) >= 0)) => ((denominator >= 0) and ((denominator * denominator) = ((squared_average - (gradient_average * gradient_average)) + eps)))))"
+                  },
+                  {
+                    "representation": "pt-smv",
+                    "formula": "(H (((step_return & centered) & (((squared_average - (gradient_average * gradient_average)) + eps) >= 0)) -> ((denominator >= 0) & ((denominator * denominator) = ((squared_average - (gradient_average * gradient_average)) + eps)))))"
+                  },
+                  {
+                    "representation": "ft-inf",
+                    "formula": "(G (((step_return & centered) & (((squared_average - (gradient_average * gradient_average)) + eps) >= 0)) -> ((denominator >= 0) & ((denominator * denominator) = ((squared_average - (gradient_average * gradient_average)) + eps)))))"
+                  },
+                  {
+                    "representation": "ft-fin",
+                    "formula": "(LAST V (((step_return & centered) & (((squared_average - (gradient_average * gradient_average)) + eps) >= 0)) -> ((denominator >= 0) & ((denominator * denominator) = ((squared_average - (gradient_average * gradient_average)) + eps)))))"
+                  }
+                ],
+                "explanation": {
+                  "format": "html",
+                  "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(step_return & centered & ( squared_average - gradient_average * gradient_average + eps >= 0 ))</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(denominator >= 0 & denominator * denominator = squared_average - gradient_average * gradient_average + eps)</i></b> also holds at the same time point."
+                },
+                "diagnostics": []
+              },
+              {
+                "id": "SRS-23-08:plain_parameter_update",
+                "status": "formalized",
+                "formulas": [
+                  {
+                    "representation": "pt-lustre",
+                    "formula": "H((((step_return and (denominator > 0)) and (momentum = 0)) => (new_parameter = (old_parameter - ((lr * effective_gradient) / denominator)))))"
+                  },
+                  {
+                    "representation": "pt-smv",
+                    "formula": "(H (((step_return & (denominator > 0)) & (momentum = 0)) -> (new_parameter = (old_parameter - ((lr * effective_gradient) / denominator)))))"
+                  },
+                  {
+                    "representation": "ft-inf",
+                    "formula": "(G (((step_return & (denominator > 0)) & (momentum = 0)) -> (new_parameter = (old_parameter - ((lr * effective_gradient) / denominator)))))"
+                  },
+                  {
+                    "representation": "ft-fin",
+                    "formula": "(LAST V (((step_return & (denominator > 0)) & (momentum = 0)) -> (new_parameter = (old_parameter - ((lr * effective_gradient) / denominator)))))"
+                  }
+                ],
+                "explanation": {
+                  "format": "html",
+                  "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(step_return & ( denominator > 0 ) & ( momentum = 0 ))</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(new_parameter = old_parameter - lr * effective_gradient / denominator)</i></b> also holds at the same time point."
+                },
+                "diagnostics": []
+              },
+              {
+                "id": "SRS-23-08:momentum_parameter_update",
+                "status": "formalized",
+                "formulas": [
+                  {
+                    "representation": "pt-lustre",
+                    "formula": "H((((step_return and (denominator > 0)) and (momentum <> 0)) => ((new_buffer = ((momentum * old_buffer) + (effective_gradient / denominator))) and (new_parameter = (old_parameter - (lr * new_buffer))))))"
+                  },
+                  {
+                    "representation": "pt-smv",
+                    "formula": "(H (((step_return & (denominator > 0)) & (momentum != 0)) -> ((new_buffer = ((momentum * old_buffer) + (effective_gradient / denominator))) & (new_parameter = (old_parameter - (lr * new_buffer))))))"
+                  },
+                  {
+                    "representation": "ft-inf",
+                    "formula": "(G (((step_return & (denominator > 0)) & (momentum != 0)) -> ((new_buffer = ((momentum * old_buffer) + (effective_gradient / denominator))) & (new_parameter = (old_parameter - (lr * new_buffer))))))"
+                  },
+                  {
+                    "representation": "ft-fin",
+                    "formula": "(LAST V (((step_return & (denominator > 0)) & (momentum != 0)) -> ((new_buffer = ((momentum * old_buffer) + (effective_gradient / denominator))) & (new_parameter = (old_parameter - (lr * new_buffer))))))"
+                  }
+                ],
+                "explanation": {
+                  "format": "html",
+                  "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(step_return & ( denominator > 0 ) & ( momentum != 0 ))</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(new_buffer = momentum * old_buffer + effective_gradient / denominator & new_parameter = old_parameter - lr * new_buffer)</i></b> also holds at the same time point."
+                },
+                "diagnostics": []
+              }
+            ]
+          },
+          "toolchain": {
+            "fret": "sha256:c45764cc1cc48928217709c243e3b800bddd47101d81254862dd1fdc4ac37ce4",
+            "adapter": "0.2.0",
+            "kind2": "kind2 v2.2.0",
+            "z3": "Z3 version 4.14.1 - 64 bit"
+          },
+          "time_model": {
+            "kind": "discrete_steps",
+            "description": "Logical observations of state initialization and completed optimization steps with pre/post-call snapshots. Previous-state inputs bind to initialization, restoration or the preceding optimizer state in execution evidence; no physical sampling, performance bound or public observation attribute is imposed."
+          },
+          "assumption_ids": [],
+          "guarantee_ids": [
+            "SRS-23-08:ones_initialization",
+            "SRS-23-08:closure_return",
+            "SRS-23-08:no_closure_return",
+            "SRS-23-08:squared_gradient_update",
+            "SRS-23-08:gradient_average_update",
+            "SRS-23-08:uncentered_denominator",
+            "SRS-23-08:centered_denominator",
+            "SRS-23-08:plain_parameter_update",
+            "SRS-23-08:momentum_parameter_update"
+          ],
+          "variable_mapping": {
+            "fret_v_0": "initializing_squared_average",
+            "fret_v_1": "squared_average_initial",
+            "fret_v_2": "step_return",
+            "fret_v_3": "closure_provided",
+            "fret_v_4": "closure_loss",
+            "fret_v_5": "returned_loss",
+            "fret_v_6": "returns_none",
+            "fret_v_7": "old_parameter",
+            "fret_v_8": "raw_gradient",
+            "fret_v_9": "weight_decay",
+            "fret_v_10": "alpha",
+            "fret_v_11": "eps",
+            "fret_v_12": "lr",
+            "fret_v_13": "momentum",
+            "fret_v_14": "centered",
+            "fret_v_15": "old_squared_average",
+            "fret_v_16": "old_gradient_average",
+            "fret_v_17": "old_buffer",
+            "fret_v_18": "effective_gradient",
+            "fret_v_19": "squared_average",
+            "fret_v_20": "gradient_average",
+            "fret_v_21": "denominator",
+            "fret_v_22": "new_buffer",
+            "fret_v_23": "new_parameter"
+          },
+          "checks": [
+            {
+              "name": "FretContract.lus",
+              "requirement_ids": [
+                "SRS-23-08:ones_initialization",
+                "SRS-23-08:closure_return",
+                "SRS-23-08:no_closure_return",
+                "SRS-23-08:squared_gradient_update",
+                "SRS-23-08:gradient_average_update",
+                "SRS-23-08:uncentered_denominator",
+                "SRS-23-08:centered_denominator",
+                "SRS-23-08:plain_parameter_update",
+                "SRS-23-08:momentum_parameter_update"
+              ],
+              "result": "ERROR",
+              "environment_result": null,
+              "lustre": "--Historically\nnode H(X:bool) returns (Y:bool);\nlet\n    Y = X -> (X and (pre Y));\ntel\n\n--Y since inclusive X\nnode SI(X,Y: bool) returns (Z:bool);\nlet\nZ = Y and (X or (false -> pre Z));\ntel\n\n--Y since X\nnode S(X,Y: bool) returns (Z:bool);\nlet\nZ = X or (Y and (false -> pre Z));\ntel\n\n--Y triggered X\nnode T(X,Y: bool) returns(Z:bool);\nlet\nZ = (X and (Y or (true -> pre Z)));\ntel\n\n--Once\nnode O(X:bool) returns (Y:bool);\nlet\n Y = X or (false -> pre Y);\ntel\n\n--Timed Once: less than or equal to N\nnode OTlore( N: int; X: bool) returns (Y: bool);\n    var C:int;\nlet\n    C = if X then 0\n        else (-1 -> pre C + (if pre C <0 then 0 else 1));\n\n    Y = 0 <= C and C <= N;\ntel\n\n--Timed Once: general case\nnode OT( L: int;  R: int; X: bool) returns (Y: bool);\nvar  D:bool;\nlet\n  D=delay(X, R);\n  Y=OTlore(L-R, D);\ntel\n\n-- Timed Historically: general case\nnode HT( L: int;  R: int; X: bool) returns (Y: bool);\nlet\n  Y = not OT(L, R, not X);\ntel\n\n-- Timed Since: general case\nnode ST( L: int;  R: int; X: bool; Y: bool)  returns (Z: bool);\nlet\n  Z = S(X, Y) and OT(L, R, X);\ntel\n\n-- Timed Since Inclusive: general case\nnode SIT( L: int;  R: int; X: bool; Y: bool) returns (Z: bool);\nlet\n  Z = SI(X, Y) and OT(L, R, X);\ntel\n\n-- Timed Triggered: general case\nnode TT( L: int;  R: int; X: bool; Y: bool)  returns (Z: bool);\nlet\n  Z = T(X, Y) or HT(L, R, X);\ntel\n\n-- Pre for integers, with an initial value at FTP\nnode preInt(InitialValue, X: int) returns (Y:int);\nlet\n  Y = InitialValue -> pre X;\ntel\n\n-- Pre for reals, with an initial value at FTP\nnode preReal(InitialValue, X: real) returns (Y:real);\nlet\n  Y = InitialValue -> pre X;\ntel\n\n-- Pre for booleans, with an initial value at FTP\nnode preBool(InitialValue, X: bool) returns (Y:bool);\nlet\n  Y = InitialValue -> pre X;\ntel\n\n-- The equivalent of LTL's Y in Lustre.\nnode YtoPre(X: bool) returns (Y:bool);\nlet\n  Y = false -> pre X;\ntel\n\n-- The equivalent of LTL's Z in Lustre.\nnode ZtoPre(X: bool) returns (Y:bool);\nlet\n  Y = true -> pre X;\ntel\n\n-- Absolute value for reals\nnode absReal(x:real) returns(y: real);\nlet\n  y = if (x >= 0.0) then x else -x;\ntel\n\n-- Absolute value for integers\nnode absInt(x:int) returns(y: int);\nlet\n  y = if (x >= 0) then x else -x;\ntel\n\n-- Maximum value between two reals\nnode maxReal (a : real; b : real)\nreturns (z : real);\nlet\n  z = (if (((a) >= (b))) then (a) else (b));\ntel\n\n-- Maximum value between two integers\nnode maxInt (a : int; b : int)\nreturns (z : int);\nlet\n  z = (if (((a) >= (b))) then (a) else (b));\ntel\n\n-- Minimum value between two integers\nnode minInt (a : int; b : int)\nreturns (z : int);\nlet\n  z = (if (((a) <= (b))) then (a) else (b));\ntel\n\n-- Minimum value between two reals\nnode minReal (a : real; b : real)\nreturns (z : real);\nlet\n  z = (if (((a) <= (b))) then (a) else (b));\ntel\n\nnode delay(X:bool;  R:int) returns(Y:bool);\nlet\n\n  Y = X;\ntel\n\n\nnode imported FretContract( fret_v_0:bool ; fret_v_2:bool ; fret_v_3:bool ; fret_v_4:real ; fret_v_7:real ; fret_v_8:real ; fret_v_9:real ; fret_v_10:real ; fret_v_11:real ; fret_v_12:real ; fret_v_13:real ; fret_v_14:bool ; fret_v_15:real ; fret_v_16:real ; fret_v_17:real ) returns ( fret_v_1:real ;  fret_v_5:real ;  fret_v_6:bool ;  fret_v_18:real ;  fret_v_19:real ;  fret_v_20:real ;  fret_v_21:real ;  fret_v_22:real ;  fret_v_23:real  );\n(*@contract\n\n\n\n\nvar __FTP : bool = true -> false;\n\n\n\n(* fret_r_0  *)\n\n\nguarantee \"fret_r_0\" H((fret_v_0 => (fret_v_1 = 1)));\n\n(* fret_r_1  *)\n\n\nguarantee \"fret_r_1\" H(((fret_v_2 and fret_v_3) => ((fret_v_5 = fret_v_4) and not (fret_v_6))));\n\n(* fret_r_2  *)\n\n\nguarantee \"fret_r_2\" H(((fret_v_2 and not (fret_v_3)) => fret_v_6));\n\n(* fret_r_3  *)\n\n\nguarantee \"fret_r_3\" H((fret_v_2 => ((fret_v_18 = (fret_v_8 + (fret_v_9 * fret_v_7))) and (fret_v_19 = ((fret_v_10 * fret_v_15) + (((1 - fret_v_10) * fret_v_18) * fret_v_18))))));\n\n(* fret_r_4  *)\n\n\nguarantee \"fret_r_4\" H(((fret_v_2 and fret_v_14) => (fret_v_20 = ((fret_v_10 * fret_v_16) + ((1 - fret_v_10) * fret_v_18)))));\n\n(* fret_r_5  *)\n\n\nguarantee \"fret_r_5\" H((((fret_v_2 and not (fret_v_14)) and ((fret_v_19 + fret_v_11) >= 0)) => ((fret_v_21 >= 0) and ((fret_v_21 * fret_v_21) = (fret_v_19 + fret_v_11)))));\n\n(* fret_r_6  *)\n\n\nguarantee \"fret_r_6\" H((((fret_v_2 and fret_v_14) and (((fret_v_19 - (fret_v_20 * fret_v_20)) + fret_v_11) >= 0)) => ((fret_v_21 >= 0) and ((fret_v_21 * fret_v_21) = ((fret_v_19 - (fret_v_20 * fret_v_20)) + fret_v_11)))));\n\n(* fret_r_7  *)\n\n\nguarantee \"fret_r_7\" H((((fret_v_2 and (fret_v_21 > 0)) and (fret_v_13 = 0)) => (fret_v_23 = (fret_v_7 - ((fret_v_12 * fret_v_18) / fret_v_21)))));\n\n(* fret_r_8  *)\n\n\nguarantee \"fret_r_8\" H((((fret_v_2 and (fret_v_21 > 0)) and (fret_v_13 <> 0)) => ((fret_v_22 = ((fret_v_13 * fret_v_17) + (fret_v_18 / fret_v_21))) and (fret_v_23 = (fret_v_7 - (fret_v_12 * fret_v_22))))));\n\n\r\n*)\n",
+              "lustre_digest": "sha256:10073b2ee616507fa29c71b131332e7bbdeedc6901e93259dfd7d4155f2bdb3c",
+              "command": [
+                "kind2",
+                "--lus_main",
+                "FretContract",
+                "-json",
+                "--enable",
+                "CONTRACTCK",
+                "--timeout",
+                "60",
+                "/var/lib/fret-mcp/work/76b84558-b0a2-4e6f-85b1-824b7af11d98/FretContract.lus"
+              ],
+              "stdout": "[\n{\n  \"objectType\" : \"log\",\n  \"level\" : \"info\",\n  \"source\" : \"parse\",\n  \"value\" : \"kind2 v2.2.0\"\n}\n,\n{\n  \"objectType\" : \"kind2Options\",\n  \"enabled\" :\n  [\n    \"contractck\"\n  ],\n  \"timeout\" : 60.000000,\n  \"bmcMax\" : 0,\n  \"compositional\" : false,\n  \"modular\" : false\n}\n,\n{\n  \"objectType\" : \"log\",\n  \"level\" : \"error\",\n  \"source\" : \"parse\",\n  \"file\" : \"/var/lib/fret-mcp/work/76b84558-b0a2-4e6f-85b1-824b7af11d98/FretContract.lus\",\n  \"line\" : 203,\n  \"column\" : 41,\n  \"value\" : \"Expected both arguments of operator to be of same integer type but found real and int\"\n}\n]\n",
+              "stderr": "",
+              "exit_code": 3,
+              "counterexample": {
+                "contract": null,
+                "environment": null
+              }
+            }
+          ],
+          "diagnosis": {
+            "status": "not_run",
+            "conflicts": [],
+            "message": null
+          }
+        },
+        "error": null,
+        "input": {
+          "request_id": "c3a961ad-7ac0-5f8b-b60e-3811f1d9d91b",
+          "component": "RMSpropTFLikeNumerics",
+          "requirements": [
+            {
+              "id": "SRS-23-08:ones_initialization",
+              "fretish": "whenever initializing_squared_average RMSpropTFLikeNumerics shall immediately satisfy squared_average_initial = 1.",
+              "kind": "guarantee",
+              "source_refs": [
+                "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#source_refs[2].quote"
+              ]
+            },
+            {
+              "id": "SRS-23-08:closure_return",
+              "fretish": "whenever step_return & closure_provided RMSpropTFLikeNumerics shall immediately satisfy returned_loss = closure_loss & !returns_none.",
+              "kind": "guarantee",
+              "source_refs": [
+                "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#source_refs[1].quote"
+              ]
+            },
+            {
+              "id": "SRS-23-08:no_closure_return",
+              "fretish": "whenever step_return & !closure_provided RMSpropTFLikeNumerics shall immediately satisfy returns_none.",
+              "kind": "guarantee",
+              "source_refs": [
+                "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#statement",
+                "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#source_refs[0].quote"
+              ]
+            },
+            {
+              "id": "SRS-23-08:squared_gradient_update",
+              "fretish": "whenever step_return RMSpropTFLikeNumerics shall immediately satisfy effective_gradient = raw_gradient + weight_decay * old_parameter & squared_average = alpha * old_squared_average + (1 - alpha) * effective_gradient * effective_gradient.",
+              "kind": "guarantee",
+              "source_refs": [
+                "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#statement",
+                "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#source_refs[3].quote",
+                "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#source_refs[4].quote"
+              ]
+            },
+            {
+              "id": "SRS-23-08:gradient_average_update",
+              "fretish": "whenever step_return & centered RMSpropTFLikeNumerics shall immediately satisfy gradient_average = alpha * old_gradient_average + (1 - alpha) * effective_gradient.",
+              "kind": "guarantee",
+              "source_refs": [
+                "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#statement",
+                "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#source_refs[3].quote"
+              ]
+            },
+            {
+              "id": "SRS-23-08:uncentered_denominator",
+              "fretish": "whenever step_return & !centered & (squared_average + eps >= 0) RMSpropTFLikeNumerics shall immediately satisfy denominator >= 0 & denominator * denominator = squared_average + eps.",
+              "kind": "guarantee",
+              "source_refs": [
+                "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#source_refs[2].quote",
+                "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#source_refs[3].quote"
+              ]
+            },
+            {
+              "id": "SRS-23-08:centered_denominator",
+              "fretish": "whenever step_return & centered & (squared_average - gradient_average * gradient_average + eps >= 0) RMSpropTFLikeNumerics shall immediately satisfy denominator >= 0 & denominator * denominator = squared_average - gradient_average * gradient_average + eps.",
+              "kind": "guarantee",
+              "source_refs": [
+                "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#source_refs[2].quote",
+                "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#source_refs[3].quote"
+              ]
+            },
+            {
+              "id": "SRS-23-08:plain_parameter_update",
+              "fretish": "whenever step_return & (denominator > 0) & (momentum = 0) RMSpropTFLikeNumerics shall immediately satisfy new_parameter = old_parameter - lr * effective_gradient / denominator.",
+              "kind": "guarantee",
+              "source_refs": [
+                "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#statement",
+                "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#source_refs[3].quote",
+                "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#source_refs[4].quote"
+              ]
+            },
+            {
+              "id": "SRS-23-08:momentum_parameter_update",
+              "fretish": "whenever step_return & (denominator > 0) & (momentum != 0) RMSpropTFLikeNumerics shall immediately satisfy new_buffer = momentum * old_buffer + effective_gradient / denominator & new_parameter = old_parameter - lr * new_buffer.",
+              "kind": "guarantee",
+              "source_refs": [
+                "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#statement",
+                "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#source_refs[3].quote",
+                "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#source_refs[4].quote"
+              ]
+            }
+          ],
+          "variables": [
+            {
+              "name": "initializing_squared_average",
+              "type": "bool",
+              "role": "input",
+              "meaning": "Observation of squared-gradient state initialization."
+            },
+            {
+              "name": "squared_average_initial",
+              "type": "real",
+              "role": "output",
+              "meaning": "Initial squared-gradient-average component."
+            },
+            {
+              "name": "step_return",
+              "type": "bool",
+              "role": "input",
+              "meaning": "Observation of a completed optimization step."
+            },
+            {
+              "name": "closure_provided",
+              "type": "bool",
+              "role": "input",
+              "meaning": "Whether this step was supplied a closure."
+            },
+            {
+              "name": "closure_loss",
+              "type": "real",
+              "role": "input",
+              "meaning": "Loss recomputed by the supplied closure."
+            },
+            {
+              "name": "returned_loss",
+              "type": "real",
+              "role": "output",
+              "meaning": "Step-returned closure loss."
+            },
+            {
+              "name": "returns_none",
+              "type": "bool",
+              "role": "output",
+              "meaning": "Whether step returns None rather than loss."
+            },
+            {
+              "name": "old_parameter",
+              "type": "real",
+              "role": "input",
+              "meaning": "One parameter component before this step."
+            },
+            {
+              "name": "raw_gradient",
+              "type": "real",
+              "role": "input",
+              "meaning": "Corresponding raw gradient component supplied for this step."
+            },
+            {
+              "name": "weight_decay",
+              "type": "real",
+              "role": "input",
+              "meaning": "Configured L2 penalty coefficient."
+            },
+            {
+              "name": "alpha",
+              "type": "real",
+              "role": "input",
+              "meaning": "Configured smoothing constant."
+            },
+            {
+              "name": "eps",
+              "type": "real",
+              "role": "input",
+              "meaning": "Configured denominator stability term."
+            },
+            {
+              "name": "lr",
+              "type": "real",
+              "role": "input",
+              "meaning": "Configured learning rate."
+            },
+            {
+              "name": "momentum",
+              "type": "real",
+              "role": "input",
+              "meaning": "Configured momentum factor."
+            },
+            {
+              "name": "centered",
+              "type": "bool",
+              "role": "input",
+              "meaning": "Whether centered RMSprop is selected."
+            },
+            {
+              "name": "old_squared_average",
+              "type": "real",
+              "role": "input",
+              "meaning": "Previous squared-gradient-average component from optimizer state, including initialization or restoration."
+            },
+            {
+              "name": "old_gradient_average",
+              "type": "real",
+              "role": "input",
+              "meaning": "Previous moving gradient-average component used by centering."
+            },
+            {
+              "name": "old_buffer",
+              "type": "real",
+              "role": "input",
+              "meaning": "Previous momentum-buffer component."
+            },
+            {
+              "name": "effective_gradient",
+              "type": "real",
+              "role": "output",
+              "meaning": "Effective gradient after L2 weight decay, a mathematical output observation not a prescribed public attribute."
+            },
+            {
+              "name": "squared_average",
+              "type": "real",
+              "role": "output",
+              "meaning": "Squared-gradient-average component after this step."
+            },
+            {
+              "name": "gradient_average",
+              "type": "real",
+              "role": "output",
+              "meaning": "Moving gradient-average component after this step when centering is selected."
+            },
+            {
+              "name": "denominator",
+              "type": "real",
+              "role": "output",
+              "meaning": "Nonnegative square-root normalization denominator, a mathematical observation not a prescribed public attribute."
+            },
+            {
+              "name": "new_buffer",
+              "type": "real",
+              "role": "output",
+              "meaning": "Momentum-buffer component after this step when momentum is configured."
+            },
+            {
+              "name": "new_parameter",
+              "type": "real",
+              "role": "output",
+              "meaning": "Parameter component after this step."
+            }
+          ],
+          "time_model": {
+            "kind": "discrete_steps",
+            "description": "Logical observations of state initialization and completed optimization steps with pre/post-call snapshots. Previous-state inputs bind to initialization, restoration or the preceding optimizer state in execution evidence; no physical sampling, performance bound or public observation attribute is imposed."
+          },
+          "options": {
+            "timeout_ms": 60000,
+            "diagnose": true
+          }
+        }
+      }
+    },
+    {
+      "component": "RunningMeanStdUpdate",
+      "provenance": {
+        "archive": "C:\\Cawl\\smoking_record\\nl2repo-stable-baselines3-20261004-cli-r2\\evidence\\approver-58-ses_ef7db6b05ffeyaEGTJaqvXfrOk.json",
+        "archive_sha256": "sha256:c358d470cee7f4e3b0a24e2c0aca5aa7d2c9967944918b929b6b46a534cb93bf",
+        "session_id": "ses_ef7db6b05ffeyaEGTJaqvXfrOk",
+        "message_id": "msg_10829f8d00013GI20jgkwDSjRg",
+        "part_id": "prt_1082a19dc0012ThvBEbhf3sve8",
+        "tool": "read_mcp_resource",
+        "tool_input": {
+          "server": "MCP_ARTIFACT",
+          "uri": "artifact://review-evidence/sha256:eaf23cf8b29b8fc884252bc624316a360ff704c19bd883fdd98975207834f855/formal/sha256:723da882709b5ae860089b1ce2e481a4a5a77227f3ddf81d447bb94108c5a644/fret_results/1"
+        },
+        "raw_output_sha256": "sha256:49fdc16096af7f34a174bbd72f8411e5cca30e9b08010854051486204a3a1185",
+        "resource_binding": {
+          "record_digest": "sha256:eaf23cf8b29b8fc884252bc624316a360ff704c19bd883fdd98975207834f855",
+          "evidence_digest": "sha256:723da882709b5ae860089b1ce2e481a4a5a77227f3ddf81d447bb94108c5a644",
+          "candidate_comment_id": 380,
+          "repository_revision": "8a63aa61e7da0364857ddeabd321ca7074a7a7e5",
+          "path": "/fret_results/1"
+        },
+        "diagnostic_locations": "Historical formalization locations are preserved verbatim (including null); backend locations refer only to the preserved generated Lustre and stdout, not to FRETish source."
+      },
+      "original": {
+        "job_id": "874f2ef7-ae2b-494b-9984-694d73c5744b",
+        "request_id": "c86c0012-5870-5c25-8e50-097d52fd0852",
+        "input_digest": "sha256:084c0c338685f7d70db8a5c54ab09295fec8e2cef61355769f52cc6cdf5a200e",
+        "status": "completed",
+        "phase": "finished",
+        "created_at": "2026-10-04T17:35:12.942Z",
+        "finished_at": "2026-10-04T17:35:13.364Z",
+        "report_digest": "sha256:03123f6db0523d09c00daa549c3b9a095397ffda0d8455d18e18f963f8ec08f6",
+        "report": {
+          "schema_version": 1,
+          "input_digest": "sha256:084c0c338685f7d70db8a5c54ab09295fec8e2cef61355769f52cc6cdf5a200e",
+          "result": "error",
+          "contract_result": null,
+          "environment_result": null,
+          "requested_ids": [
+            "SRS-23-03:combined_count",
+            "SRS-23-03:combined_moments"
+          ],
+          "analyzed_ids": [],
+          "diagnostics": [
+            {
+              "id": null,
+              "code": "backend_error",
+              "message": "Kind 2 exited with 3: Cannot unify type real with inferred type int"
+            }
+          ],
+          "formalization": {
+            "representations": [
+              "pt-lustre",
+              "pt-smv",
+              "ft-inf",
+              "ft-fin"
+            ],
+            "time_basis": "discrete_steps",
+            "results": [
+              {
+                "id": "SRS-23-03:combined_count",
+                "status": "formalized",
+                "formulas": [
+                  {
+                    "representation": "pt-lustre",
+                    "formula": "H((update_return => (new_count = (old_count + batch_count))))"
+                  },
+                  {
+                    "representation": "pt-smv",
+                    "formula": "(H (update_return -> (new_count = (old_count + batch_count))))"
+                  },
+                  {
+                    "representation": "ft-inf",
+                    "formula": "(G (update_return -> (new_count = (old_count + batch_count))))"
+                  },
+                  {
+                    "representation": "ft-fin",
+                    "formula": "(LAST V (update_return -> (new_count = (old_count + batch_count))))"
+                  }
+                ],
+                "explanation": {
+                  "format": "html",
+                  "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(update_return)</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(new_count = old_count + batch_count)</i></b> also holds at the same time point."
+                },
+                "diagnostics": []
+              },
+              {
+                "id": "SRS-23-03:combined_moments",
+                "status": "formalized",
+                "formulas": [
+                  {
+                    "representation": "pt-lustre",
+                    "formula": "H(((update_return and ((old_count + batch_count) <> 0)) => ((new_mean = (old_mean + (((batch_mean - old_mean) * batch_count) / (old_count + batch_count)))) and (new_variance = ((((old_count * old_variance) + (batch_count * batch_variance)) + (((((batch_mean - old_mean) * (batch_mean - old_mean)) * old_count) * batch_count) / (old_count + batch_count))) / (old_count + batch_count))))))"
+                  },
+                  {
+                    "representation": "pt-smv",
+                    "formula": "(H ((update_return & ((old_count + batch_count) != 0)) -> ((new_mean = (old_mean + (((batch_mean - old_mean) * batch_count) / (old_count + batch_count)))) & (new_variance = ((((old_count * old_variance) + (batch_count * batch_variance)) + (((((batch_mean - old_mean) * (batch_mean - old_mean)) * old_count) * batch_count) / (old_count + batch_count))) / (old_count + batch_count))))))"
+                  },
+                  {
+                    "representation": "ft-inf",
+                    "formula": "(G ((update_return & ((old_count + batch_count) != 0)) -> ((new_mean = (old_mean + (((batch_mean - old_mean) * batch_count) / (old_count + batch_count)))) & (new_variance = ((((old_count * old_variance) + (batch_count * batch_variance)) + (((((batch_mean - old_mean) * (batch_mean - old_mean)) * old_count) * batch_count) / (old_count + batch_count))) / (old_count + batch_count))))))"
+                  },
+                  {
+                    "representation": "ft-fin",
+                    "formula": "(LAST V ((update_return & ((old_count + batch_count) != 0)) -> ((new_mean = (old_mean + (((batch_mean - old_mean) * batch_count) / (old_count + batch_count)))) & (new_variance = ((((old_count * old_variance) + (batch_count * batch_variance)) + (((((batch_mean - old_mean) * (batch_mean - old_mean)) * old_count) * batch_count) / (old_count + batch_count))) / (old_count + batch_count))))))"
+                  }
+                ],
+                "explanation": {
+                  "format": "html",
+                  "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(update_return & ( old_count + batch_count != 0 ))</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(new_mean = old_mean + ( batch_mean - old_mean ) * batch_count / ( old_count + batch_count ) & new_variance = ( old_count * old_variance + batch_count * batch_variance + ( batch_mean - old_mean ) * ( batch_mean - old_mean ) * old_count * batch_count / ( old_count + batch_count ) ) / ( old_count + batch_count ))</i></b> also holds at the same time point."
+                },
+                "diagnostics": []
+              }
+            ]
+          },
+          "toolchain": {
+            "fret": "sha256:c45764cc1cc48928217709c243e3b800bddd47101d81254862dd1fdc4ac37ce4",
+            "adapter": "0.2.0",
+            "kind2": "kind2 v2.2.0",
+            "z3": "Z3 version 4.14.1 - 64 bit"
+          },
+          "time_model": {
+            "kind": "discrete_steps",
+            "description": "Logical observations of completed update calls using pre/post-call snapshots and independently derived mathematical input moments; no physical timing is introduced."
+          },
+          "assumption_ids": [],
+          "guarantee_ids": [
+            "SRS-23-03:combined_count",
+            "SRS-23-03:combined_moments"
+          ],
+          "variable_mapping": {
+            "fret_v_0": "update_return",
+            "fret_v_1": "old_count",
+            "fret_v_2": "batch_count",
+            "fret_v_3": "new_count",
+            "fret_v_4": "old_mean",
+            "fret_v_5": "batch_mean",
+            "fret_v_6": "new_mean",
+            "fret_v_7": "old_variance",
+            "fret_v_8": "batch_variance",
+            "fret_v_9": "new_variance"
+          },
+          "checks": [
+            {
+              "name": "FretContract.lus",
+              "requirement_ids": [
+                "SRS-23-03:combined_count",
+                "SRS-23-03:combined_moments"
+              ],
+              "result": "ERROR",
+              "environment_result": null,
+              "lustre": "--Historically\nnode H(X:bool) returns (Y:bool);\nlet\n    Y = X -> (X and (pre Y));\ntel\n\n--Y since inclusive X\nnode SI(X,Y: bool) returns (Z:bool);\nlet\nZ = Y and (X or (false -> pre Z));\ntel\n\n--Y since X\nnode S(X,Y: bool) returns (Z:bool);\nlet\nZ = X or (Y and (false -> pre Z));\ntel\n\n--Y triggered X\nnode T(X,Y: bool) returns(Z:bool);\nlet\nZ = (X and (Y or (true -> pre Z)));\ntel\n\n--Once\nnode O(X:bool) returns (Y:bool);\nlet\n Y = X or (false -> pre Y);\ntel\n\n--Timed Once: less than or equal to N\nnode OTlore( N: int; X: bool) returns (Y: bool);\n    var C:int;\nlet\n    C = if X then 0\n        else (-1 -> pre C + (if pre C <0 then 0 else 1));\n\n    Y = 0 <= C and C <= N;\ntel\n\n--Timed Once: general case\nnode OT( L: int;  R: int; X: bool) returns (Y: bool);\nvar  D:bool;\nlet\n  D=delay(X, R);\n  Y=OTlore(L-R, D);\ntel\n\n-- Timed Historically: general case\nnode HT( L: int;  R: int; X: bool) returns (Y: bool);\nlet\n  Y = not OT(L, R, not X);\ntel\n\n-- Timed Since: general case\nnode ST( L: int;  R: int; X: bool; Y: bool)  returns (Z: bool);\nlet\n  Z = S(X, Y) and OT(L, R, X);\ntel\n\n-- Timed Since Inclusive: general case\nnode SIT( L: int;  R: int; X: bool; Y: bool) returns (Z: bool);\nlet\n  Z = SI(X, Y) and OT(L, R, X);\ntel\n\n-- Timed Triggered: general case\nnode TT( L: int;  R: int; X: bool; Y: bool)  returns (Z: bool);\nlet\n  Z = T(X, Y) or HT(L, R, X);\ntel\n\n-- Pre for integers, with an initial value at FTP\nnode preInt(InitialValue, X: int) returns (Y:int);\nlet\n  Y = InitialValue -> pre X;\ntel\n\n-- Pre for reals, with an initial value at FTP\nnode preReal(InitialValue, X: real) returns (Y:real);\nlet\n  Y = InitialValue -> pre X;\ntel\n\n-- Pre for booleans, with an initial value at FTP\nnode preBool(InitialValue, X: bool) returns (Y:bool);\nlet\n  Y = InitialValue -> pre X;\ntel\n\n-- The equivalent of LTL's Y in Lustre.\nnode YtoPre(X: bool) returns (Y:bool);\nlet\n  Y = false -> pre X;\ntel\n\n-- The equivalent of LTL's Z in Lustre.\nnode ZtoPre(X: bool) returns (Y:bool);\nlet\n  Y = true -> pre X;\ntel\n\n-- Absolute value for reals\nnode absReal(x:real) returns(y: real);\nlet\n  y = if (x >= 0.0) then x else -x;\ntel\n\n-- Absolute value for integers\nnode absInt(x:int) returns(y: int);\nlet\n  y = if (x >= 0) then x else -x;\ntel\n\n-- Maximum value between two reals\nnode maxReal (a : real; b : real)\nreturns (z : real);\nlet\n  z = (if (((a) >= (b))) then (a) else (b));\ntel\n\n-- Maximum value between two integers\nnode maxInt (a : int; b : int)\nreturns (z : int);\nlet\n  z = (if (((a) >= (b))) then (a) else (b));\ntel\n\n-- Minimum value between two integers\nnode minInt (a : int; b : int)\nreturns (z : int);\nlet\n  z = (if (((a) <= (b))) then (a) else (b));\ntel\n\n-- Minimum value between two reals\nnode minReal (a : real; b : real)\nreturns (z : real);\nlet\n  z = (if (((a) <= (b))) then (a) else (b));\ntel\n\nnode delay(X:bool;  R:int) returns(Y:bool);\nlet\n\n  Y = X;\ntel\n\n\nnode imported FretContract( fret_v_0:bool ; fret_v_1:real ; fret_v_2:real ; fret_v_4:real ; fret_v_5:real ; fret_v_7:real ; fret_v_8:real ) returns ( fret_v_3:real ;  fret_v_6:real ;  fret_v_9:real  );\n(*@contract\n\n\n\n\nvar __FTP : bool = true -> false;\n\n\n\n(* fret_r_0  *)\n\n\nguarantee \"fret_r_0\" H((fret_v_0 => (fret_v_3 = (fret_v_1 + fret_v_2))));\n\n(* fret_r_1  *)\n\n\nguarantee \"fret_r_1\" H(((fret_v_0 and ((fret_v_1 + fret_v_2) <> 0)) => ((fret_v_6 = (fret_v_4 + (((fret_v_5 - fret_v_4) * fret_v_2) / (fret_v_1 + fret_v_2)))) and (fret_v_9 = ((((fret_v_1 * fret_v_7) + (fret_v_2 * fret_v_8)) + (((((fret_v_5 - fret_v_4) * (fret_v_5 - fret_v_4)) * fret_v_1) * fret_v_2) / (fret_v_1 + fret_v_2))) / (fret_v_1 + fret_v_2))))));\n\n\r\n*)\n",
+              "lustre_digest": "sha256:b85b5f96e6db4281ce5ca07edd86e54e4ea6f17eea2bad38d82b335531fefa91",
+              "command": [
+                "kind2",
+                "--lus_main",
+                "FretContract",
+                "-json",
+                "--enable",
+                "CONTRACTCK",
+                "--timeout",
+                "60",
+                "/var/lib/fret-mcp/work/874f2ef7-ae2b-494b-9984-694d73c5744b/FretContract.lus"
+              ],
+              "stdout": "[\n{\n  \"objectType\" : \"log\",\n  \"level\" : \"info\",\n  \"source\" : \"parse\",\n  \"value\" : \"kind2 v2.2.0\"\n}\n,\n{\n  \"objectType\" : \"kind2Options\",\n  \"enabled\" :\n  [\n    \"contractck\"\n  ],\n  \"timeout\" : 60.000000,\n  \"bmcMax\" : 0,\n  \"compositional\" : false,\n  \"modular\" : false\n}\n,\n{\n  \"objectType\" : \"log\",\n  \"level\" : \"error\",\n  \"source\" : \"parse\",\n  \"file\" : \"/var/lib/fret-mcp/work/874f2ef7-ae2b-494b-9984-694d73c5744b/FretContract.lus\",\n  \"line\" : 168,\n  \"column\" : 40,\n  \"value\" : \"Cannot unify type real with inferred type int\"\n}\n]\n",
+              "stderr": "",
+              "exit_code": 3,
+              "counterexample": {
+                "contract": null,
+                "environment": null
+              }
+            }
+          ],
+          "diagnosis": {
+            "status": "not_run",
+            "conflicts": [],
+            "message": null
+          }
+        },
+        "error": null,
+        "input": {
+          "component": "RunningMeanStdUpdate",
+          "requirements": [
+            {
+              "id": "SRS-23-03:combined_count",
+              "fretish": "whenever update_return RunningMeanStdUpdate shall immediately satisfy new_count = old_count + batch_count.",
+              "kind": "guarantee",
+              "source_refs": [
+                "SRS-23-03@sha256:b602841c1e9fccd5869e41fa45502882ed6bd50b3253fe75b1de8020b1a1dd53#statement"
+              ]
+            },
+            {
+              "id": "SRS-23-03:combined_moments",
+              "fretish": "whenever update_return & (old_count + batch_count != 0) RunningMeanStdUpdate shall immediately satisfy new_mean = old_mean + (batch_mean - old_mean) * batch_count / (old_count + batch_count) & new_variance = (old_count * old_variance + batch_count * batch_variance + (batch_mean - old_mean) * (batch_mean - old_mean) * old_count * batch_count / (old_count + batch_count)) / (old_count + batch_count).",
+              "kind": "guarantee",
+              "source_refs": [
+                "SRS-23-03@sha256:b602841c1e9fccd5869e41fa45502882ed6bd50b3253fe75b1de8020b1a1dd53#statement",
+                "SRS-23-03@sha256:b602841c1e9fccd5869e41fa45502882ed6bd50b3253fe75b1de8020b1a1dd53#source_refs[3].quote"
+              ]
+            }
+          ],
+          "variables": [
+            {
+              "name": "update_return",
+              "type": "bool",
+              "role": "input",
+              "meaning": "Observation of completed update call."
+            },
+            {
+              "name": "old_count",
+              "type": "real",
+              "role": "input",
+              "meaning": "Pre-call accumulated sample count."
+            },
+            {
+              "name": "batch_count",
+              "type": "real",
+              "role": "input",
+              "meaning": "Count computed from supplied batch, not an additional public parameter."
+            },
+            {
+              "name": "new_count",
+              "type": "real",
+              "role": "output",
+              "meaning": "Post-call accumulated sample count."
+            },
+            {
+              "name": "old_mean",
+              "type": "real",
+              "role": "input",
+              "meaning": "One pre-call mean component."
+            },
+            {
+              "name": "batch_mean",
+              "type": "real",
+              "role": "input",
+              "meaning": "Corresponding mathematical batch mean component, independently obtained from input samples."
+            },
+            {
+              "name": "new_mean",
+              "type": "real",
+              "role": "output",
+              "meaning": "Corresponding post-call mean component."
+            },
+            {
+              "name": "old_variance",
+              "type": "real",
+              "role": "input",
+              "meaning": "One pre-call variance component."
+            },
+            {
+              "name": "batch_variance",
+              "type": "real",
+              "role": "input",
+              "meaning": "Corresponding mathematical population variance component independently obtained from input samples."
+            },
+            {
+              "name": "new_variance",
+              "type": "real",
+              "role": "output",
+              "meaning": "Corresponding post-call variance component."
+            }
+          ],
+          "time_model": {
+            "kind": "discrete_steps",
+            "description": "Logical observations of completed update calls using pre/post-call snapshots and independently derived mathematical input moments; no physical timing is introduced."
+          },
+          "options": {
+            "timeout_ms": 60000,
+            "diagnose": true
+          },
+          "request_id": "c86c0012-5870-5c25-8e50-097d52fd0852"
+        }
+      }
+    },
+    {
+      "component": "RunningMeanStdCombine",
+      "provenance": {
+        "archive": "C:\\Cawl\\smoking_record\\nl2repo-stable-baselines3-20261004-cli-r2\\evidence\\approver-58-ses_ef7db6b05ffeyaEGTJaqvXfrOk.json",
+        "archive_sha256": "sha256:c358d470cee7f4e3b0a24e2c0aca5aa7d2c9967944918b929b6b46a534cb93bf",
+        "session_id": "ses_ef7db6b05ffeyaEGTJaqvXfrOk",
+        "message_id": "msg_1082a4dde001lKmVeQiFFOEfyB",
+        "part_id": "prt_1082a6e2200178X1VgomUCONsH",
+        "tool": "read_mcp_resource",
+        "tool_input": {
+          "server": "MCP_ARTIFACT",
+          "uri": "artifact://review-evidence/sha256:eaf23cf8b29b8fc884252bc624316a360ff704c19bd883fdd98975207834f855/formal/sha256:723da882709b5ae860089b1ce2e481a4a5a77227f3ddf81d447bb94108c5a644/fret_results/3"
+        },
+        "raw_output_sha256": "sha256:721be73ff6747d760aeebffcb440ee6b0f2f370bdc8eba41fa438c094a60368a",
+        "resource_binding": {
+          "record_digest": "sha256:eaf23cf8b29b8fc884252bc624316a360ff704c19bd883fdd98975207834f855",
+          "evidence_digest": "sha256:723da882709b5ae860089b1ce2e481a4a5a77227f3ddf81d447bb94108c5a644",
+          "candidate_comment_id": 380,
+          "repository_revision": "8a63aa61e7da0364857ddeabd321ca7074a7a7e5",
+          "path": "/fret_results/3"
+        },
+        "diagnostic_locations": "Historical formalization locations are preserved verbatim (including null); backend locations refer only to the preserved generated Lustre and stdout, not to FRETish source."
+      },
+      "original": {
+        "job_id": "a1af1153-fa9f-487d-9288-8561b438c414",
+        "request_id": "d9c946c3-82e4-5a68-bf8b-1cfca88a2aed",
+        "input_digest": "sha256:abbcf1e99be14637f954d89e37fd363d66852d9d616d08f53ce4eec9d6be34d9",
+        "status": "completed",
+        "phase": "finished",
+        "created_at": "2026-10-04T17:54:17.395Z",
+        "finished_at": "2026-10-04T17:54:17.804Z",
+        "report_digest": "sha256:83d5527b8098eaa665cb3ddabea5ba36624bcf932597332f9f0e3f4ac6f4e895",
+        "report": {
+          "schema_version": 1,
+          "input_digest": "sha256:abbcf1e99be14637f954d89e37fd363d66852d9d616d08f53ce4eec9d6be34d9",
+          "result": "error",
+          "contract_result": null,
+          "environment_result": null,
+          "requested_ids": [
+            "SRS-23-05:merge_count",
+            "SRS-23-05:combined_moments"
+          ],
+          "analyzed_ids": [],
+          "diagnostics": [
+            {
+              "id": null,
+              "code": "backend_error",
+              "message": "Kind 2 exited with 3: Cannot unify type real with inferred type int"
+            }
+          ],
+          "formalization": {
+            "representations": [
+              "pt-lustre",
+              "pt-smv",
+              "ft-inf",
+              "ft-fin"
+            ],
+            "time_basis": "discrete_steps",
+            "results": [
+              {
+                "id": "SRS-23-05:merge_count",
+                "status": "formalized",
+                "formulas": [
+                  {
+                    "representation": "pt-lustre",
+                    "formula": "H((combine_return => (combined_count = (own_count + other_count))))"
+                  },
+                  {
+                    "representation": "pt-smv",
+                    "formula": "(H (combine_return -> (combined_count = (own_count + other_count))))"
+                  },
+                  {
+                    "representation": "ft-inf",
+                    "formula": "(G (combine_return -> (combined_count = (own_count + other_count))))"
+                  },
+                  {
+                    "representation": "ft-fin",
+                    "formula": "(LAST V (combine_return -> (combined_count = (own_count + other_count))))"
+                  }
+                ],
+                "explanation": {
+                  "format": "html",
+                  "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(combine_return)</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(combined_count = own_count + other_count)</i></b> also holds at the same time point."
+                },
+                "diagnostics": []
+              },
+              {
+                "id": "SRS-23-05:combined_moments",
+                "status": "formalized",
+                "formulas": [
+                  {
+                    "representation": "pt-lustre",
+                    "formula": "H(((combine_return and ((own_count + other_count) <> 0)) => ((combined_mean = (own_mean + (((other_mean - own_mean) * other_count) / (own_count + other_count)))) and (combined_variance = ((((own_count * own_variance) + (other_count * other_variance)) + (((((other_mean - own_mean) * (other_mean - own_mean)) * own_count) * other_count) / (own_count + other_count))) / (own_count + other_count))))))"
+                  },
+                  {
+                    "representation": "pt-smv",
+                    "formula": "(H ((combine_return & ((own_count + other_count) != 0)) -> ((combined_mean = (own_mean + (((other_mean - own_mean) * other_count) / (own_count + other_count)))) & (combined_variance = ((((own_count * own_variance) + (other_count * other_variance)) + (((((other_mean - own_mean) * (other_mean - own_mean)) * own_count) * other_count) / (own_count + other_count))) / (own_count + other_count))))))"
+                  },
+                  {
+                    "representation": "ft-inf",
+                    "formula": "(G ((combine_return & ((own_count + other_count) != 0)) -> ((combined_mean = (own_mean + (((other_mean - own_mean) * other_count) / (own_count + other_count)))) & (combined_variance = ((((own_count * own_variance) + (other_count * other_variance)) + (((((other_mean - own_mean) * (other_mean - own_mean)) * own_count) * other_count) / (own_count + other_count))) / (own_count + other_count))))))"
+                  },
+                  {
+                    "representation": "ft-fin",
+                    "formula": "(LAST V ((combine_return & ((own_count + other_count) != 0)) -> ((combined_mean = (own_mean + (((other_mean - own_mean) * other_count) / (own_count + other_count)))) & (combined_variance = ((((own_count * own_variance) + (other_count * other_variance)) + (((((other_mean - own_mean) * (other_mean - own_mean)) * own_count) * other_count) / (own_count + other_count))) / (own_count + other_count))))))"
+                  }
+                ],
+                "explanation": {
+                  "format": "html",
+                  "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(combine_return & ( own_count + other_count != 0 ))</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(combined_mean = own_mean + ( other_mean - own_mean ) * other_count / ( own_count + other_count ) & combined_variance = ( own_count * own_variance + other_count * other_variance + ( other_mean - own_mean ) * ( other_mean - own_mean ) * own_count * other_count / ( own_count + other_count ) ) / ( own_count + other_count ))</i></b> also holds at the same time point."
+                },
+                "diagnostics": []
+              }
+            ]
+          },
+          "toolchain": {
+            "fret": "sha256:c45764cc1cc48928217709c243e3b800bddd47101d81254862dd1fdc4ac37ce4",
+            "adapter": "0.2.0",
+            "kind2": "kind2 v2.2.0",
+            "z3": "Z3 version 4.14.1 - 64 bit"
+          },
+          "time_model": {
+            "kind": "discrete_steps",
+            "description": "Logical observations of completed combine calls with pre/post-call count snapshots; no physical timing is prescribed."
+          },
+          "assumption_ids": [],
+          "guarantee_ids": [
+            "SRS-23-05:merge_count",
+            "SRS-23-05:combined_moments"
+          ],
+          "variable_mapping": {
+            "fret_v_0": "combine_return",
+            "fret_v_1": "own_count",
+            "fret_v_2": "other_count",
+            "fret_v_3": "combined_count",
+            "fret_v_4": "own_mean",
+            "fret_v_5": "other_mean",
+            "fret_v_6": "combined_mean",
+            "fret_v_7": "own_variance",
+            "fret_v_8": "other_variance",
+            "fret_v_9": "combined_variance"
+          },
+          "checks": [
+            {
+              "name": "FretContract.lus",
+              "requirement_ids": [
+                "SRS-23-05:merge_count",
+                "SRS-23-05:combined_moments"
+              ],
+              "result": "ERROR",
+              "environment_result": null,
+              "lustre": "--Historically\nnode H(X:bool) returns (Y:bool);\nlet\n    Y = X -> (X and (pre Y));\ntel\n\n--Y since inclusive X\nnode SI(X,Y: bool) returns (Z:bool);\nlet\nZ = Y and (X or (false -> pre Z));\ntel\n\n--Y since X\nnode S(X,Y: bool) returns (Z:bool);\nlet\nZ = X or (Y and (false -> pre Z));\ntel\n\n--Y triggered X\nnode T(X,Y: bool) returns(Z:bool);\nlet\nZ = (X and (Y or (true -> pre Z)));\ntel\n\n--Once\nnode O(X:bool) returns (Y:bool);\nlet\n Y = X or (false -> pre Y);\ntel\n\n--Timed Once: less than or equal to N\nnode OTlore( N: int; X: bool) returns (Y: bool);\n    var C:int;\nlet\n    C = if X then 0\n        else (-1 -> pre C + (if pre C <0 then 0 else 1));\n\n    Y = 0 <= C and C <= N;\ntel\n\n--Timed Once: general case\nnode OT( L: int;  R: int; X: bool) returns (Y: bool);\nvar  D:bool;\nlet\n  D=delay(X, R);\n  Y=OTlore(L-R, D);\ntel\n\n-- Timed Historically: general case\nnode HT( L: int;  R: int; X: bool) returns (Y: bool);\nlet\n  Y = not OT(L, R, not X);\ntel\n\n-- Timed Since: general case\nnode ST( L: int;  R: int; X: bool; Y: bool)  returns (Z: bool);\nlet\n  Z = S(X, Y) and OT(L, R, X);\ntel\n\n-- Timed Since Inclusive: general case\nnode SIT( L: int;  R: int; X: bool; Y: bool) returns (Z: bool);\nlet\n  Z = SI(X, Y) and OT(L, R, X);\ntel\n\n-- Timed Triggered: general case\nnode TT( L: int;  R: int; X: bool; Y: bool)  returns (Z: bool);\nlet\n  Z = T(X, Y) or HT(L, R, X);\ntel\n\n-- Pre for integers, with an initial value at FTP\nnode preInt(InitialValue, X: int) returns (Y:int);\nlet\n  Y = InitialValue -> pre X;\ntel\n\n-- Pre for reals, with an initial value at FTP\nnode preReal(InitialValue, X: real) returns (Y:real);\nlet\n  Y = InitialValue -> pre X;\ntel\n\n-- Pre for booleans, with an initial value at FTP\nnode preBool(InitialValue, X: bool) returns (Y:bool);\nlet\n  Y = InitialValue -> pre X;\ntel\n\n-- The equivalent of LTL's Y in Lustre.\nnode YtoPre(X: bool) returns (Y:bool);\nlet\n  Y = false -> pre X;\ntel\n\n-- The equivalent of LTL's Z in Lustre.\nnode ZtoPre(X: bool) returns (Y:bool);\nlet\n  Y = true -> pre X;\ntel\n\n-- Absolute value for reals\nnode absReal(x:real) returns(y: real);\nlet\n  y = if (x >= 0.0) then x else -x;\ntel\n\n-- Absolute value for integers\nnode absInt(x:int) returns(y: int);\nlet\n  y = if (x >= 0) then x else -x;\ntel\n\n-- Maximum value between two reals\nnode maxReal (a : real; b : real)\nreturns (z : real);\nlet\n  z = (if (((a) >= (b))) then (a) else (b));\ntel\n\n-- Maximum value between two integers\nnode maxInt (a : int; b : int)\nreturns (z : int);\nlet\n  z = (if (((a) >= (b))) then (a) else (b));\ntel\n\n-- Minimum value between two integers\nnode minInt (a : int; b : int)\nreturns (z : int);\nlet\n  z = (if (((a) <= (b))) then (a) else (b));\ntel\n\n-- Minimum value between two reals\nnode minReal (a : real; b : real)\nreturns (z : real);\nlet\n  z = (if (((a) <= (b))) then (a) else (b));\ntel\n\nnode delay(X:bool;  R:int) returns(Y:bool);\nlet\n\n  Y = X;\ntel\n\n\nnode imported FretContract( fret_v_0:bool ; fret_v_1:real ; fret_v_2:real ; fret_v_4:real ; fret_v_5:real ; fret_v_7:real ; fret_v_8:real ) returns ( fret_v_3:real ;  fret_v_6:real ;  fret_v_9:real  );\n(*@contract\n\n\n\n\nvar __FTP : bool = true -> false;\n\n\n\n(* fret_r_0  *)\n\n\nguarantee \"fret_r_0\" H((fret_v_0 => (fret_v_3 = (fret_v_1 + fret_v_2))));\n\n(* fret_r_1  *)\n\n\nguarantee \"fret_r_1\" H(((fret_v_0 and ((fret_v_1 + fret_v_2) <> 0)) => ((fret_v_6 = (fret_v_4 + (((fret_v_5 - fret_v_4) * fret_v_2) / (fret_v_1 + fret_v_2)))) and (fret_v_9 = ((((fret_v_1 * fret_v_7) + (fret_v_2 * fret_v_8)) + (((((fret_v_5 - fret_v_4) * (fret_v_5 - fret_v_4)) * fret_v_1) * fret_v_2) / (fret_v_1 + fret_v_2))) / (fret_v_1 + fret_v_2))))));\n\n\r\n*)\n",
+              "lustre_digest": "sha256:b85b5f96e6db4281ce5ca07edd86e54e4ea6f17eea2bad38d82b335531fefa91",
+              "command": [
+                "kind2",
+                "--lus_main",
+                "FretContract",
+                "-json",
+                "--enable",
+                "CONTRACTCK",
+                "--timeout",
+                "60",
+                "/var/lib/fret-mcp/work/a1af1153-fa9f-487d-9288-8561b438c414/FretContract.lus"
+              ],
+              "stdout": "[\n{\n  \"objectType\" : \"log\",\n  \"level\" : \"info\",\n  \"source\" : \"parse\",\n  \"value\" : \"kind2 v2.2.0\"\n}\n,\n{\n  \"objectType\" : \"kind2Options\",\n  \"enabled\" :\n  [\n    \"contractck\"\n  ],\n  \"timeout\" : 60.000000,\n  \"bmcMax\" : 0,\n  \"compositional\" : false,\n  \"modular\" : false\n}\n,\n{\n  \"objectType\" : \"log\",\n  \"level\" : \"error\",\n  \"source\" : \"parse\",\n  \"file\" : \"/var/lib/fret-mcp/work/a1af1153-fa9f-487d-9288-8561b438c414/FretContract.lus\",\n  \"line\" : 168,\n  \"column\" : 40,\n  \"value\" : \"Cannot unify type real with inferred type int\"\n}\n]\n",
+              "stderr": "",
+              "exit_code": 3,
+              "counterexample": {
+                "contract": null,
+                "environment": null
+              }
+            }
+          ],
+          "diagnosis": {
+            "status": "not_run",
+            "conflicts": [],
+            "message": null
+          }
+        },
+        "error": null,
+        "input": {
+          "component": "RunningMeanStdCombine",
+          "requirements": [
+            {
+              "id": "SRS-23-05:merge_count",
+              "fretish": "whenever combine_return RunningMeanStdCombine shall immediately satisfy combined_count = own_count + other_count.",
+              "kind": "guarantee",
+              "source_refs": [
+                "SRS-23-05@sha256:e160d7092a3f95d7cb24da931ff7ab80d12abf841fef464a0959d7efffbb7fe7#statement"
+              ]
+            },
+            {
+              "id": "SRS-23-05:combined_moments",
+              "fretish": "whenever combine_return & (own_count + other_count != 0) RunningMeanStdCombine shall immediately satisfy combined_mean = own_mean + (other_mean - own_mean) * other_count / (own_count + other_count) & combined_variance = (own_count * own_variance + other_count * other_variance + (other_mean - own_mean) * (other_mean - own_mean) * own_count * other_count / (own_count + other_count)) / (own_count + other_count).",
+              "kind": "guarantee",
+              "source_refs": [
+                "SRS-23-05@sha256:e160d7092a3f95d7cb24da931ff7ab80d12abf841fef464a0959d7efffbb7fe7#statement",
+                "SRS-23-05@sha256:e160d7092a3f95d7cb24da931ff7ab80d12abf841fef464a0959d7efffbb7fe7#source_refs[3].quote"
+              ]
+            }
+          ],
+          "variables": [
+            {
+              "name": "combine_return",
+              "type": "bool",
+              "role": "input",
+              "meaning": "Observation of a completed combine call."
+            },
+            {
+              "name": "own_count",
+              "type": "real",
+              "role": "input",
+              "meaning": "Pre-call receiver sample count."
+            },
+            {
+              "name": "other_count",
+              "type": "real",
+              "role": "input",
+              "meaning": "Other instance sample count."
+            },
+            {
+              "name": "combined_count",
+              "type": "real",
+              "role": "output",
+              "meaning": "Receiver sample count at completion."
+            },
+            {
+              "name": "own_mean",
+              "type": "real",
+              "role": "input",
+              "meaning": "One pre-call receiver mean component."
+            },
+            {
+              "name": "other_mean",
+              "type": "real",
+              "role": "input",
+              "meaning": "Corresponding other-instance mean component."
+            },
+            {
+              "name": "combined_mean",
+              "type": "real",
+              "role": "output",
+              "meaning": "Corresponding receiver mean component after combine."
+            },
+            {
+              "name": "own_variance",
+              "type": "real",
+              "role": "input",
+              "meaning": "One pre-call receiver variance component."
+            },
+            {
+              "name": "other_variance",
+              "type": "real",
+              "role": "input",
+              "meaning": "Corresponding other-instance variance component."
+            },
+            {
+              "name": "combined_variance",
+              "type": "real",
+              "role": "output",
+              "meaning": "Corresponding receiver variance component after combine."
+            }
+          ],
+          "time_model": {
+            "kind": "discrete_steps",
+            "description": "Logical observations of completed combine calls with pre/post-call count snapshots; no physical timing is prescribed."
+          },
+          "options": {
+            "timeout_ms": 60000,
+            "diagnose": true
+          },
+          "request_id": "d9c946c3-82e4-5a68-bf8b-1cfca88a2aed"
+        }
+      }
+    },
+    {
+      "component": "NatureExtractor",
+      "provenance": {
+        "archive": "C:\\Cawl\\smoking_record\\nl2repo-stable-baselines3-20261004-cli-r2\\evidence\\approver-60-ses_ef7945ff5ffe3LT0qDQ6HcsGw1-snapshot.json",
+        "archive_sha256": "sha256:2ab314950d69a8fcc6ce16652d88ad8fd1f7d24f068ab4a9989ae04591d1e8c2",
+        "session_id": "ses_ef7945ff5ffe3LT0qDQ6HcsGw1",
+        "message_id": "msg_108750e83001JVtmmqI6n1FI4U",
+        "part_id": "prt_108751fdf001sn66e1byOdZ3cw",
+        "tool": "MCP_FRET_get_analysis",
+        "tool_input": {
+          "job_id": "21110ce5-9948-4ffd-af9e-6a709ad47e29"
+        },
+        "raw_output_sha256": "sha256:6ca95bf440e6b07344aaa8b4e7fe410341713c796631d9f3ced76edb78723830",
+        "resource_binding": null,
+        "diagnostic_locations": "Historical formalization locations are preserved verbatim (including null); backend locations refer only to the preserved generated Lustre and stdout, not to FRETish source."
+      },
+      "original": {
+        "job_id": "21110ce5-9948-4ffd-af9e-6a709ad47e29",
+        "request_id": "c74cee94-9501-56a1-b812-56c2ca018eaa",
+        "input_digest": "sha256:dbe45f7801b0f37740d4243118f8f31d2a2176d02999741ba9c0903c6f6cd1d9",
+        "status": "completed",
+        "phase": "finished",
+        "created_at": "2026-10-04T19:47:26.631Z",
+        "finished_at": "2026-10-04T19:47:27.076Z",
+        "report_digest": "sha256:850cbfd27fbcaa65933017a5482a2d82aeb81950ae276aa27c6acd8b76e1338c",
+        "report": {
+          "schema_version": 1,
+          "input_digest": "sha256:dbe45f7801b0f37740d4243118f8f31d2a2176d02999741ba9c0903c6f6cd1d9",
+          "result": "invalid",
+          "contract_result": null,
+          "environment_result": null,
+          "requested_ids": [
+            "SRS-25-03:output_dimension",
+            "SRS-25-03:last_layer_dimension",
+            "SRS-25-03:dtype_check_selection",
+            "SRS-25-03:bounds_check_selection"
+          ],
+          "analyzed_ids": [],
+          "diagnostics": [
+            {
+              "id": "SRS-25-03:dtype_check_selection",
+              "code": "invalid",
+              "message": "extraneous input '!' expecting {'(', '-', ID, NUMBER}"
+            },
+            {
+              "id": "SRS-25-03:bounds_check_selection",
+              "code": "invalid",
+              "message": "extraneous input '!' expecting {'(', '-', ID, NUMBER}"
+            }
+          ],
+          "formalization": {
+            "representations": [
+              "pt-lustre",
+              "pt-smv",
+              "ft-inf",
+              "ft-fin"
+            ],
+            "time_basis": "discrete_steps",
+            "results": [
+              {
+                "id": "SRS-25-03:output_dimension",
+                "status": "formalized",
+                "formulas": [
+                  {
+                    "representation": "pt-lustre",
+                    "formula": "H((output_features = configured_features))"
+                  },
+                  {
+                    "representation": "pt-smv",
+                    "formula": "(H (output_features = configured_features))"
+                  },
+                  {
+                    "representation": "ft-inf",
+                    "formula": "(G (output_features = configured_features))"
+                  },
+                  {
+                    "representation": "ft-fin",
+                    "formula": "(LAST V (output_features = configured_features))"
+                  }
+                ],
+                "explanation": {
+                  "format": "html",
+                  "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(true)</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(output_features = configured_features)</i></b> also holds at the same time point."
+                },
+                "diagnostics": []
+              },
+              {
+                "id": "SRS-25-03:last_layer_dimension",
+                "status": "formalized",
+                "formulas": [
+                  {
+                    "representation": "pt-lustre",
+                    "formula": "H((last_layer_units = configured_features))"
+                  },
+                  {
+                    "representation": "pt-smv",
+                    "formula": "(H (last_layer_units = configured_features))"
+                  },
+                  {
+                    "representation": "ft-inf",
+                    "formula": "(G (last_layer_units = configured_features))"
+                  },
+                  {
+                    "representation": "ft-fin",
+                    "formula": "(LAST V (last_layer_units = configured_features))"
+                  }
+                ],
+                "explanation": {
+                  "format": "html",
+                  "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(true)</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(last_layer_units = configured_features)</i></b> also holds at the same time point."
+                },
+                "diagnostics": []
+              },
+              {
+                "id": "SRS-25-03:dtype_check_selection",
+                "status": "invalid",
+                "formulas": [],
+                "explanation": null,
+                "diagnostics": [
+                  {
+                    "code": "syntax_error",
+                    "message": "extraneous input '!' expecting {'(', '-', ID, NUMBER}",
+                    "location": {
+                      "line": 1,
+                      "column": 73
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "SRS-25-03:bounds_check_selection",
+                "status": "invalid",
+                "formulas": [],
+                "explanation": null,
+                "diagnostics": [
+                  {
+                    "code": "syntax_error",
+                    "message": "extraneous input '!' expecting {'(', '-', ID, NUMBER}",
+                    "location": {
+                      "line": 1,
+                      "column": 74
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "toolchain": {
+            "fret": "sha256:c45764cc1cc48928217709c243e3b800bddd47101d81254862dd1fdc4ac37ce4",
+            "adapter": "0.2.0",
+            "kind2": "kind2 v2.2.0",
+            "z3": "Z3 version 4.14.1 - 64 bit"
+          },
+          "time_model": {
+            "kind": "discrete_steps",
+            "description": "Each step abstracts a configured NatureCNN extraction and its dimensional relation and selected construction checks; no physical time or call frequency is prescribed."
+          },
+          "assumption_ids": [],
+          "guarantee_ids": [
+            "SRS-25-03:output_dimension",
+            "SRS-25-03:last_layer_dimension",
+            "SRS-25-03:dtype_check_selection",
+            "SRS-25-03:bounds_check_selection"
+          ],
+          "variable_mapping": {
+            "fret_v_0": "configured_features",
+            "fret_v_1": "output_features",
+            "fret_v_2": "last_layer_units",
+            "fret_v_3": "normalized_image",
+            "fret_v_4": "dtype_checked",
+            "fret_v_5": "bounds_checked"
+          },
+          "checks": [],
+          "diagnosis": {
+            "status": "not_run",
+            "conflicts": [],
+            "message": null
+          }
+        },
+        "error": null,
+        "input": {
+          "request_id": "c74cee94-9501-56a1-b812-56c2ca018eaa",
+          "component": "NatureExtractor",
+          "requirements": [
+            {
+              "id": "SRS-25-03:output_dimension",
+              "fretish": "whenever true NatureExtractor shall immediately satisfy output_features = configured_features",
+              "kind": "guarantee",
+              "source_refs": [
+                "SRS-25-03@sha256:1397fbfd9a5777dd810539353ade676b2e85df2a34a7fa86470b3adddba439cd#statement"
+              ]
+            },
+            {
+              "id": "SRS-25-03:last_layer_dimension",
+              "fretish": "whenever true NatureExtractor shall immediately satisfy last_layer_units = configured_features",
+              "kind": "guarantee",
+              "source_refs": [
+                "SRS-25-03@sha256:1397fbfd9a5777dd810539353ade676b2e85df2a34a7fa86470b3adddba439cd#statement"
+              ]
+            },
+            {
+              "id": "SRS-25-03:dtype_check_selection",
+              "fretish": "whenever true NatureExtractor shall immediately satisfy dtype_checked = !normalized_image",
+              "kind": "guarantee",
+              "source_refs": [
+                "SRS-25-03@sha256:1397fbfd9a5777dd810539353ade676b2e85df2a34a7fa86470b3adddba439cd#statement"
+              ]
+            },
+            {
+              "id": "SRS-25-03:bounds_check_selection",
+              "fretish": "whenever true NatureExtractor shall immediately satisfy bounds_checked = !normalized_image",
+              "kind": "guarantee",
+              "source_refs": [
+                "SRS-25-03@sha256:1397fbfd9a5777dd810539353ade676b2e85df2a34a7fa86470b3adddba439cd#statement"
+              ]
+            }
+          ],
+          "variables": [
+            {
+              "name": "configured_features",
+              "type": "int",
+              "role": "input",
+              "meaning": "features_dim argument."
+            },
+            {
+              "name": "output_features",
+              "type": "int",
+              "role": "output",
+              "meaning": "Output feature dimension."
+            },
+            {
+              "name": "last_layer_units",
+              "type": "int",
+              "role": "output",
+              "meaning": "Last fully connected layer unit count."
+            },
+            {
+              "name": "normalized_image",
+              "type": "bool",
+              "role": "input",
+              "meaning": "normalized_image constructor flag."
+            },
+            {
+              "name": "dtype_checked",
+              "type": "bool",
+              "role": "output",
+              "meaning": "The uint8 dtype check is enabled."
+            },
+            {
+              "name": "bounds_checked",
+              "type": "bool",
+              "role": "output",
+              "meaning": "The [0,255] bounds check is enabled."
+            }
+          ],
+          "time_model": {
+            "kind": "discrete_steps",
+            "description": "Each step abstracts a configured NatureCNN extraction and its dimensional relation and selected construction checks; no physical time or call frequency is prescribed."
+          },
+          "options": {
+            "timeout_ms": 60000,
+            "diagnose": true
+          }
+        }
+      }
+    },
+    {
+      "component": "CombinedExtractorConfiguration",
+      "provenance": {
+        "archive": "C:\\Cawl\\smoking_record\\nl2repo-stable-baselines3-20261004-cli-r2\\evidence\\approver-60-ses_ef782c418ffeGFEjp8wn9ZseEV-snapshot.json",
+        "archive_sha256": "sha256:98a96d0b21700212e70e2d5032cf033b07d8141daa1e647a5c47a2cc9fe442e4",
+        "session_id": "ses_ef782c418ffeGFEjp8wn9ZseEV",
+        "message_id": "msg_10881ba330017oJK6W0085nVM9",
+        "part_id": "prt_10881cc91001kQMU212DSeM63c",
+        "tool": "MCP_FRET_get_analysis",
+        "tool_input": {
+          "job_id": "568dc02e-8b58-4ec4-be6f-9deb930c29fd"
+        },
+        "raw_output_sha256": "sha256:13ec1f5c65c228be736697d39fae5cba42013dde6239d22c29d4c890da7272c5",
+        "resource_binding": null,
+        "diagnostic_locations": "Historical formalization locations are preserved verbatim (including null); backend locations refer only to the preserved generated Lustre and stdout, not to FRETish source."
+      },
+      "original": {
+        "job_id": "568dc02e-8b58-4ec4-be6f-9deb930c29fd",
+        "request_id": "002e71ac-bb20-5227-93f1-b893142cb813",
+        "input_digest": "sha256:547f643f91f6bbbc8422ad2ac201bbd137da5cc7b5e6e3e5c41b3f56fe2587a6",
+        "status": "completed",
+        "phase": "finished",
+        "created_at": "2026-10-04T20:01:21.617Z",
+        "finished_at": "2026-10-04T20:01:22.007Z",
+        "report_digest": "sha256:0b9daf4f71d7fc5dd4a497ddeee41fb65217fc0490bad9f3963245c20af6ba34",
+        "report": {
+          "schema_version": 1,
+          "input_digest": "sha256:547f643f91f6bbbc8422ad2ac201bbd137da5cc7b5e6e3e5c41b3f56fe2587a6",
+          "result": "invalid",
+          "contract_result": null,
+          "environment_result": null,
+          "requested_ids": [
+            "SRS-25-05:cnn_dimension",
+            "SRS-25-05:dtype_check_selection",
+            "SRS-25-05:bounds_check_selection"
+          ],
+          "analyzed_ids": [],
+          "diagnostics": [
+            {
+              "id": "SRS-25-05:dtype_check_selection",
+              "code": "invalid",
+              "message": "extraneous input '!' expecting {'(', '-', ID, NUMBER}"
+            },
+            {
+              "id": "SRS-25-05:bounds_check_selection",
+              "code": "invalid",
+              "message": "extraneous input '!' expecting {'(', '-', ID, NUMBER}"
+            }
+          ],
+          "formalization": {
+            "representations": [
+              "pt-lustre",
+              "pt-smv",
+              "ft-inf",
+              "ft-fin"
+            ],
+            "time_basis": "discrete_steps",
+            "results": [
+              {
+                "id": "SRS-25-05:cnn_dimension",
+                "status": "formalized",
+                "formulas": [
+                  {
+                    "representation": "pt-lustre",
+                    "formula": "H((cnn_features = cnn_output_dim))"
+                  },
+                  {
+                    "representation": "pt-smv",
+                    "formula": "(H (cnn_features = cnn_output_dim))"
+                  },
+                  {
+                    "representation": "ft-inf",
+                    "formula": "(G (cnn_features = cnn_output_dim))"
+                  },
+                  {
+                    "representation": "ft-fin",
+                    "formula": "(LAST V (cnn_features = cnn_output_dim))"
+                  }
+                ],
+                "explanation": {
+                  "format": "html",
+                  "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(true)</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(cnn_features = cnn_output_dim)</i></b> also holds at the same time point."
+                },
+                "diagnostics": []
+              },
+              {
+                "id": "SRS-25-05:dtype_check_selection",
+                "status": "invalid",
+                "formulas": [],
+                "explanation": null,
+                "diagnostics": [
+                  {
+                    "code": "syntax_error",
+                    "message": "extraneous input '!' expecting {'(', '-', ID, NUMBER}",
+                    "location": {
+                      "line": 1,
+                      "column": 88
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "SRS-25-05:bounds_check_selection",
+                "status": "invalid",
+                "formulas": [],
+                "explanation": null,
+                "diagnostics": [
+                  {
+                    "code": "syntax_error",
+                    "message": "extraneous input '!' expecting {'(', '-', ID, NUMBER}",
+                    "location": {
+                      "line": 1,
+                      "column": 89
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "toolchain": {
+            "fret": "sha256:c45764cc1cc48928217709c243e3b800bddd47101d81254862dd1fdc4ac37ce4",
+            "adapter": "0.2.0",
+            "kind2": "kind2 v2.2.0",
+            "z3": "Z3 version 4.14.1 - 64 bit"
+          },
+          "time_model": {
+            "kind": "discrete_steps",
+            "description": "Each step abstracts a considered CNN submodule's configured dimensional relation and selected image-space construction checks; no physical time, frequency or per-key scheduling is prescribed."
+          },
+          "assumption_ids": [],
+          "guarantee_ids": [
+            "SRS-25-05:cnn_dimension",
+            "SRS-25-05:dtype_check_selection",
+            "SRS-25-05:bounds_check_selection"
+          ],
+          "variable_mapping": {
+            "fret_v_0": "cnn_output_dim",
+            "fret_v_1": "cnn_features",
+            "fret_v_2": "normalized_image",
+            "fret_v_3": "dtype_checked",
+            "fret_v_4": "bounds_checked"
+          },
+          "checks": [],
+          "diagnosis": {
+            "status": "not_run",
+            "conflicts": [],
+            "message": null
+          }
+        },
+        "error": null,
+        "input": {
+          "request_id": "002e71ac-bb20-5227-93f1-b893142cb813",
+          "component": "CombinedExtractorConfiguration",
+          "requirements": [
+            {
+              "id": "SRS-25-05:cnn_dimension",
+              "fretish": "whenever true CombinedExtractorConfiguration shall immediately satisfy cnn_features = cnn_output_dim",
+              "kind": "guarantee",
+              "source_refs": [
+                "SRS-25-05@sha256:ed8eb6872ee5c90d1bd9aeb25586e12c090536bf40eba940f3231f77236654b2#statement"
+              ]
+            },
+            {
+              "id": "SRS-25-05:dtype_check_selection",
+              "fretish": "whenever true CombinedExtractorConfiguration shall immediately satisfy dtype_checked = !normalized_image",
+              "kind": "guarantee",
+              "source_refs": [
+                "SRS-25-05@sha256:ed8eb6872ee5c90d1bd9aeb25586e12c090536bf40eba940f3231f77236654b2#statement"
+              ]
+            },
+            {
+              "id": "SRS-25-05:bounds_check_selection",
+              "fretish": "whenever true CombinedExtractorConfiguration shall immediately satisfy bounds_checked = !normalized_image",
+              "kind": "guarantee",
+              "source_refs": [
+                "SRS-25-05@sha256:ed8eb6872ee5c90d1bd9aeb25586e12c090536bf40eba940f3231f77236654b2#statement"
+              ]
+            }
+          ],
+          "variables": [
+            {
+              "name": "cnn_output_dim",
+              "type": "int",
+              "role": "input",
+              "meaning": "Configured output features per CNN."
+            },
+            {
+              "name": "cnn_features",
+              "type": "int",
+              "role": "output",
+              "meaning": "Output feature count of the considered CNN."
+            },
+            {
+              "name": "normalized_image",
+              "type": "bool",
+              "role": "input",
+              "meaning": "normalized_image constructor flag."
+            },
+            {
+              "name": "dtype_checked",
+              "type": "bool",
+              "role": "output",
+              "meaning": "The image-space uint8 dtype check is enabled."
+            },
+            {
+              "name": "bounds_checked",
+              "type": "bool",
+              "role": "output",
+              "meaning": "The image-space [0,255] bounds check is enabled."
+            }
+          ],
+          "time_model": {
+            "kind": "discrete_steps",
+            "description": "Each step abstracts a considered CNN submodule's configured dimensional relation and selected image-space construction checks; no physical time, frequency or per-key scheduling is prescribed."
+          },
+          "options": {
+            "timeout_ms": 60000,
+            "diagnose": true
+          }
+        }
+      }
+    },
+    {
+      "component": "HerStorage",
+      "provenance": {
+        "archive": "C:\\Cawl\\smoking_record\\nl2repo-stable-baselines3-20261004-cli-r2\\evidence\\approver-61-ses_ef76a6ad2ffe9pnzgR47PYmtze-snapshot.json",
+        "archive_sha256": "sha256:7f6969d766f270029148f27b0cfd2d13ad1b21f7cd1318d218c92c9840f9fbb5",
+        "session_id": "ses_ef76a6ad2ffe9pnzgR47PYmtze",
+        "message_id": "msg_108986a960013I0rA4JX4xuMVs",
+        "part_id": "prt_108987f31001eGeYGpbYjdhjut",
+        "tool": "MCP_FRET_get_analysis",
+        "tool_input": {
+          "job_id": "51882783-9414-4e17-87c2-2769e5d6f856"
+        },
+        "raw_output_sha256": "sha256:080f7fb9e8b28a2cb25eea6c4b6c65396a1f3f8676865ce1460f2c0c8aacd0c1",
+        "resource_binding": null,
+        "diagnostic_locations": "Historical formalization locations are preserved verbatim (including null); backend locations refer only to the preserved generated Lustre and stdout, not to FRETish source."
+      },
+      "original": {
+        "job_id": "51882783-9414-4e17-87c2-2769e5d6f856",
+        "request_id": "89869e68-4c60-5593-8054-185263bfccea",
+        "input_digest": "sha256:518c8c55ec6ef3d0670dd63c0d60854dfe7d8b63505e8617ffd735502fdd5576",
+        "status": "completed",
+        "phase": "finished",
+        "created_at": "2026-10-04T20:26:08.783Z",
+        "finished_at": "2026-10-04T20:26:09.246Z",
+        "report_digest": "sha256:3ca902cd924cee4583ace7e9b73ecb5cf42fefc69403d9978494ae06e9f55835",
+        "report": {
+          "schema_version": 1,
+          "input_digest": "sha256:518c8c55ec6ef3d0670dd63c0d60854dfe7d8b63505e8617ffd735502fdd5576",
+          "result": "invalid",
+          "contract_result": null,
+          "environment_result": null,
+          "requested_ids": [
+            "SRS-28-03:copy_requested_info"
+          ],
+          "analyzed_ids": [],
+          "diagnostics": [
+            {
+              "id": "SRS-28-03:copy_requested_info",
+              "code": "invalid",
+              "message": "mismatched input 'whenever' expecting SHALL"
+            }
+          ],
+          "formalization": {
+            "representations": [
+              "pt-lustre",
+              "pt-smv",
+              "ft-inf",
+              "ft-fin"
+            ],
+            "time_basis": "discrete_steps",
+            "results": [
+              {
+                "id": "SRS-28-03:copy_requested_info",
+                "status": "invalid",
+                "formulas": [],
+                "explanation": null,
+                "diagnostics": [
+                  {
+                    "code": "syntax_error",
+                    "message": "mismatched input 'whenever' expecting SHALL",
+                    "location": {
+                      "line": 1,
+                      "column": 12
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "toolchain": {
+            "fret": "sha256:c45764cc1cc48928217709c243e3b800bddd47101d81254862dd1fdc4ac37ce4",
+            "adapter": "0.2.0",
+            "kind2": "kind2 v2.2.0",
+            "z3": "Z3 version 4.14.1 - 64 bit"
+          },
+          "time_model": {
+            "kind": "discrete_steps",
+            "description": "Each logical observation records one completed add operation and its post-operation info storage state; no elapsed-time bound is added."
+          },
+          "assumption_ids": [],
+          "guarantee_ids": [
+            "SRS-28-03:copy_requested_info"
+          ],
+          "variable_mapping": {
+            "fret_v_0": "addition_completed",
+            "fret_v_1": "copy_info",
+            "fret_v_2": "info_stored"
+          },
+          "checks": [],
+          "diagnosis": {
+            "status": "not_run",
+            "conflicts": [],
+            "message": null
+          }
+        },
+        "error": null,
+        "input": {
+          "request_id": "89869e68-4c60-5593-8054-185263bfccea",
+          "component": "HerStorage",
+          "requirements": [
+            {
+              "id": "SRS-28-03:copy_requested_info",
+              "fretish": "HerStorage whenever addition_completed & copy_info shall immediately satisfy info_stored.",
+              "kind": "guarantee",
+              "source_refs": [
+                "SRS-28-03@sha256:88cca55410f8509bafcc48c140864a9b77f2ea4241854070efaa2c5181fcac44#statement"
+              ]
+            }
+          ],
+          "variables": [
+            {
+              "name": "addition_completed",
+              "type": "bool",
+              "role": "input",
+              "meaning": "The add operation for the supplied transition has completed."
+            },
+            {
+              "name": "copy_info",
+              "type": "bool",
+              "role": "input",
+              "meaning": "copy_info_dict is True for this buffer."
+            },
+            {
+              "name": "info_stored",
+              "type": "bool",
+              "role": "output",
+              "meaning": "The supplied transition's info dictionaries are stored as copies for compute_reward."
+            }
+          ],
+          "time_model": {
+            "kind": "discrete_steps",
+            "description": "Each logical observation records one completed add operation and its post-operation info storage state; no elapsed-time bound is added."
+          },
+          "options": {
+            "timeout_ms": 60000,
+            "diagnose": true
+          }
+        }
+      }
+    },
+    {
+      "component": "HerGoals",
+      "provenance": {
+        "archive": "C:\\Cawl\\smoking_record\\nl2repo-stable-baselines3-20261004-cli-r2\\evidence\\approver-61-ses_ef74ff945ffeAjOSrA6ADDrRPx-snapshot.json",
+        "archive_sha256": "sha256:89cd57b0bb6987e7fe845cd3a4feda425957c605b03a497d5f92336ab6dcf04c",
+        "session_id": "ses_ef74ff945ffeAjOSrA6ADDrRPx",
+        "message_id": "msg_108b2df7e001X35FUvmASyl0xq",
+        "part_id": "prt_108b2f034001u4bNOzapOjjJ4A",
+        "tool": "MCP_FRET_get_analysis",
+        "tool_input": {
+          "job_id": "19fcfbd5-b2ec-4158-9ae6-3cbc43aefaa9"
+        },
+        "raw_output_sha256": "sha256:a3f9dc50f71e1f9c4c0317739d8d5d1c11b45f85ba3f73d4ee5f4cca96e419f0",
+        "resource_binding": null,
+        "diagnostic_locations": "Historical formalization locations are preserved verbatim (including null); backend locations refer only to the preserved generated Lustre and stdout, not to FRETish source."
+      },
+      "original": {
+        "job_id": "19fcfbd5-b2ec-4158-9ae6-3cbc43aefaa9",
+        "request_id": "358e4f01-c7bc-5db6-92bc-99ed4749711b",
+        "input_digest": "sha256:f2425d1a5dddb6a3db4d7ddaf4527933c15851e790fdd10c1e847458406d4deb",
+        "status": "completed",
+        "phase": "finished",
+        "created_at": "2026-10-04T20:54:30.963Z",
+        "finished_at": "2026-10-04T20:54:31.363Z",
+        "report_digest": "sha256:d426a71a8d8dce8a8f9c7f1c3a913724a8c72a7344b48fdf7c7ffba3a3a73696",
+        "report": {
+          "schema_version": 1,
+          "input_digest": "sha256:f2425d1a5dddb6a3db4d7ddaf4527933c15851e790fdd10c1e847458406d4deb",
+          "result": "invalid",
+          "contract_result": null,
+          "environment_result": null,
+          "requested_ids": [
+            "SRS-28-07:future_goal",
+            "SRS-28-07:final_goal",
+            "SRS-28-07:episode_goal"
+          ],
+          "analyzed_ids": [],
+          "diagnostics": [
+            {
+              "id": "SRS-28-07:future_goal",
+              "code": "invalid",
+              "message": "mismatched input 'whenever' expecting SHALL"
+            },
+            {
+              "id": "SRS-28-07:final_goal",
+              "code": "invalid",
+              "message": "mismatched input 'whenever' expecting SHALL"
+            },
+            {
+              "id": "SRS-28-07:episode_goal",
+              "code": "invalid",
+              "message": "mismatched input 'whenever' expecting SHALL"
+            }
+          ],
+          "formalization": {
+            "representations": [
+              "pt-lustre",
+              "pt-smv",
+              "ft-inf",
+              "ft-fin"
+            ],
+            "time_basis": "discrete_steps",
+            "results": [
+              {
+                "id": "SRS-28-07:future_goal",
+                "status": "invalid",
+                "formulas": [],
+                "explanation": null,
+                "diagnostics": [
+                  {
+                    "code": "syntax_error",
+                    "message": "mismatched input 'whenever' expecting SHALL",
+                    "location": {
+                      "line": 1,
+                      "column": 10
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "SRS-28-07:final_goal",
+                "status": "invalid",
+                "formulas": [],
+                "explanation": null,
+                "diagnostics": [
+                  {
+                    "code": "syntax_error",
+                    "message": "mismatched input 'whenever' expecting SHALL",
+                    "location": {
+                      "line": 1,
+                      "column": 10
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "SRS-28-07:episode_goal",
+                "status": "invalid",
+                "formulas": [],
+                "explanation": null,
+                "diagnostics": [
+                  {
+                    "code": "syntax_error",
+                    "message": "mismatched input 'whenever' expecting SHALL",
+                    "location": {
+                      "line": 1,
+                      "column": 10
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "toolchain": {
+            "fret": "sha256:c45764cc1cc48928217709c243e3b800bddd47101d81254862dd1fdc4ac37ce4",
+            "adapter": "0.2.0",
+            "kind2": "kind2 v2.2.0",
+            "z3": "Z3 version 4.14.1 - 64 bit"
+          },
+          "time_model": {
+            "kind": "discrete_steps",
+            "description": "One logical step per completed goal selection for a representative indexed transition. Episode-relative positions describe where the selected goal was achieved, not physical elapsed time."
+          },
+          "assumption_ids": [],
+          "guarantee_ids": [
+            "SRS-28-07:future_goal",
+            "SRS-28-07:final_goal",
+            "SRS-28-07:episode_goal"
+          ],
+          "variable_mapping": {
+            "fret_v_0": "strategy_code",
+            "fret_v_1": "current_step",
+            "fret_v_2": "last_step",
+            "fret_v_3": "selected_step",
+            "fret_v_4": "same_episode"
+          },
+          "checks": [],
+          "diagnosis": {
+            "status": "not_run",
+            "conflicts": [],
+            "message": null
+          }
+        },
+        "error": null,
+        "input": {
+          "request_id": "358e4f01-c7bc-5db6-92bc-99ed4749711b",
+          "component": "HerGoals",
+          "requirements": [
+            {
+              "id": "SRS-28-07:future_goal",
+              "fretish": "HerGoals whenever strategy_code = 0 shall immediately satisfy same_episode & selected_step > current_step.",
+              "kind": "guarantee",
+              "source_refs": [
+                "SRS-28-07@sha256:7b097f1c2410fdae1d985e1ae314254fba60e70f010d1e7bdc8da457b4a25699#statement",
+                "SRS-28-07@sha256:7b097f1c2410fdae1d985e1ae314254fba60e70f010d1e7bdc8da457b4a25699#source_refs[2].quote"
+              ]
+            },
+            {
+              "id": "SRS-28-07:final_goal",
+              "fretish": "HerGoals whenever strategy_code = 1 shall immediately satisfy same_episode & selected_step = last_step.",
+              "kind": "guarantee",
+              "source_refs": [
+                "SRS-28-07@sha256:7b097f1c2410fdae1d985e1ae314254fba60e70f010d1e7bdc8da457b4a25699#statement",
+                "SRS-28-07@sha256:7b097f1c2410fdae1d985e1ae314254fba60e70f010d1e7bdc8da457b4a25699#source_refs[2].quote"
+              ]
+            },
+            {
+              "id": "SRS-28-07:episode_goal",
+              "fretish": "HerGoals whenever strategy_code = 2 shall immediately satisfy same_episode.",
+              "kind": "guarantee",
+              "source_refs": [
+                "SRS-28-07@sha256:7b097f1c2410fdae1d985e1ae314254fba60e70f010d1e7bdc8da457b4a25699#statement",
+                "SRS-28-07@sha256:7b097f1c2410fdae1d985e1ae314254fba60e70f010d1e7bdc8da457b4a25699#source_refs[2].quote"
+              ]
+            }
+          ],
+          "variables": [
+            {
+              "name": "strategy_code",
+              "type": "int",
+              "role": "input",
+              "meaning": "Configured strategy code: FUTURE=0, FINAL=1, EPISODE=2."
+            },
+            {
+              "name": "current_step",
+              "type": "int",
+              "role": "input",
+              "meaning": "Current transition's episode-relative step position, not its circular buffer index."
+            },
+            {
+              "name": "last_step",
+              "type": "int",
+              "role": "input",
+              "meaning": "Episode-relative position of the final achieved goal."
+            },
+            {
+              "name": "selected_step",
+              "type": "int",
+              "role": "output",
+              "meaning": "Episode-relative position at which the returned goal was achieved."
+            },
+            {
+              "name": "same_episode",
+              "type": "bool",
+              "role": "output",
+              "meaning": "Returned achieved goal belongs to the indexed transition's episode."
+            }
+          ],
+          "time_model": {
+            "kind": "discrete_steps",
+            "description": "One logical step per completed goal selection for a representative indexed transition. Episode-relative positions describe where the selected goal was achieved, not physical elapsed time."
+          },
+          "options": {
+            "timeout_ms": 60000,
+            "diagnose": true
+          }
+        }
+      }
+    }
+  ]
+}

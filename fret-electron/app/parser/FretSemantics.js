@@ -70,17 +70,23 @@ function checkReqt(trimmedText) {
 
 /**
  * Compiles text returns an object with parse or semantics.
- * If there are parse errors, then an object { parseErrors: '...'} is returned.
+ * Errors include diagnostics with one-based line/column positions in the
+ * original input (UTF-16 columns), or a null location when none is available.
+ * An optional Map from variable names to bool/int/real enables strict checking
+ * of the source expressions before temporal expansion and simplification.
+ * The parseErrors string is retained for existing callers.
  * Otherwise, semantics can be collected and an object
  * { collectedSemantics: {...} } is returned.
  */
-exports.compile = (text) => {
+exports.compile = (text, variableTypes) => {
   let trimmedText = trimReqtText(text)
+  const leadingText = text.slice(0, text.length - text.trimStart().length);
+  const leadingLines = leadingText.split('\n');
   if (do_not_formalize(trimmedText)) {
     // Handle reqt that is within string quotes, meaning don't formalize it
     semanticsAnalyzer.clearResult();
     semanticsAnalyzer.enterFreeform();
-    return ({ collectedSemantics: semanticsAnalyzer.semantics()})
+    return ({ collectedSemantics: semanticsAnalyzer.semantics(), diagnostics: []})
   } else {
   var chars = new antlr4.InputStream(trimmedText);
   var lexer = new RequirementLexer.RequirementLexer(chars);
@@ -94,13 +100,35 @@ exports.compile = (text) => {
   parser.removeErrorListeners();
   parser.addErrorListener(listener);
   var tree = parser[REQ_BODY_CTX_RULE]();
-  if (annotations.length > 0)
-    return {parseErrors: annotations.map(a => a.text).join('; ' )}
+  if (annotations.length > 0) {
+    const diagnostics = annotations.map(a => ({
+      code: 'syntax_error',
+      message: a.text,
+      location: {
+        line: a.row + leadingLines.length,
+        column: a.column + 1 + (a.row === 0 ? leadingLines[leadingLines.length - 1].length : 0)
+      }
+    }));
+    return {parseErrors: annotations.map(a => a.text).join('; '), diagnostics}
+  }
   semanticsAnalyzer.clearResult();
   antlr4.tree.ParseTreeWalker.DEFAULT.walk(semanticsAnalyzer, tree);
   const reqtErrors = checkReqt(trimmedText)
-  if (reqtErrors.length > 0) return {parseErrors: reqtErrors}
-  else return {collectedSemantics: semanticsAnalyzer.semantics()}
+  if (reqtErrors.length > 0) return {
+    parseErrors: reqtErrors,
+    diagnostics: [{code: 'requirement_error', message: reqtErrors, location: null}]
+  }
+  if (variableTypes !== undefined) {
+    const diagnostics = semanticsAnalyzer.checkTypes(tree, variableTypes).map(diagnostic => ({
+      ...diagnostic,
+      location: {
+        line: diagnostic.location.line + leadingLines.length - 1,
+        column: diagnostic.location.column + (diagnostic.location.line === 1 ? leadingLines[leadingLines.length - 1].length : 0)
+      }
+    }));
+    if (diagnostics.length) return { parseErrors: diagnostics.map(item => item.message).join('; '), diagnostics };
+  }
+  return {collectedSemantics: semanticsAnalyzer.semantics(), diagnostics: []}
   }
 }
 

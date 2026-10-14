@@ -467,7 +467,7 @@ function parseit(triple) {
 }
 
 function indexTriples(triples) {
-  let index = {};
+  let index = Object.create(null);
   for (const triple of triples) {
     const pat = triple[0]
     const ind = extractIndex(pat)

@@ -1,0 +1,1491 @@
+{
+  "description": "Explicit correction candidates for the 16 archived failed inputs. Only enumerated FRETish clauses change; all IDs, source references, kinds, variable declarations, roles, meanings, time models, and solver options remain identical. These are not new archived jobs or evidence of source/implementation correctness.",
+  "cases": [
+    {
+      "component": "WrapperRetrieval",
+      "original_job_id": "738815b1-c7ce-45a1-bb03-a0a5ea8b4f86",
+      "input": {
+        "request_id": "7be76b6b-f44a-5728-8996-66d8f9ea1156",
+        "component": "WrapperRetrieval",
+        "requirements": [
+          {
+            "id": "SRS-12-01:absence_result",
+            "fretish": "WrapperRetrieval shall always satisfy (returned_none <-> !has_wrapper).",
+            "kind": "guarantee",
+            "source_refs": [
+              "SRS-12-01@sha256:7b137d7f442bd486c8657e437d8aeb0981c186fc9812526547e457557336e22d#statement"
+            ]
+          }
+        ],
+        "variables": [
+          {
+            "name": "has_wrapper",
+            "type": "bool",
+            "role": "input",
+            "meaning": "The supplied environment wrapper chain contains the specified wrapper class."
+          },
+          {
+            "name": "returned_none",
+            "type": "bool",
+            "role": "output",
+            "meaning": "The unwrap_wrapper result is None."
+          }
+        ],
+        "time_model": {
+          "kind": "discrete_steps",
+          "description": "Each step observes the inputs and result of one completed unwrap_wrapper invocation; this logical observation model adds no physical duration or call-completion bound."
+        },
+        "options": {
+          "timeout_ms": 60000,
+          "diagnose": true
+        }
+      },
+      "changes": [
+        {
+          "id": "SRS-12-01:absence_result",
+          "before": "WrapperRetrieval shall always satisfy returned_none = !has_wrapper.",
+          "after": "WrapperRetrieval shall always satisfy (returned_none <-> !has_wrapper).",
+          "rationale": "Express the intended Boolean equality with FRET's equivalence operator; preserve both directions of the absence relation."
+        }
+      ],
+      "remaining_gaps": [
+        "The Bool abstraction only captures result absence; wrapper identity, traversal order, termination, and implementation observations remain outside it."
+      ]
+    },
+    {
+      "component": "StickyActionEnv",
+      "original_job_id": "c9bdff3e-7452-493e-9a00-8dfc77b8fe4c",
+      "input": {
+        "request_id": "d2ced656-ff6b-5aec-847c-39793f6af59f",
+        "component": "StickyActionEnv",
+        "requirements": [
+          {
+            "id": "SRS-9-01:allowed_actions",
+            "fretish": "StickyActionEnv shall satisfy executed_action = previous_action | executed_action = intended_action.",
+            "kind": "guarantee",
+            "source_refs": [
+              "SRS-9-01@sha256:0afd51f42a2c448817317c895ac055e0c6ef2a2fe86d4b058a1deabe6c2c8bc9#statement"
+            ]
+          },
+          {
+            "id": "SRS-9-01:zero_repeat_probability",
+            "fretish": "whenever repeat_probability = 0.0 StickyActionEnv shall satisfy executed_action = intended_action.",
+            "kind": "guarantee",
+            "source_refs": [
+              "SRS-9-01@sha256:0afd51f42a2c448817317c895ac055e0c6ef2a2fe86d4b058a1deabe6c2c8bc9#statement"
+            ]
+          },
+          {
+            "id": "SRS-9-01:certain_repeat_probability",
+            "fretish": "whenever repeat_probability = 1.0 StickyActionEnv shall satisfy executed_action = previous_action.",
+            "kind": "guarantee",
+            "source_refs": [
+              "SRS-9-01@sha256:0afd51f42a2c448817317c895ac055e0c6ef2a2fe86d4b058a1deabe6c2c8bc9#statement"
+            ]
+          }
+        ],
+        "variables": [
+          {
+            "name": "repeat_probability",
+            "type": "real",
+            "role": "input",
+            "meaning": "Configured sticky-action selection probability."
+          },
+          {
+            "name": "previous_action",
+            "type": "int",
+            "role": "input",
+            "meaning": "Previous action available for repetition at this observed step; history extraction is outside this projection."
+          },
+          {
+            "name": "intended_action",
+            "type": "int",
+            "role": "input",
+            "meaning": "Intended new action supplied to step."
+          },
+          {
+            "name": "executed_action",
+            "type": "int",
+            "role": "output",
+            "meaning": "Action executed at the observed step."
+          }
+        ],
+        "time_model": {
+          "kind": "discrete_steps",
+          "description": "One logical observation per completed step call, pairing configured probability and intended/previous actions with the executed action; no physical timing or probabilistic trace measure is asserted."
+        },
+        "options": {
+          "timeout_ms": 60000,
+          "diagnose": true
+        }
+      },
+      "changes": [
+        {
+          "id": "SRS-9-01:zero_repeat_probability",
+          "before": "StickyActionEnv whenever repeat_probability = 0 shall satisfy executed_action = intended_action.",
+          "after": "whenever repeat_probability = 0.0 StickyActionEnv shall satisfy executed_action = intended_action.",
+          "rationale": "Place the condition before the component and spell zero as a real literal for the unchanged real probability declaration; preserve the zero-probability endpoint."
+        },
+        {
+          "id": "SRS-9-01:certain_repeat_probability",
+          "before": "StickyActionEnv whenever repeat_probability = 1 shall satisfy executed_action = previous_action.",
+          "after": "whenever repeat_probability = 1.0 StickyActionEnv shall satisfy executed_action = previous_action.",
+          "rationale": "Place the condition before the component and spell one as a real literal; preserve the certainty endpoint."
+        }
+      ],
+      "remaining_gaps": [
+        "This retains allowed actions and the probability-0/1 endpoints, not intermediate probability distribution or sampling independence.",
+        "previous_action is an independent input snapshot; cross-step history binding and the probability input domain are not established by this model."
+      ]
+    },
+    {
+      "component": "TrainingProgress",
+      "original_job_id": "21233fcb-bf3e-48b0-8e51-a1c4dcc63315",
+      "input": {
+        "request_id": "656298bd-1b8d-5f06-966a-06f6035c045e",
+        "component": "TrainingProgress",
+        "requirements": [
+          {
+            "id": "SRS-10-08:remaining_fraction",
+            "fretish": "whenever total > 0.0 TrainingProgress shall immediately satisfy remaining = 1.0 - current / total.",
+            "kind": "guarantee",
+            "source_refs": [
+              "SRS-10-08@sha256:e80be4e5a502a81aa7d4fc5e80563e61be4442b2da0c746e0692039cee101a86#statement",
+              "SRS-10-08@sha256:e80be4e5a502a81aa7d4fc5e80563e61be4442b2da0c746e0692039cee101a86#source_refs[1].quote"
+            ]
+          }
+        ],
+        "variables": [
+          {
+            "name": "current",
+            "type": "real",
+            "role": "input",
+            "meaning": "Current timestep argument of one progress update."
+          },
+          {
+            "name": "total",
+            "type": "real",
+            "role": "input",
+            "meaning": "Total timestep argument of one progress update."
+          },
+          {
+            "name": "remaining",
+            "type": "real",
+            "role": "output",
+            "meaning": "Progress remaining computed by that update."
+          }
+        ],
+        "time_model": {
+          "kind": "discrete_steps",
+          "description": "Each logical step is one completed call to the progress update; no physical-time sampling or deadline is introduced."
+        },
+        "options": {
+          "timeout_ms": 60000,
+          "diagnose": true
+        }
+      },
+      "changes": [
+        {
+          "id": "SRS-10-08:remaining_fraction",
+          "before": "whenever total > 0 TrainingProgress shall immediately satisfy remaining = 1 - current / total.",
+          "after": "whenever total > 0.0 TrainingProgress shall immediately satisfy remaining = 1.0 - current / total.",
+          "rationale": "Both comparison zero and subtraction one must be real literals because total/current/remaining are declared real. Preserve the complete division relation and positive-total guard."
+        }
+      ],
+      "remaining_gaps": [
+        "This retains the complete guarded arithmetic relation over Reals, not merely endpoint behavior.",
+        "The model does not establish integral timesteps, input domain beyond the existing positive-total guard, call completion, or actual implementation observations."
+      ]
+    },
+    {
+      "component": "CallbackLifecycle",
+      "original_job_id": "37d00a8e-5f4c-4ceb-bed9-a7db18f29d35",
+      "input": {
+        "request_id": "6f9c1423-781e-55e4-a62a-e0317c9112ef",
+        "component": "CallbackLifecycle",
+        "requirements": [
+          {
+            "id": "SRS-13-03:lifecycle_dispatch",
+            "fretish": "CallbackLifecycle shall always satisfy (lifecycle_event => hook_called).",
+            "kind": "guarantee",
+            "source_refs": [
+              "SRS-13-03@sha256:1bc7026d43763c36bb1349ad7ba17e69af7e7983ddff19ad215ee0a62d628852#statement"
+            ]
+          }
+        ],
+        "variables": [
+          {
+            "name": "lifecycle_event",
+            "type": "bool",
+            "role": "input",
+            "meaning": "A training or rollout start/end event occurs in this dispatch observation."
+          },
+          {
+            "name": "hook_called",
+            "type": "bool",
+            "role": "output",
+            "meaning": "The corresponding public lifecycle callback is invoked at this dispatch."
+          }
+        ],
+        "time_model": {
+          "kind": "discrete_steps",
+          "description": "Each step is a training lifecycle dispatch observation, not a physical-time interval."
+        },
+        "options": {
+          "timeout_ms": 60000,
+          "diagnose": true
+        }
+      },
+      "changes": [
+        {
+          "id": "SRS-13-03:lifecycle_dispatch",
+          "before": "CallbackLifecycle shall always satisfy (lifecycle_event implies hook_called).",
+          "after": "CallbackLifecycle shall always satisfy (lifecycle_event => hook_called).",
+          "rationale": "Use FRET's implication token for the same one-way dispatch obligation."
+        }
+      ],
+      "remaining_gaps": [
+        "The aggregate event/hook booleans do not distinguish each lifecycle hook's identity, order, arguments, or actual invocation."
+      ]
+    },
+    {
+      "component": "EventComposition",
+      "original_job_id": "d85dc31c-aaf6-4fa8-9d17-231a46bd6845",
+      "input": {
+        "request_id": "6af3e80f-f3d0-54d3-bd59-6dea1d9c3652",
+        "component": "EventComposition",
+        "requirements": [
+          {
+            "id": "SRS-13-06:trigger_child",
+            "fretish": "EventComposition shall always satisfy ((child_present & event_dispatch) => child_called).",
+            "kind": "guarantee",
+            "source_refs": [
+              "SRS-13-06@sha256:d3cb6aea91c5a46fa8e52f74c4bdbe81b98acaf5199d3cc2f17c5ad70caf3909#statement"
+            ]
+          },
+          {
+            "id": "SRS-13-06:return_child",
+            "fretish": "EventComposition shall always satisfy ((child_present & event_dispatch) => (event_result = child_result)).",
+            "kind": "guarantee",
+            "source_refs": [
+              "SRS-13-06@sha256:d3cb6aea91c5a46fa8e52f74c4bdbe81b98acaf5199d3cc2f17c5ad70caf3909#statement"
+            ]
+          }
+        ],
+        "variables": [
+          {
+            "name": "child_present",
+            "type": "bool",
+            "role": "input",
+            "meaning": "An event child callback is configured."
+          },
+          {
+            "name": "event_dispatch",
+            "type": "bool",
+            "role": "input",
+            "meaning": "_on_event is being dispatched."
+          },
+          {
+            "name": "child_result",
+            "type": "bool",
+            "role": "input",
+            "meaning": "Boolean returned by the configured child's on_step."
+          },
+          {
+            "name": "child_called",
+            "type": "bool",
+            "role": "output",
+            "meaning": "The child's on_step is invoked in this dispatch."
+          },
+          {
+            "name": "event_result",
+            "type": "bool",
+            "role": "output",
+            "meaning": "Boolean returned by _on_event."
+          }
+        ],
+        "time_model": {
+          "kind": "discrete_steps",
+          "description": "Each step observes an event callback dispatch and its return, not physical time."
+        },
+        "options": {
+          "timeout_ms": 60000,
+          "diagnose": true
+        }
+      },
+      "changes": [
+        {
+          "id": "SRS-13-06:trigger_child",
+          "before": "EventComposition shall always satisfy ((child_present and event_dispatch) implies child_called).",
+          "after": "EventComposition shall always satisfy ((child_present & event_dispatch) => child_called).",
+          "rationale": "Use FRET conjunction and implication tokens without changing the conjunction or its consequent."
+        },
+        {
+          "id": "SRS-13-06:return_child",
+          "before": "EventComposition shall always satisfy ((child_present and event_dispatch) implies (event_result = child_result)).",
+          "after": "EventComposition shall always satisfy ((child_present & event_dispatch) => (event_result = child_result)).",
+          "rationale": "Use FRET conjunction and implication tokens; retain the Boolean result equality."
+        }
+      ],
+      "remaining_gaps": [
+        "The abstraction retains dispatch and Boolean child-result forwarding, not object identity, actual child invocation, arguments, or ordering."
+      ]
+    },
+    {
+      "component": "ListComposition",
+      "original_job_id": "44101d17-73fa-48b3-8066-903c05f24723",
+      "input": {
+        "request_id": "1c5edb8d-d8b3-5432-9bb3-4f462a1ba63a",
+        "component": "ListComposition",
+        "requirements": [
+          {
+            "id": "SRS-13-07:any_false_stops",
+            "fretish": "ListComposition shall always satisfy ((list_step & any_child_false) => !list_result).",
+            "kind": "guarantee",
+            "source_refs": [
+              "SRS-13-07@sha256:a0319584d66d88043666faab826d11359d1b370fdb710fb73d1a1706f7e9fa33#statement"
+            ]
+          }
+        ],
+        "variables": [
+          {
+            "name": "list_step",
+            "type": "bool",
+            "role": "input",
+            "meaning": "A callback-list step dispatch is occurring."
+          },
+          {
+            "name": "any_child_false",
+            "type": "bool",
+            "role": "input",
+            "meaning": "At least one invoked member returned False in this dispatch."
+          },
+          {
+            "name": "list_result",
+            "type": "bool",
+            "role": "output",
+            "meaning": "The list step's returned boolean."
+          }
+        ],
+        "time_model": {
+          "kind": "discrete_steps",
+          "description": "Each step is one whole list-step dispatch observation after all child returns."
+        },
+        "options": {
+          "timeout_ms": 60000,
+          "diagnose": true
+        }
+      },
+      "changes": [
+        {
+          "id": "SRS-13-07:any_false_stops",
+          "before": "ListComposition shall always satisfy ((list_step and any_child_false) implies !list_result).",
+          "after": "ListComposition shall always satisfy ((list_step & any_child_false) => !list_result).",
+          "rationale": "Use FRET conjunction and implication tokens; retain the negative list-result obligation."
+        }
+      ],
+      "remaining_gaps": [
+        "The aggregate any_child_false predicate must be independently observed; member ordering, invoking every member, and the all-true return case are not specified by this single implication."
+      ]
+    },
+    {
+      "component": "VecMonitorReset",
+      "original_job_id": "af912ce3-80d9-4c8c-95f9-d2a69e5edd5f",
+      "input": {
+        "component": "VecMonitorReset",
+        "requirements": [
+          {
+            "id": "SRS-18-11:clear_counters",
+            "fretish": "VecMonitorReset shall always satisfy ((episode_return = 0.0) & (episode_length = 0)).",
+            "kind": "guarantee",
+            "source_refs": [
+              "SRS-18-11@sha256:213f10edf87da70271d501fef96df39c3d0eea14d200c958a81d4580d890c6af#statement"
+            ]
+          }
+        ],
+        "variables": [
+          {
+            "name": "episode_return",
+            "type": "real",
+            "role": "output",
+            "meaning": "Episode return counter after each reset for an arbitrary monitored environment."
+          },
+          {
+            "name": "episode_length",
+            "type": "int",
+            "role": "output",
+            "meaning": "Episode length counter after each reset for an arbitrary monitored environment."
+          }
+        ],
+        "time_model": {
+          "kind": "discrete_steps",
+          "description": "Each step observes a completed VecMonitor.reset call for an arbitrary environment; no physical sampling period or reset frequency is prescribed."
+        },
+        "options": {
+          "timeout_ms": 60000,
+          "diagnose": true
+        },
+        "request_id": "27232503-fe19-5872-a6e6-8d6d4b40b590"
+      },
+      "changes": [
+        {
+          "id": "SRS-18-11:clear_counters",
+          "before": "VecMonitorReset shall always satisfy ((episode_return = 0) & (episode_length = 0)).",
+          "after": "VecMonitorReset shall always satisfy ((episode_return = 0.0) & (episode_length = 0)).",
+          "rationale": "Only episode_return is real; its zero becomes 0.0 while the integer episode_length and its zero remain unchanged."
+        }
+      ],
+      "remaining_gaps": [
+        "The snapshot model only checks cleared scalar counters for an arbitrary environment; it does not model vector shape, every environment, call termination, or subsequent accumulation."
+      ]
+    },
+    {
+      "component": "ResultsFilter",
+      "original_job_id": "2aaa1ac5-fe0d-4f0e-ae84-f6cd3c18540f",
+      "input": {
+        "component": "ResultsFilter",
+        "requirements": [
+          {
+            "id": "SRS-18-19:strict_cutoff",
+            "fretish": "ResultsFilter shall always satisfy (cutoff_supplied => (passes_timestep_filter <-> (point_timesteps < cutoff))).",
+            "kind": "guarantee",
+            "source_refs": [
+              "SRS-18-19@sha256:66e187f9deccacff7f4e76178d7bbffebe050f04c0ee29dc3e3ba15f601982f8#statement"
+            ]
+          },
+          {
+            "id": "SRS-18-19:no_cutoff",
+            "fretish": "ResultsFilter shall always satisfy (!cutoff_supplied => passes_timestep_filter).",
+            "kind": "guarantee",
+            "source_refs": [
+              "SRS-18-19@sha256:66e187f9deccacff7f4e76178d7bbffebe050f04c0ee29dc3e3ba15f601982f8#statement"
+            ]
+          }
+        ],
+        "variables": [
+          {
+            "name": "cutoff_supplied",
+            "type": "bool",
+            "role": "input",
+            "meaning": "num_timesteps is supplied rather than None."
+          },
+          {
+            "name": "point_timesteps",
+            "type": "int",
+            "role": "input",
+            "meaning": "Candidate point's cumulative timestep count."
+          },
+          {
+            "name": "cutoff",
+            "type": "int",
+            "role": "input",
+            "meaning": "The supplied num_timesteps cutoff; unused when None."
+          },
+          {
+            "name": "passes_timestep_filter",
+            "type": "bool",
+            "role": "output",
+            "meaning": "The candidate point passes the requested timestep cutoff."
+          }
+        ],
+        "time_model": {
+          "kind": "discrete_steps",
+          "description": "Each step observes timestep-filter eligibility for an arbitrary result point in a plot_results call; no walltime bound is introduced."
+        },
+        "options": {
+          "timeout_ms": 60000,
+          "diagnose": true
+        },
+        "request_id": "e71ca7d1-6376-548a-baec-f4c96c3cc034"
+      },
+      "changes": [
+        {
+          "id": "SRS-18-19:strict_cutoff",
+          "before": "ResultsFilter shall always satisfy (cutoff_supplied => (passes_timestep_filter = (point_timesteps < cutoff))).",
+          "after": "ResultsFilter shall always satisfy (cutoff_supplied => (passes_timestep_filter <-> (point_timesteps < cutoff))).",
+          "rationale": "Use Boolean equivalence to compare the predicate with the integer comparison; preserve the strict less-than cutoff and both truth directions."
+        }
+      ],
+      "remaining_gaps": [
+        "The arbitrary-point model retains strict cutoff eligibility and no-cutoff behavior; it does not model collection ordering, complete point enumeration, or plotting effects."
+      ]
+    },
+    {
+      "component": "RunningMeanStdMoments",
+      "original_job_id": "d7ba46c2-9ad2-4c54-8804-fe3f55aa833f",
+      "input": {
+        "request_id": "0a884432-da86-5c1c-bb7d-bdbdb6382255",
+        "component": "RunningMeanStdMoments",
+        "requirements": [
+          {
+            "id": "SRS-23-04:combined_count",
+            "fretish": "whenever moments_return RunningMeanStdMoments shall immediately satisfy new_count = old_count + batch_count.",
+            "kind": "guarantee",
+            "source_refs": [
+              "SRS-23-04@sha256:461785d89da47d7ac14dc8e184de0f44dd8a0850542e71c4649841aac60699f3#statement",
+              "SRS-23-04@sha256:461785d89da47d7ac14dc8e184de0f44dd8a0850542e71c4649841aac60699f3#source_refs[1].quote"
+            ]
+          },
+          {
+            "id": "SRS-23-04:combined_moments",
+            "fretish": "whenever moments_return & (old_count + batch_count != 0.0) RunningMeanStdMoments shall immediately satisfy new_mean = old_mean + (batch_mean - old_mean) * batch_count / (old_count + batch_count) & new_variance = (old_count * old_variance + batch_count * batch_variance + (batch_mean - old_mean) * (batch_mean - old_mean) * old_count * batch_count / (old_count + batch_count)) / (old_count + batch_count).",
+            "kind": "guarantee",
+            "source_refs": [
+              "SRS-23-04@sha256:461785d89da47d7ac14dc8e184de0f44dd8a0850542e71c4649841aac60699f3#statement",
+              "SRS-23-04@sha256:461785d89da47d7ac14dc8e184de0f44dd8a0850542e71c4649841aac60699f3#source_refs[1].quote"
+            ]
+          }
+        ],
+        "variables": [
+          {
+            "name": "moments_return",
+            "type": "bool",
+            "role": "input",
+            "meaning": "Observation of completed update_from_moments call."
+          },
+          {
+            "name": "old_count",
+            "type": "real",
+            "role": "input",
+            "meaning": "Pre-call accumulated sample count."
+          },
+          {
+            "name": "batch_count",
+            "type": "real",
+            "role": "input",
+            "meaning": "Supplied batch sample count."
+          },
+          {
+            "name": "new_count",
+            "type": "real",
+            "role": "output",
+            "meaning": "Post-call accumulated sample count."
+          },
+          {
+            "name": "old_mean",
+            "type": "real",
+            "role": "input",
+            "meaning": "One pre-call mean component."
+          },
+          {
+            "name": "batch_mean",
+            "type": "real",
+            "role": "input",
+            "meaning": "Corresponding supplied batch-mean component."
+          },
+          {
+            "name": "new_mean",
+            "type": "real",
+            "role": "output",
+            "meaning": "Corresponding post-call mean component."
+          },
+          {
+            "name": "old_variance",
+            "type": "real",
+            "role": "input",
+            "meaning": "One pre-call variance component."
+          },
+          {
+            "name": "batch_variance",
+            "type": "real",
+            "role": "input",
+            "meaning": "Corresponding supplied batch-variance component."
+          },
+          {
+            "name": "new_variance",
+            "type": "real",
+            "role": "output",
+            "meaning": "Corresponding post-call variance component."
+          }
+        ],
+        "time_model": {
+          "kind": "discrete_steps",
+          "description": "Logical observations of completed update_from_moments calls with pre/post-call count snapshots; no physical timing is imposed."
+        },
+        "options": {
+          "timeout_ms": 60000,
+          "diagnose": true
+        }
+      },
+      "changes": [
+        {
+          "id": "SRS-23-04:combined_moments",
+          "before": "whenever moments_return & (old_count + batch_count != 0) RunningMeanStdMoments shall immediately satisfy new_mean = old_mean + (batch_mean - old_mean) * batch_count / (old_count + batch_count) & new_variance = (old_count * old_variance + batch_count * batch_variance + (batch_mean - old_mean) * (batch_mean - old_mean) * old_count * batch_count / (old_count + batch_count)) / (old_count + batch_count).",
+          "after": "whenever moments_return & (old_count + batch_count != 0.0) RunningMeanStdMoments shall immediately satisfy new_mean = old_mean + (batch_mean - old_mean) * batch_count / (old_count + batch_count) & new_variance = (old_count * old_variance + batch_count * batch_variance + (batch_mean - old_mean) * (batch_mean - old_mean) * old_count * batch_count / (old_count + batch_count)) / (old_count + batch_count).",
+          "rationale": "Use real zero in the real-valued sum guard; retain the full nonlinear mean/variance equations and unchanged real count abstraction."
+        }
+      ],
+      "remaining_gaps": [
+        "The complete nonlinear scalar moment relations are retained; backend support/termination must be measured rather than assumed.",
+        "Real count snapshots do not prove integer/nonnegative counts; vector shape, previous-state binding, floating-point error, and actual observations remain outside this model."
+      ]
+    },
+    {
+      "component": "RMSpropTFLikeNumerics",
+      "original_job_id": "76b84558-b0a2-4e6f-85b1-824b7af11d98",
+      "input": {
+        "request_id": "c3a961ad-7ac0-5f8b-b60e-3811f1d9d91b",
+        "component": "RMSpropTFLikeNumerics",
+        "requirements": [
+          {
+            "id": "SRS-23-08:ones_initialization",
+            "fretish": "whenever initializing_squared_average RMSpropTFLikeNumerics shall immediately satisfy squared_average_initial = 1.0.",
+            "kind": "guarantee",
+            "source_refs": [
+              "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#source_refs[2].quote"
+            ]
+          },
+          {
+            "id": "SRS-23-08:closure_return",
+            "fretish": "whenever step_return & closure_provided RMSpropTFLikeNumerics shall immediately satisfy returned_loss = closure_loss & !returns_none.",
+            "kind": "guarantee",
+            "source_refs": [
+              "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#source_refs[1].quote"
+            ]
+          },
+          {
+            "id": "SRS-23-08:no_closure_return",
+            "fretish": "whenever step_return & !closure_provided RMSpropTFLikeNumerics shall immediately satisfy returns_none.",
+            "kind": "guarantee",
+            "source_refs": [
+              "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#statement",
+              "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#source_refs[0].quote"
+            ]
+          },
+          {
+            "id": "SRS-23-08:squared_gradient_update",
+            "fretish": "whenever step_return RMSpropTFLikeNumerics shall immediately satisfy effective_gradient = raw_gradient + weight_decay * old_parameter & squared_average = alpha * old_squared_average + (1.0 - alpha) * effective_gradient * effective_gradient.",
+            "kind": "guarantee",
+            "source_refs": [
+              "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#statement",
+              "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#source_refs[3].quote",
+              "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#source_refs[4].quote"
+            ]
+          },
+          {
+            "id": "SRS-23-08:gradient_average_update",
+            "fretish": "whenever step_return & centered RMSpropTFLikeNumerics shall immediately satisfy gradient_average = alpha * old_gradient_average + (1.0 - alpha) * effective_gradient.",
+            "kind": "guarantee",
+            "source_refs": [
+              "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#statement",
+              "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#source_refs[3].quote"
+            ]
+          },
+          {
+            "id": "SRS-23-08:uncentered_denominator",
+            "fretish": "whenever step_return & !centered & (squared_average + eps >= 0.0) RMSpropTFLikeNumerics shall immediately satisfy denominator >= 0.0 & denominator * denominator = squared_average + eps.",
+            "kind": "guarantee",
+            "source_refs": [
+              "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#source_refs[2].quote",
+              "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#source_refs[3].quote"
+            ]
+          },
+          {
+            "id": "SRS-23-08:centered_denominator",
+            "fretish": "whenever step_return & centered & (squared_average - gradient_average * gradient_average + eps >= 0.0) RMSpropTFLikeNumerics shall immediately satisfy denominator >= 0.0 & denominator * denominator = squared_average - gradient_average * gradient_average + eps.",
+            "kind": "guarantee",
+            "source_refs": [
+              "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#source_refs[2].quote",
+              "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#source_refs[3].quote"
+            ]
+          },
+          {
+            "id": "SRS-23-08:plain_parameter_update",
+            "fretish": "whenever step_return & (denominator > 0.0) & (momentum = 0.0) RMSpropTFLikeNumerics shall immediately satisfy new_parameter = old_parameter - lr * effective_gradient / denominator.",
+            "kind": "guarantee",
+            "source_refs": [
+              "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#statement",
+              "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#source_refs[3].quote",
+              "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#source_refs[4].quote"
+            ]
+          },
+          {
+            "id": "SRS-23-08:momentum_parameter_update",
+            "fretish": "whenever step_return & (denominator > 0.0) & (momentum != 0.0) RMSpropTFLikeNumerics shall immediately satisfy new_buffer = momentum * old_buffer + effective_gradient / denominator & new_parameter = old_parameter - lr * new_buffer.",
+            "kind": "guarantee",
+            "source_refs": [
+              "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#statement",
+              "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#source_refs[3].quote",
+              "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#source_refs[4].quote"
+            ]
+          }
+        ],
+        "variables": [
+          {
+            "name": "initializing_squared_average",
+            "type": "bool",
+            "role": "input",
+            "meaning": "Observation of squared-gradient state initialization."
+          },
+          {
+            "name": "squared_average_initial",
+            "type": "real",
+            "role": "output",
+            "meaning": "Initial squared-gradient-average component."
+          },
+          {
+            "name": "step_return",
+            "type": "bool",
+            "role": "input",
+            "meaning": "Observation of a completed optimization step."
+          },
+          {
+            "name": "closure_provided",
+            "type": "bool",
+            "role": "input",
+            "meaning": "Whether this step was supplied a closure."
+          },
+          {
+            "name": "closure_loss",
+            "type": "real",
+            "role": "input",
+            "meaning": "Loss recomputed by the supplied closure."
+          },
+          {
+            "name": "returned_loss",
+            "type": "real",
+            "role": "output",
+            "meaning": "Step-returned closure loss."
+          },
+          {
+            "name": "returns_none",
+            "type": "bool",
+            "role": "output",
+            "meaning": "Whether step returns None rather than loss."
+          },
+          {
+            "name": "old_parameter",
+            "type": "real",
+            "role": "input",
+            "meaning": "One parameter component before this step."
+          },
+          {
+            "name": "raw_gradient",
+            "type": "real",
+            "role": "input",
+            "meaning": "Corresponding raw gradient component supplied for this step."
+          },
+          {
+            "name": "weight_decay",
+            "type": "real",
+            "role": "input",
+            "meaning": "Configured L2 penalty coefficient."
+          },
+          {
+            "name": "alpha",
+            "type": "real",
+            "role": "input",
+            "meaning": "Configured smoothing constant."
+          },
+          {
+            "name": "eps",
+            "type": "real",
+            "role": "input",
+            "meaning": "Configured denominator stability term."
+          },
+          {
+            "name": "lr",
+            "type": "real",
+            "role": "input",
+            "meaning": "Configured learning rate."
+          },
+          {
+            "name": "momentum",
+            "type": "real",
+            "role": "input",
+            "meaning": "Configured momentum factor."
+          },
+          {
+            "name": "centered",
+            "type": "bool",
+            "role": "input",
+            "meaning": "Whether centered RMSprop is selected."
+          },
+          {
+            "name": "old_squared_average",
+            "type": "real",
+            "role": "input",
+            "meaning": "Previous squared-gradient-average component from optimizer state, including initialization or restoration."
+          },
+          {
+            "name": "old_gradient_average",
+            "type": "real",
+            "role": "input",
+            "meaning": "Previous moving gradient-average component used by centering."
+          },
+          {
+            "name": "old_buffer",
+            "type": "real",
+            "role": "input",
+            "meaning": "Previous momentum-buffer component."
+          },
+          {
+            "name": "effective_gradient",
+            "type": "real",
+            "role": "output",
+            "meaning": "Effective gradient after L2 weight decay, a mathematical output observation not a prescribed public attribute."
+          },
+          {
+            "name": "squared_average",
+            "type": "real",
+            "role": "output",
+            "meaning": "Squared-gradient-average component after this step."
+          },
+          {
+            "name": "gradient_average",
+            "type": "real",
+            "role": "output",
+            "meaning": "Moving gradient-average component after this step when centering is selected."
+          },
+          {
+            "name": "denominator",
+            "type": "real",
+            "role": "output",
+            "meaning": "Nonnegative square-root normalization denominator, a mathematical observation not a prescribed public attribute."
+          },
+          {
+            "name": "new_buffer",
+            "type": "real",
+            "role": "output",
+            "meaning": "Momentum-buffer component after this step when momentum is configured."
+          },
+          {
+            "name": "new_parameter",
+            "type": "real",
+            "role": "output",
+            "meaning": "Parameter component after this step."
+          }
+        ],
+        "time_model": {
+          "kind": "discrete_steps",
+          "description": "Logical observations of state initialization and completed optimization steps with pre/post-call snapshots. Previous-state inputs bind to initialization, restoration or the preceding optimizer state in execution evidence; no physical sampling, performance bound or public observation attribute is imposed."
+        },
+        "options": {
+          "timeout_ms": 60000,
+          "diagnose": true
+        }
+      },
+      "changes": [
+        {
+          "id": "SRS-23-08:ones_initialization",
+          "before": "whenever initializing_squared_average RMSpropTFLikeNumerics shall immediately satisfy squared_average_initial = 1.",
+          "after": "whenever initializing_squared_average RMSpropTFLikeNumerics shall immediately satisfy squared_average_initial = 1.0.",
+          "rationale": "The initialized squared average is real, so use real one without changing its value."
+        },
+        {
+          "id": "SRS-23-08:squared_gradient_update",
+          "before": "whenever step_return RMSpropTFLikeNumerics shall immediately satisfy effective_gradient = raw_gradient + weight_decay * old_parameter & squared_average = alpha * old_squared_average + (1 - alpha) * effective_gradient * effective_gradient.",
+          "after": "whenever step_return RMSpropTFLikeNumerics shall immediately satisfy effective_gradient = raw_gradient + weight_decay * old_parameter & squared_average = alpha * old_squared_average + (1.0 - alpha) * effective_gradient * effective_gradient.",
+          "rationale": "Use real one in the real alpha subtraction; preserve both weight-decay and full squared-gradient update equations."
+        },
+        {
+          "id": "SRS-23-08:gradient_average_update",
+          "before": "whenever step_return & centered RMSpropTFLikeNumerics shall immediately satisfy gradient_average = alpha * old_gradient_average + (1 - alpha) * effective_gradient.",
+          "after": "whenever step_return & centered RMSpropTFLikeNumerics shall immediately satisfy gradient_average = alpha * old_gradient_average + (1.0 - alpha) * effective_gradient.",
+          "rationale": "Use real one in the real alpha subtraction; preserve the centering guard and update equation."
+        },
+        {
+          "id": "SRS-23-08:uncentered_denominator",
+          "before": "whenever step_return & !centered & (squared_average + eps >= 0) RMSpropTFLikeNumerics shall immediately satisfy denominator >= 0 & denominator * denominator = squared_average + eps.",
+          "after": "whenever step_return & !centered & (squared_average + eps >= 0.0) RMSpropTFLikeNumerics shall immediately satisfy denominator >= 0.0 & denominator * denominator = squared_average + eps.",
+          "rationale": "Use real zeros in both real comparisons; retain the nonnegative square-root relation and original domain guard."
+        },
+        {
+          "id": "SRS-23-08:centered_denominator",
+          "before": "whenever step_return & centered & (squared_average - gradient_average * gradient_average + eps >= 0) RMSpropTFLikeNumerics shall immediately satisfy denominator >= 0 & denominator * denominator = squared_average - gradient_average * gradient_average + eps.",
+          "after": "whenever step_return & centered & (squared_average - gradient_average * gradient_average + eps >= 0.0) RMSpropTFLikeNumerics shall immediately satisfy denominator >= 0.0 & denominator * denominator = squared_average - gradient_average * gradient_average + eps.",
+          "rationale": "Use real zeros in both real comparisons; retain the centered nonnegative square-root relation and original domain guard."
+        },
+        {
+          "id": "SRS-23-08:plain_parameter_update",
+          "before": "whenever step_return & (denominator > 0) & (momentum = 0) RMSpropTFLikeNumerics shall immediately satisfy new_parameter = old_parameter - lr * effective_gradient / denominator.",
+          "after": "whenever step_return & (denominator > 0.0) & (momentum = 0.0) RMSpropTFLikeNumerics shall immediately satisfy new_parameter = old_parameter - lr * effective_gradient / denominator.",
+          "rationale": "Use real zeros for denominator and momentum comparisons; retain the complete plain parameter update and positive-denominator guard."
+        },
+        {
+          "id": "SRS-23-08:momentum_parameter_update",
+          "before": "whenever step_return & (denominator > 0) & (momentum != 0) RMSpropTFLikeNumerics shall immediately satisfy new_buffer = momentum * old_buffer + effective_gradient / denominator & new_parameter = old_parameter - lr * new_buffer.",
+          "after": "whenever step_return & (denominator > 0.0) & (momentum != 0.0) RMSpropTFLikeNumerics shall immediately satisfy new_buffer = momentum * old_buffer + effective_gradient / denominator & new_parameter = old_parameter - lr * new_buffer.",
+          "rationale": "Use real zeros for denominator and momentum comparisons; retain both momentum-buffer and parameter equations."
+        }
+      ],
+      "remaining_gaps": [
+        "All nine clauses, nonlinear products/divisions, square-root characterization, and guards are retained; backend support/termination is not assumed.",
+        "Configured input domains and previous-state bindings are unchanged and may admit nonphysical values. Tensor-wide behavior, closure identity, floating-point effects, and actual execution are not proved.",
+        "Some original triggers reference output quantities; these guards are preserved for fidelity, and do not independently prove that positive denominators or valid radicands always arise."
+      ]
+    },
+    {
+      "component": "RunningMeanStdUpdate",
+      "original_job_id": "874f2ef7-ae2b-494b-9984-694d73c5744b",
+      "input": {
+        "component": "RunningMeanStdUpdate",
+        "requirements": [
+          {
+            "id": "SRS-23-03:combined_count",
+            "fretish": "whenever update_return RunningMeanStdUpdate shall immediately satisfy new_count = old_count + batch_count.",
+            "kind": "guarantee",
+            "source_refs": [
+              "SRS-23-03@sha256:b602841c1e9fccd5869e41fa45502882ed6bd50b3253fe75b1de8020b1a1dd53#statement"
+            ]
+          },
+          {
+            "id": "SRS-23-03:combined_moments",
+            "fretish": "whenever update_return & (old_count + batch_count != 0.0) RunningMeanStdUpdate shall immediately satisfy new_mean = old_mean + (batch_mean - old_mean) * batch_count / (old_count + batch_count) & new_variance = (old_count * old_variance + batch_count * batch_variance + (batch_mean - old_mean) * (batch_mean - old_mean) * old_count * batch_count / (old_count + batch_count)) / (old_count + batch_count).",
+            "kind": "guarantee",
+            "source_refs": [
+              "SRS-23-03@sha256:b602841c1e9fccd5869e41fa45502882ed6bd50b3253fe75b1de8020b1a1dd53#statement",
+              "SRS-23-03@sha256:b602841c1e9fccd5869e41fa45502882ed6bd50b3253fe75b1de8020b1a1dd53#source_refs[3].quote"
+            ]
+          }
+        ],
+        "variables": [
+          {
+            "name": "update_return",
+            "type": "bool",
+            "role": "input",
+            "meaning": "Observation of completed update call."
+          },
+          {
+            "name": "old_count",
+            "type": "real",
+            "role": "input",
+            "meaning": "Pre-call accumulated sample count."
+          },
+          {
+            "name": "batch_count",
+            "type": "real",
+            "role": "input",
+            "meaning": "Count computed from supplied batch, not an additional public parameter."
+          },
+          {
+            "name": "new_count",
+            "type": "real",
+            "role": "output",
+            "meaning": "Post-call accumulated sample count."
+          },
+          {
+            "name": "old_mean",
+            "type": "real",
+            "role": "input",
+            "meaning": "One pre-call mean component."
+          },
+          {
+            "name": "batch_mean",
+            "type": "real",
+            "role": "input",
+            "meaning": "Corresponding mathematical batch mean component, independently obtained from input samples."
+          },
+          {
+            "name": "new_mean",
+            "type": "real",
+            "role": "output",
+            "meaning": "Corresponding post-call mean component."
+          },
+          {
+            "name": "old_variance",
+            "type": "real",
+            "role": "input",
+            "meaning": "One pre-call variance component."
+          },
+          {
+            "name": "batch_variance",
+            "type": "real",
+            "role": "input",
+            "meaning": "Corresponding mathematical population variance component independently obtained from input samples."
+          },
+          {
+            "name": "new_variance",
+            "type": "real",
+            "role": "output",
+            "meaning": "Corresponding post-call variance component."
+          }
+        ],
+        "time_model": {
+          "kind": "discrete_steps",
+          "description": "Logical observations of completed update calls using pre/post-call snapshots and independently derived mathematical input moments; no physical timing is introduced."
+        },
+        "options": {
+          "timeout_ms": 60000,
+          "diagnose": true
+        },
+        "request_id": "c86c0012-5870-5c25-8e50-097d52fd0852"
+      },
+      "changes": [
+        {
+          "id": "SRS-23-03:combined_moments",
+          "before": "whenever update_return & (old_count + batch_count != 0) RunningMeanStdUpdate shall immediately satisfy new_mean = old_mean + (batch_mean - old_mean) * batch_count / (old_count + batch_count) & new_variance = (old_count * old_variance + batch_count * batch_variance + (batch_mean - old_mean) * (batch_mean - old_mean) * old_count * batch_count / (old_count + batch_count)) / (old_count + batch_count).",
+          "after": "whenever update_return & (old_count + batch_count != 0.0) RunningMeanStdUpdate shall immediately satisfy new_mean = old_mean + (batch_mean - old_mean) * batch_count / (old_count + batch_count) & new_variance = (old_count * old_variance + batch_count * batch_variance + (batch_mean - old_mean) * (batch_mean - old_mean) * old_count * batch_count / (old_count + batch_count)) / (old_count + batch_count).",
+          "rationale": "Use real zero in the real-valued sum guard; retain the full nonlinear mean/variance equations and unchanged real count abstraction."
+        }
+      ],
+      "remaining_gaps": [
+        "The complete nonlinear scalar moment relations are retained; backend support/termination must be measured rather than assumed.",
+        "Input moments must be independently derived from the supplied batch. Real count snapshots do not prove integer counts; batch arrays, vector shape, previous-state binding and floating-point error remain outside this model."
+      ]
+    },
+    {
+      "component": "RunningMeanStdCombine",
+      "original_job_id": "a1af1153-fa9f-487d-9288-8561b438c414",
+      "input": {
+        "component": "RunningMeanStdCombine",
+        "requirements": [
+          {
+            "id": "SRS-23-05:merge_count",
+            "fretish": "whenever combine_return RunningMeanStdCombine shall immediately satisfy combined_count = own_count + other_count.",
+            "kind": "guarantee",
+            "source_refs": [
+              "SRS-23-05@sha256:e160d7092a3f95d7cb24da931ff7ab80d12abf841fef464a0959d7efffbb7fe7#statement"
+            ]
+          },
+          {
+            "id": "SRS-23-05:combined_moments",
+            "fretish": "whenever combine_return & (own_count + other_count != 0.0) RunningMeanStdCombine shall immediately satisfy combined_mean = own_mean + (other_mean - own_mean) * other_count / (own_count + other_count) & combined_variance = (own_count * own_variance + other_count * other_variance + (other_mean - own_mean) * (other_mean - own_mean) * own_count * other_count / (own_count + other_count)) / (own_count + other_count).",
+            "kind": "guarantee",
+            "source_refs": [
+              "SRS-23-05@sha256:e160d7092a3f95d7cb24da931ff7ab80d12abf841fef464a0959d7efffbb7fe7#statement",
+              "SRS-23-05@sha256:e160d7092a3f95d7cb24da931ff7ab80d12abf841fef464a0959d7efffbb7fe7#source_refs[3].quote"
+            ]
+          }
+        ],
+        "variables": [
+          {
+            "name": "combine_return",
+            "type": "bool",
+            "role": "input",
+            "meaning": "Observation of a completed combine call."
+          },
+          {
+            "name": "own_count",
+            "type": "real",
+            "role": "input",
+            "meaning": "Pre-call receiver sample count."
+          },
+          {
+            "name": "other_count",
+            "type": "real",
+            "role": "input",
+            "meaning": "Other instance sample count."
+          },
+          {
+            "name": "combined_count",
+            "type": "real",
+            "role": "output",
+            "meaning": "Receiver sample count at completion."
+          },
+          {
+            "name": "own_mean",
+            "type": "real",
+            "role": "input",
+            "meaning": "One pre-call receiver mean component."
+          },
+          {
+            "name": "other_mean",
+            "type": "real",
+            "role": "input",
+            "meaning": "Corresponding other-instance mean component."
+          },
+          {
+            "name": "combined_mean",
+            "type": "real",
+            "role": "output",
+            "meaning": "Corresponding receiver mean component after combine."
+          },
+          {
+            "name": "own_variance",
+            "type": "real",
+            "role": "input",
+            "meaning": "One pre-call receiver variance component."
+          },
+          {
+            "name": "other_variance",
+            "type": "real",
+            "role": "input",
+            "meaning": "Corresponding other-instance variance component."
+          },
+          {
+            "name": "combined_variance",
+            "type": "real",
+            "role": "output",
+            "meaning": "Corresponding receiver variance component after combine."
+          }
+        ],
+        "time_model": {
+          "kind": "discrete_steps",
+          "description": "Logical observations of completed combine calls with pre/post-call count snapshots; no physical timing is prescribed."
+        },
+        "options": {
+          "timeout_ms": 60000,
+          "diagnose": true
+        },
+        "request_id": "d9c946c3-82e4-5a68-bf8b-1cfca88a2aed"
+      },
+      "changes": [
+        {
+          "id": "SRS-23-05:combined_moments",
+          "before": "whenever combine_return & (own_count + other_count != 0) RunningMeanStdCombine shall immediately satisfy combined_mean = own_mean + (other_mean - own_mean) * other_count / (own_count + other_count) & combined_variance = (own_count * own_variance + other_count * other_variance + (other_mean - own_mean) * (other_mean - own_mean) * own_count * other_count / (own_count + other_count)) / (own_count + other_count).",
+          "after": "whenever combine_return & (own_count + other_count != 0.0) RunningMeanStdCombine shall immediately satisfy combined_mean = own_mean + (other_mean - own_mean) * other_count / (own_count + other_count) & combined_variance = (own_count * own_variance + other_count * other_variance + (other_mean - own_mean) * (other_mean - own_mean) * own_count * other_count / (own_count + other_count)) / (own_count + other_count).",
+          "rationale": "Use real zero in the real-valued sum guard; retain the full nonlinear merge equations and unchanged real count abstraction."
+        }
+      ],
+      "remaining_gaps": [
+        "The complete nonlinear scalar merge relations are retained; backend support/termination must be measured rather than assumed.",
+        "Real count snapshots do not prove integer/nonnegative counts; vector shape, independent other-state binding, floating-point error, and actual observations remain outside this model."
+      ]
+    },
+    {
+      "component": "NatureExtractor",
+      "original_job_id": "21110ce5-9948-4ffd-af9e-6a709ad47e29",
+      "input": {
+        "request_id": "c74cee94-9501-56a1-b812-56c2ca018eaa",
+        "component": "NatureExtractor",
+        "requirements": [
+          {
+            "id": "SRS-25-03:output_dimension",
+            "fretish": "whenever true NatureExtractor shall immediately satisfy output_features = configured_features",
+            "kind": "guarantee",
+            "source_refs": [
+              "SRS-25-03@sha256:1397fbfd9a5777dd810539353ade676b2e85df2a34a7fa86470b3adddba439cd#statement"
+            ]
+          },
+          {
+            "id": "SRS-25-03:last_layer_dimension",
+            "fretish": "whenever true NatureExtractor shall immediately satisfy last_layer_units = configured_features",
+            "kind": "guarantee",
+            "source_refs": [
+              "SRS-25-03@sha256:1397fbfd9a5777dd810539353ade676b2e85df2a34a7fa86470b3adddba439cd#statement"
+            ]
+          },
+          {
+            "id": "SRS-25-03:dtype_check_selection",
+            "fretish": "whenever true NatureExtractor shall immediately satisfy (dtype_checked <-> !normalized_image)",
+            "kind": "guarantee",
+            "source_refs": [
+              "SRS-25-03@sha256:1397fbfd9a5777dd810539353ade676b2e85df2a34a7fa86470b3adddba439cd#statement"
+            ]
+          },
+          {
+            "id": "SRS-25-03:bounds_check_selection",
+            "fretish": "whenever true NatureExtractor shall immediately satisfy (bounds_checked <-> !normalized_image)",
+            "kind": "guarantee",
+            "source_refs": [
+              "SRS-25-03@sha256:1397fbfd9a5777dd810539353ade676b2e85df2a34a7fa86470b3adddba439cd#statement"
+            ]
+          }
+        ],
+        "variables": [
+          {
+            "name": "configured_features",
+            "type": "int",
+            "role": "input",
+            "meaning": "features_dim argument."
+          },
+          {
+            "name": "output_features",
+            "type": "int",
+            "role": "output",
+            "meaning": "Output feature dimension."
+          },
+          {
+            "name": "last_layer_units",
+            "type": "int",
+            "role": "output",
+            "meaning": "Last fully connected layer unit count."
+          },
+          {
+            "name": "normalized_image",
+            "type": "bool",
+            "role": "input",
+            "meaning": "normalized_image constructor flag."
+          },
+          {
+            "name": "dtype_checked",
+            "type": "bool",
+            "role": "output",
+            "meaning": "The uint8 dtype check is enabled."
+          },
+          {
+            "name": "bounds_checked",
+            "type": "bool",
+            "role": "output",
+            "meaning": "The [0,255] bounds check is enabled."
+          }
+        ],
+        "time_model": {
+          "kind": "discrete_steps",
+          "description": "Each step abstracts a configured NatureCNN extraction and its dimensional relation and selected construction checks; no physical time or call frequency is prescribed."
+        },
+        "options": {
+          "timeout_ms": 60000,
+          "diagnose": true
+        }
+      },
+      "changes": [
+        {
+          "id": "SRS-25-03:dtype_check_selection",
+          "before": "whenever true NatureExtractor shall immediately satisfy dtype_checked = !normalized_image",
+          "after": "whenever true NatureExtractor shall immediately satisfy (dtype_checked <-> !normalized_image)",
+          "rationale": "Express the intended Boolean equality with equivalence; preserve the normalized-image flag polarity."
+        },
+        {
+          "id": "SRS-25-03:bounds_check_selection",
+          "before": "whenever true NatureExtractor shall immediately satisfy bounds_checked = !normalized_image",
+          "after": "whenever true NatureExtractor shall immediately satisfy (bounds_checked <-> !normalized_image)",
+          "rationale": "Express the intended Boolean equality with equivalence; preserve the normalized-image flag polarity."
+        }
+      ],
+      "remaining_gaps": [
+        "Dimensions and selected image checks are modeled, not convolution architecture, tensor values, image-domain validity, or implementation observations."
+      ]
+    },
+    {
+      "component": "CombinedExtractorConfiguration",
+      "original_job_id": "568dc02e-8b58-4ec4-be6f-9deb930c29fd",
+      "input": {
+        "request_id": "002e71ac-bb20-5227-93f1-b893142cb813",
+        "component": "CombinedExtractorConfiguration",
+        "requirements": [
+          {
+            "id": "SRS-25-05:cnn_dimension",
+            "fretish": "whenever true CombinedExtractorConfiguration shall immediately satisfy cnn_features = cnn_output_dim",
+            "kind": "guarantee",
+            "source_refs": [
+              "SRS-25-05@sha256:ed8eb6872ee5c90d1bd9aeb25586e12c090536bf40eba940f3231f77236654b2#statement"
+            ]
+          },
+          {
+            "id": "SRS-25-05:dtype_check_selection",
+            "fretish": "whenever true CombinedExtractorConfiguration shall immediately satisfy (dtype_checked <-> !normalized_image)",
+            "kind": "guarantee",
+            "source_refs": [
+              "SRS-25-05@sha256:ed8eb6872ee5c90d1bd9aeb25586e12c090536bf40eba940f3231f77236654b2#statement"
+            ]
+          },
+          {
+            "id": "SRS-25-05:bounds_check_selection",
+            "fretish": "whenever true CombinedExtractorConfiguration shall immediately satisfy (bounds_checked <-> !normalized_image)",
+            "kind": "guarantee",
+            "source_refs": [
+              "SRS-25-05@sha256:ed8eb6872ee5c90d1bd9aeb25586e12c090536bf40eba940f3231f77236654b2#statement"
+            ]
+          }
+        ],
+        "variables": [
+          {
+            "name": "cnn_output_dim",
+            "type": "int",
+            "role": "input",
+            "meaning": "Configured output features per CNN."
+          },
+          {
+            "name": "cnn_features",
+            "type": "int",
+            "role": "output",
+            "meaning": "Output feature count of the considered CNN."
+          },
+          {
+            "name": "normalized_image",
+            "type": "bool",
+            "role": "input",
+            "meaning": "normalized_image constructor flag."
+          },
+          {
+            "name": "dtype_checked",
+            "type": "bool",
+            "role": "output",
+            "meaning": "The image-space uint8 dtype check is enabled."
+          },
+          {
+            "name": "bounds_checked",
+            "type": "bool",
+            "role": "output",
+            "meaning": "The image-space [0,255] bounds check is enabled."
+          }
+        ],
+        "time_model": {
+          "kind": "discrete_steps",
+          "description": "Each step abstracts a considered CNN submodule's configured dimensional relation and selected image-space construction checks; no physical time, frequency or per-key scheduling is prescribed."
+        },
+        "options": {
+          "timeout_ms": 60000,
+          "diagnose": true
+        }
+      },
+      "changes": [
+        {
+          "id": "SRS-25-05:dtype_check_selection",
+          "before": "whenever true CombinedExtractorConfiguration shall immediately satisfy dtype_checked = !normalized_image",
+          "after": "whenever true CombinedExtractorConfiguration shall immediately satisfy (dtype_checked <-> !normalized_image)",
+          "rationale": "Express the intended Boolean equality with equivalence; preserve the normalized-image flag polarity."
+        },
+        {
+          "id": "SRS-25-05:bounds_check_selection",
+          "before": "whenever true CombinedExtractorConfiguration shall immediately satisfy bounds_checked = !normalized_image",
+          "after": "whenever true CombinedExtractorConfiguration shall immediately satisfy (bounds_checked <-> !normalized_image)",
+          "rationale": "Express the intended Boolean equality with equivalence; preserve the normalized-image flag polarity."
+        }
+      ],
+      "remaining_gaps": [
+        "The model treats one considered CNN; per-key extraction, concatenation order, total shape, and actual implementation remain outside it."
+      ]
+    },
+    {
+      "component": "HerStorage",
+      "original_job_id": "51882783-9414-4e17-87c2-2769e5d6f856",
+      "input": {
+        "request_id": "89869e68-4c60-5593-8054-185263bfccea",
+        "component": "HerStorage",
+        "requirements": [
+          {
+            "id": "SRS-28-03:copy_requested_info",
+            "fretish": "whenever addition_completed & copy_info HerStorage shall immediately satisfy info_stored.",
+            "kind": "guarantee",
+            "source_refs": [
+              "SRS-28-03@sha256:88cca55410f8509bafcc48c140864a9b77f2ea4241854070efaa2c5181fcac44#statement"
+            ]
+          }
+        ],
+        "variables": [
+          {
+            "name": "addition_completed",
+            "type": "bool",
+            "role": "input",
+            "meaning": "The add operation for the supplied transition has completed."
+          },
+          {
+            "name": "copy_info",
+            "type": "bool",
+            "role": "input",
+            "meaning": "copy_info_dict is True for this buffer."
+          },
+          {
+            "name": "info_stored",
+            "type": "bool",
+            "role": "output",
+            "meaning": "The supplied transition's info dictionaries are stored as copies for compute_reward."
+          }
+        ],
+        "time_model": {
+          "kind": "discrete_steps",
+          "description": "Each logical observation records one completed add operation and its post-operation info storage state; no elapsed-time bound is added."
+        },
+        "options": {
+          "timeout_ms": 60000,
+          "diagnose": true
+        }
+      },
+      "changes": [
+        {
+          "id": "SRS-28-03:copy_requested_info",
+          "before": "HerStorage whenever addition_completed & copy_info shall immediately satisfy info_stored.",
+          "after": "whenever addition_completed & copy_info HerStorage shall immediately satisfy info_stored.",
+          "rationale": "Place the same conjunction before the component as required by FRET grammar; retain the storage guarantee and immediate timing."
+        }
+      ],
+      "remaining_gaps": [
+        "The info_stored observation requires independent binding to copied input dictionaries; alias independence, all dictionary entries, and later compute_reward behavior are not established by a Bool flag alone."
+      ]
+    },
+    {
+      "component": "HerGoals",
+      "original_job_id": "19fcfbd5-b2ec-4158-9ae6-3cbc43aefaa9",
+      "input": {
+        "request_id": "358e4f01-c7bc-5db6-92bc-99ed4749711b",
+        "component": "HerGoals",
+        "requirements": [
+          {
+            "id": "SRS-28-07:future_goal",
+            "fretish": "whenever strategy_code = 0 HerGoals shall immediately satisfy same_episode & selected_step > current_step.",
+            "kind": "guarantee",
+            "source_refs": [
+              "SRS-28-07@sha256:7b097f1c2410fdae1d985e1ae314254fba60e70f010d1e7bdc8da457b4a25699#statement",
+              "SRS-28-07@sha256:7b097f1c2410fdae1d985e1ae314254fba60e70f010d1e7bdc8da457b4a25699#source_refs[2].quote"
+            ]
+          },
+          {
+            "id": "SRS-28-07:final_goal",
+            "fretish": "whenever strategy_code = 1 HerGoals shall immediately satisfy same_episode & selected_step = last_step.",
+            "kind": "guarantee",
+            "source_refs": [
+              "SRS-28-07@sha256:7b097f1c2410fdae1d985e1ae314254fba60e70f010d1e7bdc8da457b4a25699#statement",
+              "SRS-28-07@sha256:7b097f1c2410fdae1d985e1ae314254fba60e70f010d1e7bdc8da457b4a25699#source_refs[2].quote"
+            ]
+          },
+          {
+            "id": "SRS-28-07:episode_goal",
+            "fretish": "whenever strategy_code = 2 HerGoals shall immediately satisfy same_episode.",
+            "kind": "guarantee",
+            "source_refs": [
+              "SRS-28-07@sha256:7b097f1c2410fdae1d985e1ae314254fba60e70f010d1e7bdc8da457b4a25699#statement",
+              "SRS-28-07@sha256:7b097f1c2410fdae1d985e1ae314254fba60e70f010d1e7bdc8da457b4a25699#source_refs[2].quote"
+            ]
+          }
+        ],
+        "variables": [
+          {
+            "name": "strategy_code",
+            "type": "int",
+            "role": "input",
+            "meaning": "Configured strategy code: FUTURE=0, FINAL=1, EPISODE=2."
+          },
+          {
+            "name": "current_step",
+            "type": "int",
+            "role": "input",
+            "meaning": "Current transition's episode-relative step position, not its circular buffer index."
+          },
+          {
+            "name": "last_step",
+            "type": "int",
+            "role": "input",
+            "meaning": "Episode-relative position of the final achieved goal."
+          },
+          {
+            "name": "selected_step",
+            "type": "int",
+            "role": "output",
+            "meaning": "Episode-relative position at which the returned goal was achieved."
+          },
+          {
+            "name": "same_episode",
+            "type": "bool",
+            "role": "output",
+            "meaning": "Returned achieved goal belongs to the indexed transition's episode."
+          }
+        ],
+        "time_model": {
+          "kind": "discrete_steps",
+          "description": "One logical step per completed goal selection for a representative indexed transition. Episode-relative positions describe where the selected goal was achieved, not physical elapsed time."
+        },
+        "options": {
+          "timeout_ms": 60000,
+          "diagnose": true
+        }
+      },
+      "changes": [
+        {
+          "id": "SRS-28-07:future_goal",
+          "before": "HerGoals whenever strategy_code = 0 shall immediately satisfy same_episode & selected_step > current_step.",
+          "after": "whenever strategy_code = 0 HerGoals shall immediately satisfy same_episode & selected_step > current_step.",
+          "rationale": "Place the condition before the component; retain strategy 0 and the strictly-future relation without adding episode bounds."
+        },
+        {
+          "id": "SRS-28-07:final_goal",
+          "before": "HerGoals whenever strategy_code = 1 shall immediately satisfy same_episode & selected_step = last_step.",
+          "after": "whenever strategy_code = 1 HerGoals shall immediately satisfy same_episode & selected_step = last_step.",
+          "rationale": "Place the condition before the component; retain strategy 1 and final-step equality."
+        },
+        {
+          "id": "SRS-28-07:episode_goal",
+          "before": "HerGoals whenever strategy_code = 2 shall immediately satisfy same_episode.",
+          "after": "whenever strategy_code = 2 HerGoals shall immediately satisfy same_episode.",
+          "rationale": "Place the condition before the component; retain strategy 2 and same-episode guarantee."
+        }
+      ],
+      "remaining_gaps": [
+        "The strict future-step relation is preserved; finite episode bounds and whether a future step exists are not added as assumptions.",
+        "Goal identity, sampling distribution, circular-buffer binding, and actual observations remain outside this integer/Bool abstraction."
+      ]
+    }
+  ]
+}

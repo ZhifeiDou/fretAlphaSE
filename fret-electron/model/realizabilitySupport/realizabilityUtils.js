@@ -475,7 +475,7 @@ function diagnoseSpec(selectedProject, rlzState, selectedReqs) {
           var ccProperties = contract.properties.filter(p => projectReport.systemComponents[systemComponentIndex].compositional.connectedComponents[connectedComponentIndex].requirements.includes(p.reqid.substring(2)));
           ccContract.properties = ccProperties
 
-          let engine = new DiagnosisEngine(ccContract, actualTimeout, 'realizability', engineName, engineOptions);
+          let engine = new DiagnosisEngine(ccContract, engineName, engineOptions, diagnosisExecution(engineName));
           engine.main().then(function ([err, result]) {
             if (err) {              
               projectReport.systemComponents[systemComponentIndex].compositional.connectedComponents[connectedComponentIndex].diagnosisStatus = 'ERROR';
@@ -484,7 +484,7 @@ function diagnoseSpec(selectedProject, rlzState, selectedReqs) {
                 rlzState.projectReport = projectReport
               } else if (result) {
                 projectReport.systemComponents[systemComponentIndex].compositional.connectedComponents[connectedComponentIndex].diagnosisStatus = 'DIAGNOSED';
-                projectReport.systemComponents[systemComponentIndex].compositional.connectedComponents[connectedComponentIndex].diagnosisReport = result[1];
+                projectReport.systemComponents[systemComponentIndex].compositional.connectedComponents[connectedComponentIndex].diagnosisReport = desktopDiagnosisReport(result[1]);
                 projectReport.systemComponents[systemComponentIndex].compositional.connectedComponents[connectedComponentIndex].error = '';
 
                 rlzState.projectReport = projectReport;
@@ -505,7 +505,7 @@ function diagnoseSpec(selectedProject, rlzState, selectedReqs) {
           });
         } else if (monolithic) {
           contract.componentName = selected.component_name;
-          let engine = new DiagnosisEngine(contract, actualTimeout, 'realizability', engineName, engineOptions);
+          let engine = new DiagnosisEngine(contract, engineName, engineOptions, diagnosisExecution(engineName));
 
           engine.main().then(function ([err, result]) {
             if (err) {
@@ -515,7 +515,7 @@ function diagnoseSpec(selectedProject, rlzState, selectedReqs) {
               rlzState.projectReport = projectReport
             } else if (result) {
               projectReport.systemComponents[systemComponentIndex].monolithic.diagnosisStatus = 'DIAGNOSED';
-              projectReport.systemComponents[systemComponentIndex].monolithic.diagnosisReport = result[1];
+              projectReport.systemComponents[systemComponentIndex].monolithic.diagnosisReport = desktopDiagnosisReport(result[1]);
               projectReport.systemComponents[systemComponentIndex].monolithic.error = ''
               rlzState.projectReport = projectReport
 
@@ -550,4 +550,30 @@ function diagnoseSpec(selectedProject, rlzState, selectedReqs) {
       })
     })
   })
+}
+
+// Desktop adapter: the calculation core receives explicit execution dependencies.
+function desktopDiagnosisReport(report) {
+  const requirementName = id => id.replace(/^__/, '').replace(/-/g, '');
+  return {
+    Requirements: report.Requirements.map(requirementName),
+    Conflicts: report.Conflicts.map(item => ({ Conflict: item.Conflict.map(requirementName) })),
+    Counterexamples: report.Counterexamples.map(item => ({ ...item,
+      requirements: item.requirements.map(requirementName),
+      Counterexample: item.Counterexample.map(signal => ({ ...signal, name: signal.name.replace(/^__/, '') }))
+    }))
+  };
+}
+
+function diagnosisExecution(engineName) {
+  return {
+    workDirectory: analysisPath,
+    renderContract: contract => ejsCache_realize.renderRealizeCode(engineName).component.complete(contract),
+    checkContract: (filePath, engine, options) => new Promise((resolve, reject) => {
+      realizability.checkRealizability(filePath, engine, options, (error, result, time, traceInfo, jsonOutput) => {
+        if (error) reject(error);
+        else resolve({ result, time, traceInfo, jsonOutput });
+      });
+    })
+  };
 }

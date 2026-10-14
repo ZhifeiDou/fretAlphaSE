@@ -5,6 +5,7 @@
 // Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
 
 import { modelDB } from '../fretDB';
+const { createContract } = require('../../analysis/contractBuilder');
 const utils = require('../../support/utils');
 const constants = require('../../app/parser/Constants');
 const cocospecSemantics = require('../../support/cocospecSemantics');
@@ -108,6 +109,7 @@ function getPropertyInfo(result, outputVariables, component) {
             property.value = doc.semantics.CoCoSpecCode;
             property.R2U2 = doc.semantics.R2U2Code;
             property.reqid = doc.reqid;
+            property.kind = doc.reqid.toLowerCase().includes('assumption') ? 'assumption' : 'guarantee';
             property.fullText = "Req text: " + doc.fulltext;
             property.fretish = doc.fulltext;
             //TODO: remove HTML-tags from ptExpanded
@@ -192,79 +194,8 @@ function getSMVDataType(dataType) {
   }
 }
 
-function getR2U2DataType(dataType) {
-  if (dataType === 'boolean'){
-    return "bool";
-  } else if (dataType ==='integer'){
-    return 'int';
-  } else if (dataType === 'double'){
-    return 'float';
-  }
-}
-
-function getCoCoSpecDataType(dataType){
-  if (dataType === 'boolean'){
-      return 'bool';
-  } else if (dataType.includes('int') ){
-    return 'int';
-  } else if (dataType === 'double' || 'single'){
-    return 'real';
-  }
-}
-
-function getDataType(dataType, language) {
-  if (language === 'smv') {
-    return getSMVDataType(dataType);
-  } else if (language === 'r2u2') {
-    return getR2U2DataType(dataType);
-  }
-  else {
-    return getCoCoSpecDataType(dataType);
-  }
-}
-
 function getContractInfo(result, language) {
-  var contract = {
-    componentName: '',
-    outputVariables: [],
-    inputVariables: [],
-    internalVariables: [],
-    functions: [],
-    assignments: [],
-    copilotAssignments: [],
-    r2u2Assignments: [],
-    smvAssignments: [],
-    modes: [],
-    properties: []
-  };
-
-  result.docs.forEach(function(doc){
-    var variable ={};
-    variable.name = doc.variable_name;
-    if (doc.idType === 'Input'){
-      variable.type = getDataType(doc.dataType, language);
-      contract.inputVariables.push(variable);
-    } else if (doc.idType === 'Output'){
-      variable.type = getDataType(doc.dataType, language);
-      contract.outputVariables.push(variable);
-    } else if (doc.idType === 'Internal'){
-      variable.type = getDataType(doc.dataType, language);
-      contract.internalVariables.push(variable);
-      contract.assignments.push(doc.assignment);
-      contract.copilotAssignments.push(doc.copilotAssignment);
-      contract.r2u2Assignments.push(doc.r2u2Assignment);
-      contract.smvAssignments.push(doc.smvAssignment);
-    } else if (doc.idType === 'Mode'){
-      if (doc.modeRequirement !== '')
-        variable.assignment = doc.modeRequirement;
-        variable.type = getDataType(doc.dataType, language);
-        contract.modes.push(variable);
-    } else if (doc.idType === 'Function'){
-      variable.moduleName = doc.moduleName;
-      contract.functions.push(variable);
-    }
-  })
-  return contract;
+  return createContract(result.docs, language);
 }
 
 function getObligationInfo(doc, outputVariables, component, language, fragment){

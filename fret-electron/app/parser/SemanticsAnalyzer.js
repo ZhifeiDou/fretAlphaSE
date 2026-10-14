@@ -5,6 +5,7 @@
 // Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
 const constants = require('./Constants');
 const RequirementListener = require('./RequirementListener').RequirementListener;
+const { RequirementParser } = require('./RequirementParser');
 const AntlrUtilities = require('../parser/AntlrUtilities').AntlrUtilities;
 const antlrUtilities = new AntlrUtilities();
 const utilities = require('../../support/utilities');
@@ -55,6 +56,89 @@ function pushNewVariable(v) {
 // inherit default listener
 SemanticsAnalyzer.prototype = Object.create(RequirementListener.prototype);
 SemanticsAnalyzer.prototype.constructor = SemanticsAnalyzer;
+
+// Signatures of the existing FRET temporal rewrites and Lustre library nodes.
+// The final element is the result type. No implicit numeric conversion is used.
+const functionTypes = {
+  absInt: [['int', 'int']], absReal: [['real', 'real']],
+  minInt: [['int', 'int', 'int']], maxInt: [['int', 'int', 'int']],
+  minReal: [['real', 'real', 'real']], maxReal: [['real', 'real', 'real']],
+  preInt: [['int', 'int', 'int']], preReal: [['real', 'real', 'real']],
+  preBool: [['bool', 'bool', 'bool']], ite: [['bool', 'bool', 'bool', 'bool']],
+  prevOcc: [['bool', 'bool', 'bool']], nextOcc: [['bool', 'bool', 'bool']],
+  persisted: [['int', 'bool', 'bool'], ['int', 'int', 'bool', 'bool']],
+  occurred: [['int', 'bool', 'bool'], ['int', 'int', 'bool', 'bool']]
+};
+
+// Check the original parse tree before temporal expansion or simplification.
+// This preserves source locations and catches errors even in branches that
+// simplify away. The type environment and diagnostics belong to this call.
+SemanticsAnalyzer.prototype.checkTypes = function(tree, variableTypes) {
+  const diagnostics = [];
+  const expressionRules = [RequirementParser.RULE_bool_expr, RequirementParser.RULE_numeric_expr];
+  const error = (ctx, message, code = 'type_error') => {
+    diagnostics.push({ code, message,
+      location: { line: ctx.start.line, column: ctx.start.column + 1 } });
+    return null;
+  };
+  const infer = ctx => {
+    const args = (ctx.children || []).filter(child => expressionRules.includes(child.ruleIndex));
+    const types = args.map(infer);
+    if (types.includes(null)) return null;
+    const identifier = ctx.ID?.();
+    if (identifier) {
+      const name = identifier.getText();
+      if (ctx.children.length === 1) {
+        if (name === 'FTP') return 'bool';
+        return variableTypes.get(name) ?? error(ctx, `Variable ${name} has no declared type.`, 'undeclared_variable');
+      }
+      if (!Object.hasOwn(functionTypes, name)) {
+        return error(ctx, `Function ${name} has no supported FRET/Lustre type signature.`, 'unsupported_function');
+      }
+      const signatures = functionTypes[name];
+      const signature = signatures.find(sig => sig.length === types.length + 1 &&
+        types.every((type, index) => type === sig[index]));
+      if (signature) return signature[signature.length - 1];
+      return error(ctx, `Function ${name} expects ${signatures.map(sig => '(' + sig.slice(0, -1).join(', ') + ')').join(' or ')}; received (${types.join(', ')}).`);
+    }
+    const number = ctx.NUMBER?.();
+    if (number) return /[.eE]/.test(number.getText()) ? 'real' : 'int';
+    if (['true', 'false'].includes(ctx.getText())) return 'bool';
+    if (ctx.children[0].getText() === '(') return types[0];
+
+    if (ctx.ruleIndex === RequirementParser.RULE_numeric_expr) {
+      const operator = ctx.children[types.length === 1 ? 0 : 1].getText().toLowerCase();
+      if (operator === '^') {
+        return error(ctx, 'Scalar exponentiation has no implementation in the current Lustre backend.', 'unsupported_operator');
+      }
+      const allowed = operator === 'mod' ? ['int'] : ['int', 'real'];
+      if (types.every(type => allowed.includes(type) && type === types[0])) return types[0];
+      return error(ctx, `Expression ${ctx.getText()} requires matching ${operator === 'mod' ? 'int' : 'numeric'} operands; received (${types.join(', ')}).`);
+    }
+    const comparison = ctx.RELATIONAL_OP?.();
+    if (comparison) {
+      const allowed = ['=', '!='].includes(comparison.getText()) ? ['bool', 'int', 'real'] : ['int', 'real'];
+      if (types.every(type => allowed.includes(type) && type === types[0])) return 'bool';
+      return error(ctx, `Comparison ${ctx.getText()} requires matching ${allowed.includes('bool') ? 'operand types' : 'numeric types'}; received (${types.join(', ')}).`);
+    }
+    if (types.every(type => type === 'bool')) return 'bool';
+    return error(ctx, `Expression ${ctx.getText()} requires bool operands; received (${types.join(', ')}).`);
+  };
+  const visit = ctx => {
+    if (expressionRules.includes(ctx.ruleIndex) || ctx.ruleIndex === RequirementParser.RULE_mode_name) {
+      const type = infer(ctx);
+      if (type !== null && type !== 'bool') {
+        error(ctx, `Condition ${ctx.getText()} must have type bool; received ${type}.`);
+      }
+    } else {
+      for (const child of ctx.children || []) {
+        if (child.ruleIndex !== undefined) visit(child);
+      }
+    }
+  };
+  visit(tree);
+  return diagnostics;
+};
 
 // override default listener behavior
 RequirementListener.prototype.enterNasa = function(ctx) {
@@ -218,8 +302,24 @@ RequirementListener.prototype.exitTiming = function(ctx) {
 
 // keep only the number; i.e., throw away the units
 RequirementListener.prototype.enterDuration = function(ctx) {
-    let d = antlrUtilities.getText(ctx).trim().match(/\d+(?:\.\d+)?/)
-    if (d) result.duration = d[0];
+    // Keep the complete NUMBER token. Downstream time-bound transformations
+    // expect decimal notation, so expand exponents without floating-point loss.
+    const number = ctx.NUMBER();
+    // Partial-text parsing can omit NUMBER or insert a recovery token.
+    if (!number || number.symbol.tokenIndex < 0) return;
+    const token = number.getText();
+    const sign = token.startsWith('-') ? '-' : '';
+    const [mantissa, exponent = '0'] = token.slice(sign.length).split(/[eE]/);
+    const [integer, fraction = ''] = mantissa.split('.');
+    const digits = integer + fraction;
+    const point = integer.length + Number(exponent);
+    let decimal;
+    if (point <= 0) decimal = '0.' + '0'.repeat(-point) + digits;
+    else if (point >= digits.length) decimal = digits + '0'.repeat(point - digits.length);
+    else decimal = digits.slice(0, point) + '.' + digits.slice(point);
+    decimal = decimal.replace(/^0+(?=\d)/, '');
+    if (decimal.includes('.')) decimal = decimal.replace(/0+$/, '').replace(/\.$/, '');
+    result.duration = (decimal === '0' ? '' : sign) + decimal;
 }
 
 RequirementListener.prototype.exitResponse = function(ctx) {

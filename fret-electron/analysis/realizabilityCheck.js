@@ -3,7 +3,6 @@
 // The “FRET : Formal Requirements Elicitation Tool - Version 3.0” software is licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0. 
 // 
 
-import { json } from 'stream/consumers';
 
 // Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
 const fs = require('fs');
@@ -61,103 +60,70 @@ export function checkRealizabilityJKind(filePath, options, callback) {
   })
 }
 
-export function checkRealizabilityKind2(filePath, options, callback) {
-  var fileName = path.basename(filePath, path.extname(filePath));
-  const kind2 = spawn('kind2',['--lus_main', fileName, ...options, filePath]);
-  
-  var stdout = '';
-  kind2.stdout.on('data', (data) => {
-      stdout = stdout + data.toString();
+export function runKind2(filePath, options, execution = {}) {
+  const command = ['--lus_main', path.basename(filePath, path.extname(filePath)), ...options, filePath];
+  return new Promise(resolve => {
+    const child = spawn('kind2', command, { cwd: execution.cwd, windowsHide: true });
+    let stdout = '';
+    let stderr = '';
+    let failure;
+    const collect = (chunk, stream) => {
+      if (failure) return;
+      if (stream === 'stdout') stdout += chunk;
+      else stderr += chunk;
+      if (Buffer.byteLength(stdout) + Buffer.byteLength(stderr) > 16 * 1024 * 1024) {
+        failure = new Error('Kind 2 output exceeded the 16 MiB evidence limit.');
+        child.kill('SIGKILL');
+      }
+    };
+    child.stdout.on('data', chunk => collect(chunk, 'stdout'));
+    child.stderr.on('data', chunk => collect(chunk, 'stderr'));
+    child.on('error', error => { failure = error; });
+    child.once('close', (code, signal) => {
+      const output = { result: 'ERROR', environmentResult: null, analysisStarted: false, time: null,
+        traceInfo: null, environmentTrace: null, jsonOutput: null, error: null,
+        stdout, stderr, exitCode: code, command: ['kind2', ...command] };
+      try {
+        if (failure) throw failure;
+        if (signal) throw new Error(`Kind 2 terminated by ${signal}.`);
+        const events = JSON.parse(stdout);
+        output.jsonOutput = events;
+        const timeout = events.some(item => item.value === 'Wallclock timeout.' ||
+          (item.level === 'fatal' && item.value?.endsWith('Lib.TimeoutWall')));
+        if (![0, 30, 40].includes(code) && !timeout) {
+          const errors = events.filter(item => ['error', 'fatal'].includes(item.level)).map(item => item.value);
+          throw new Error(`Kind 2 exited with ${code}: ${errors.join('; ') || stderr}`);
+        }
+        let context;
+        const checks = {};
+        for (const item of events) {
+          if (item.objectType === 'analysisStart') {
+            context = item.context || 'contract';
+            if (context === 'contract') output.analysisStarted = true;
+          }
+          else if (item.objectType === 'analysisStop') context = null;
+          else if (context && item.objectType === 'realizabilityCheck') checks[context] = item;
+        }
+        const result = check => check?.runtime?.timeout ? 'UNKNOWN' : check?.result?.toUpperCase() ?? (timeout ? 'UNKNOWN' : null);
+        output.result = result(checks.contract);
+        output.environmentResult = result(checks.environment);
+        if (![output.result, output.environmentResult].every(value => ['REALIZABLE', 'UNREALIZABLE', 'UNKNOWN'].includes(value))) {
+          throw new Error('Kind 2 returned no recognized contract/environment realizability result.');
+        }
+        output.time = checks.contract?.runtime ?? null;
+        output.traceInfo = checks.contract?.deadlockingTrace ?? null;
+        output.environmentTrace = checks.environment?.deadlockingTrace ?? null;
+      } catch (error) { output.result = 'ERROR'; output.error = error.message; }
+      resolve(output);
+    });
   });
+}
 
-  kind2.on('close', (code) => {
-    var jsonContent = JSON.parse(stdout);
-    switch(code) {
-      case 0:
-      case 40:
-      case 30:
-        //0 for Realizable, 40 for Unrealizable, 30 for Unknown
-        try {
-          let result, time, realizableTraceInfo;
-          var analysisElement = [];
-          var inAnalysisBlock = false;
-          for (const elem of jsonContent.filter(e => e.objectType)) {
-            if (elem.objectType === 'analysisStart') {
-              var contractContext = elem.context ? elem.context === 'contract' : true;
-              if (contractContext) {
-                inAnalysisBlock = true;
-                analysisElement.push(elem)
-              }            
-            } else if (inAnalysisBlock && elem.objectType === 'analysisStop') {
-              analysisElement.push(elem)
-              break;
-            } else if (inAnalysisBlock) {
-              analysisElement.push(elem)
-            }
-          }
-
-          var realizabilityResults = analysisElement.find(e => e.objectType === 'realizabilityCheck');
-          var consistencyResults = analysisElement.find(e => e.objectType === 'satisfiabilityCheck');
-
-          if (realizabilityResults) {
-            var logResultsArray = jsonContent.filter(e => e.objectType === "log");
-            var logResults = logResultsArray[logResultsArray.length-1];
-            result = (logResults && logResults.value === "Wallclock timeout.") ? "UNKNOWN" : (consistencyResults ? (consistencyResults.result === "unsatisfiable" ? "UNREALIZABLE" : realizabilityResults.result.toUpperCase()) : realizabilityResults.result.toUpperCase());
-            if (consistencyResults) {
-              time = (realizabilityResults.runtime['value'] + consistencyResults.runtime['value']).toString() + realizabilityResults.runtime['unit'];
-            } else if (realizabilityResults) {
-              time = (realizabilityResults.runtime['value'] + (consistencyResults ? consistencyResults.runtime['value'] : 0)).toString() + realizabilityResults.runtime['unit'];
-            } else {
-              time = "Wallclock timeout."
-            }
-
-            realizableTraceInfo = (realizabilityResults && realizabilityResults.deadlockingTrace) ? realizabilityResults.deadlockingTrace : null;
-            callback(null, result, time, realizableTraceInfo, jsonContent);
-          } else {
-            var logResultsArray = jsonContent.filter(e => e.objectType === "log");
-            var logResults = logResultsArray[logResultsArray.length-1];
-            if (logResults && logResults.value === "Wallclock timeout.") {
-              callback(null, "UNKNOWN", "Wallclock timeout.", null, jsonContent)
-            } else {
-              callback(new Error('Kind 2 call terminated unexpectedly.'))
-            }
-          }
-        } catch (err) {
-          callback(new Error('Kind2 call terminated unexpectedly.'))
-        }        
-        break;
-      case 1:
-        //General error
-        kind2.kill();
-        callback(new Error('Kind 2 returned with a general error.'));
-        break;
-      case 2:
-        //Incorrect command line argument
-        kind2.kill();
-        callback(new Error('Incorrect command line argument provided to Kind 2.'));
-        break;
-      case 3:
-        //Parse error
-        var logObject = jsonContent.reverse().find(({ level }) => level === 'error');
-        kind2.kill();
-        callback(new Error('Kind 2 detected a parse error.\nFile: '+logObject.file+'\nLine: '+logObject.line+', Column: '+logObject.column+'\nValue: '+logObject.value));
-        break;        
-      case 4:
-        //No smt solver found
-        kind2.kill();
-        callback(new Error('Kind 2 did not detect an SMT solver.'));
-        break;
-      case 5:
-        //Unknown or unsupported version of an SMT solver was found
-        kind2.kill();
-        callback(new Error('Kind 2 detected an unknown or unsupported version of SMT solver.'));
-        break;
-      default:
-        kind2.kill();
-        callback(new Error('Kind 2 terminated unexpectedly.'));
-        break;
-    }
-  })
+export function checkRealizabilityKind2(filePath, options, callback) {
+  runKind2(filePath, options).then(output => {
+    if (output.result === 'ERROR') callback(new Error(output.error));
+    else callback(null, output.result, output.time ? `${output.time.value}${output.time.unit}` : '', output.traceInfo, output.jsonOutput);
+  }, error => callback(error));
 }
 
 export function checkRealizability(filePath, engine, options, callback) {
