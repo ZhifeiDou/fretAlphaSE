@@ -1,0 +1,440 @@
+{
+  "component": "RunningMeanStdCombine",
+  "original_job_id": "a1af1153-fa9f-487d-9288-8561b438c414",
+  "original_input": {
+    "component": "RunningMeanStdCombine",
+    "requirements": [
+      {
+        "id": "SRS-23-05:merge_count",
+        "fretish": "whenever combine_return RunningMeanStdCombine shall immediately satisfy combined_count = own_count + other_count.",
+        "kind": "guarantee",
+        "source_refs": [
+          "SRS-23-05@sha256:e160d7092a3f95d7cb24da931ff7ab80d12abf841fef464a0959d7efffbb7fe7#statement"
+        ]
+      },
+      {
+        "id": "SRS-23-05:combined_moments",
+        "fretish": "whenever combine_return & (own_count + other_count != 0) RunningMeanStdCombine shall immediately satisfy combined_mean = own_mean + (other_mean - own_mean) * other_count / (own_count + other_count) & combined_variance = (own_count * own_variance + other_count * other_variance + (other_mean - own_mean) * (other_mean - own_mean) * own_count * other_count / (own_count + other_count)) / (own_count + other_count).",
+        "kind": "guarantee",
+        "source_refs": [
+          "SRS-23-05@sha256:e160d7092a3f95d7cb24da931ff7ab80d12abf841fef464a0959d7efffbb7fe7#statement",
+          "SRS-23-05@sha256:e160d7092a3f95d7cb24da931ff7ab80d12abf841fef464a0959d7efffbb7fe7#source_refs[3].quote"
+        ]
+      }
+    ],
+    "variables": [
+      {
+        "name": "combine_return",
+        "type": "bool",
+        "role": "input",
+        "meaning": "Observation of a completed combine call."
+      },
+      {
+        "name": "own_count",
+        "type": "real",
+        "role": "input",
+        "meaning": "Pre-call receiver sample count."
+      },
+      {
+        "name": "other_count",
+        "type": "real",
+        "role": "input",
+        "meaning": "Other instance sample count."
+      },
+      {
+        "name": "combined_count",
+        "type": "real",
+        "role": "output",
+        "meaning": "Receiver sample count at completion."
+      },
+      {
+        "name": "own_mean",
+        "type": "real",
+        "role": "input",
+        "meaning": "One pre-call receiver mean component."
+      },
+      {
+        "name": "other_mean",
+        "type": "real",
+        "role": "input",
+        "meaning": "Corresponding other-instance mean component."
+      },
+      {
+        "name": "combined_mean",
+        "type": "real",
+        "role": "output",
+        "meaning": "Corresponding receiver mean component after combine."
+      },
+      {
+        "name": "own_variance",
+        "type": "real",
+        "role": "input",
+        "meaning": "One pre-call receiver variance component."
+      },
+      {
+        "name": "other_variance",
+        "type": "real",
+        "role": "input",
+        "meaning": "Corresponding other-instance variance component."
+      },
+      {
+        "name": "combined_variance",
+        "type": "real",
+        "role": "output",
+        "meaning": "Corresponding receiver variance component after combine."
+      }
+    ],
+    "time_model": {
+      "kind": "discrete_steps",
+      "description": "Logical observations of completed combine calls with pre/post-call count snapshots; no physical timing is prescribed."
+    },
+    "options": {
+      "timeout_ms": 60000,
+      "diagnose": true
+    },
+    "request_id": "d9c946c3-82e4-5a68-bf8b-1cfca88a2aed"
+  },
+  "original_replay": {
+    "schema_version": 1,
+    "input_digest": "sha256:abbcf1e99be14637f954d89e37fd363d66852d9d616d08f53ce4eec9d6be34d9",
+    "result": "invalid",
+    "contract_result": null,
+    "environment_result": null,
+    "requested_ids": [
+      "SRS-23-05:merge_count",
+      "SRS-23-05:combined_moments"
+    ],
+    "analyzed_ids": [],
+    "diagnostics": [
+      {
+        "id": "SRS-23-05:combined_moments",
+        "code": "type_error",
+        "message": "Comparison own_count+other_count!=0 requires matching operand types; received (real, int)."
+      }
+    ],
+    "formalization": {
+      "representations": [
+        "pt-lustre",
+        "pt-smv",
+        "ft-inf",
+        "ft-fin"
+      ],
+      "time_basis": "discrete_steps",
+      "results": [
+        {
+          "id": "SRS-23-05:merge_count",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "H((combine_return => (combined_count = (own_count + other_count))))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "(H (combine_return -> (combined_count = (own_count + other_count))))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(G (combine_return -> (combined_count = (own_count + other_count))))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "(LAST V (combine_return -> (combined_count = (own_count + other_count))))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(combine_return)</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(combined_count = own_count + other_count)</i></b> also holds at the same time point."
+          },
+          "diagnostics": []
+        },
+        {
+          "id": "SRS-23-05:combined_moments",
+          "status": "invalid",
+          "formulas": [],
+          "explanation": null,
+          "diagnostics": [
+            {
+              "code": "type_error",
+              "message": "Comparison own_count+other_count!=0 requires matching operand types; received (real, int).",
+              "location": {
+                "line": 1,
+                "column": 28
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "toolchain": {
+      "fret": "sha256:be0a44be39cbfc40d736ca28a45f23d5610209e975ea5afa59f78fa7e72a7f18",
+      "adapter": "0.2.0",
+      "kind2": "kind2 v2.2.0",
+      "z3": "Z3 version 4.14.1 - 64 bit"
+    },
+    "time_model": {
+      "kind": "discrete_steps",
+      "description": "Logical observations of completed combine calls with pre/post-call count snapshots; no physical timing is prescribed."
+    },
+    "assumption_ids": [],
+    "guarantee_ids": [
+      "SRS-23-05:merge_count",
+      "SRS-23-05:combined_moments"
+    ],
+    "variable_mapping": {
+      "fret_v_0": "combine_return",
+      "fret_v_1": "own_count",
+      "fret_v_2": "other_count",
+      "fret_v_3": "combined_count",
+      "fret_v_4": "own_mean",
+      "fret_v_5": "other_mean",
+      "fret_v_6": "combined_mean",
+      "fret_v_7": "own_variance",
+      "fret_v_8": "other_variance",
+      "fret_v_9": "combined_variance"
+    },
+    "checks": [],
+    "diagnosis": {
+      "status": "not_run",
+      "conflicts": [],
+      "message": null
+    }
+  },
+  "corrected_input": {
+    "component": "RunningMeanStdCombine",
+    "requirements": [
+      {
+        "id": "SRS-23-05:merge_count",
+        "fretish": "whenever combine_return RunningMeanStdCombine shall immediately satisfy combined_count = own_count + other_count.",
+        "kind": "guarantee",
+        "source_refs": [
+          "SRS-23-05@sha256:e160d7092a3f95d7cb24da931ff7ab80d12abf841fef464a0959d7efffbb7fe7#statement"
+        ]
+      },
+      {
+        "id": "SRS-23-05:combined_moments",
+        "fretish": "whenever combine_return & (own_count + other_count != 0.0) RunningMeanStdCombine shall immediately satisfy combined_mean = own_mean + (other_mean - own_mean) * other_count / (own_count + other_count) & combined_variance = (own_count * own_variance + other_count * other_variance + (other_mean - own_mean) * (other_mean - own_mean) * own_count * other_count / (own_count + other_count)) / (own_count + other_count).",
+        "kind": "guarantee",
+        "source_refs": [
+          "SRS-23-05@sha256:e160d7092a3f95d7cb24da931ff7ab80d12abf841fef464a0959d7efffbb7fe7#statement",
+          "SRS-23-05@sha256:e160d7092a3f95d7cb24da931ff7ab80d12abf841fef464a0959d7efffbb7fe7#source_refs[3].quote"
+        ]
+      }
+    ],
+    "variables": [
+      {
+        "name": "combine_return",
+        "type": "bool",
+        "role": "input",
+        "meaning": "Observation of a completed combine call."
+      },
+      {
+        "name": "own_count",
+        "type": "real",
+        "role": "input",
+        "meaning": "Pre-call receiver sample count."
+      },
+      {
+        "name": "other_count",
+        "type": "real",
+        "role": "input",
+        "meaning": "Other instance sample count."
+      },
+      {
+        "name": "combined_count",
+        "type": "real",
+        "role": "output",
+        "meaning": "Receiver sample count at completion."
+      },
+      {
+        "name": "own_mean",
+        "type": "real",
+        "role": "input",
+        "meaning": "One pre-call receiver mean component."
+      },
+      {
+        "name": "other_mean",
+        "type": "real",
+        "role": "input",
+        "meaning": "Corresponding other-instance mean component."
+      },
+      {
+        "name": "combined_mean",
+        "type": "real",
+        "role": "output",
+        "meaning": "Corresponding receiver mean component after combine."
+      },
+      {
+        "name": "own_variance",
+        "type": "real",
+        "role": "input",
+        "meaning": "One pre-call receiver variance component."
+      },
+      {
+        "name": "other_variance",
+        "type": "real",
+        "role": "input",
+        "meaning": "Corresponding other-instance variance component."
+      },
+      {
+        "name": "combined_variance",
+        "type": "real",
+        "role": "output",
+        "meaning": "Corresponding receiver variance component after combine."
+      }
+    ],
+    "time_model": {
+      "kind": "discrete_steps",
+      "description": "Logical observations of completed combine calls with pre/post-call count snapshots; no physical timing is prescribed."
+    },
+    "options": {
+      "timeout_ms": 60000,
+      "diagnose": true
+    },
+    "request_id": "d9c946c3-82e4-5a68-bf8b-1cfca88a2aed"
+  },
+  "corrected_report": {
+    "schema_version": 1,
+    "input_digest": "sha256:63e0395ad112a8429d30ea39a01460490a6615a78c5ddf987d0a3f2696125999",
+    "result": "realizable",
+    "contract_result": "realizable",
+    "environment_result": "realizable",
+    "requested_ids": [
+      "SRS-23-05:merge_count",
+      "SRS-23-05:combined_moments"
+    ],
+    "analyzed_ids": [
+      "SRS-23-05:merge_count",
+      "SRS-23-05:combined_moments"
+    ],
+    "diagnostics": [],
+    "formalization": {
+      "representations": [
+        "pt-lustre",
+        "pt-smv",
+        "ft-inf",
+        "ft-fin"
+      ],
+      "time_basis": "discrete_steps",
+      "results": [
+        {
+          "id": "SRS-23-05:merge_count",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "H((combine_return => (combined_count = (own_count + other_count))))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "(H (combine_return -> (combined_count = (own_count + other_count))))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(G (combine_return -> (combined_count = (own_count + other_count))))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "(LAST V (combine_return -> (combined_count = (own_count + other_count))))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(combine_return)</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(combined_count = own_count + other_count)</i></b> also holds at the same time point."
+          },
+          "diagnostics": []
+        },
+        {
+          "id": "SRS-23-05:combined_moments",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "H(((combine_return and ((own_count + other_count) <> 0.0)) => ((combined_mean = (own_mean + (((other_mean - own_mean) * other_count) / (own_count + other_count)))) and (combined_variance = ((((own_count * own_variance) + (other_count * other_variance)) + (((((other_mean - own_mean) * (other_mean - own_mean)) * own_count) * other_count) / (own_count + other_count))) / (own_count + other_count))))))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "(H ((combine_return & ((own_count + other_count) != 0.0)) -> ((combined_mean = (own_mean + (((other_mean - own_mean) * other_count) / (own_count + other_count)))) & (combined_variance = ((((own_count * own_variance) + (other_count * other_variance)) + (((((other_mean - own_mean) * (other_mean - own_mean)) * own_count) * other_count) / (own_count + other_count))) / (own_count + other_count))))))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(G ((combine_return & ((own_count + other_count) != 0.0)) -> ((combined_mean = (own_mean + (((other_mean - own_mean) * other_count) / (own_count + other_count)))) & (combined_variance = ((((own_count * own_variance) + (other_count * other_variance)) + (((((other_mean - own_mean) * (other_mean - own_mean)) * own_count) * other_count) / (own_count + other_count))) / (own_count + other_count))))))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "(LAST V ((combine_return & ((own_count + other_count) != 0.0)) -> ((combined_mean = (own_mean + (((other_mean - own_mean) * other_count) / (own_count + other_count)))) & (combined_variance = ((((own_count * own_variance) + (other_count * other_variance)) + (((((other_mean - own_mean) * (other_mean - own_mean)) * own_count) * other_count) / (own_count + other_count))) / (own_count + other_count))))))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(combine_return & ( own_count + other_count != 0.0 ))</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(combined_mean = own_mean + ( other_mean - own_mean ) * other_count / ( own_count + other_count ) & combined_variance = ( own_count * own_variance + other_count * other_variance + ( other_mean - own_mean ) * ( other_mean - own_mean ) * own_count * other_count / ( own_count + other_count ) ) / ( own_count + other_count ))</i></b> also holds at the same time point."
+          },
+          "diagnostics": []
+        }
+      ]
+    },
+    "toolchain": {
+      "fret": "sha256:be0a44be39cbfc40d736ca28a45f23d5610209e975ea5afa59f78fa7e72a7f18",
+      "adapter": "0.2.0",
+      "kind2": "kind2 v2.2.0",
+      "z3": "Z3 version 4.14.1 - 64 bit"
+    },
+    "time_model": {
+      "kind": "discrete_steps",
+      "description": "Logical observations of completed combine calls with pre/post-call count snapshots; no physical timing is prescribed."
+    },
+    "assumption_ids": [],
+    "guarantee_ids": [
+      "SRS-23-05:merge_count",
+      "SRS-23-05:combined_moments"
+    ],
+    "variable_mapping": {
+      "fret_v_0": "combine_return",
+      "fret_v_1": "own_count",
+      "fret_v_2": "other_count",
+      "fret_v_3": "combined_count",
+      "fret_v_4": "own_mean",
+      "fret_v_5": "other_mean",
+      "fret_v_6": "combined_mean",
+      "fret_v_7": "own_variance",
+      "fret_v_8": "other_variance",
+      "fret_v_9": "combined_variance"
+    },
+    "checks": [
+      {
+        "name": "FretContract.lus",
+        "requirement_ids": [
+          "SRS-23-05:merge_count",
+          "SRS-23-05:combined_moments"
+        ],
+        "result": "REALIZABLE",
+        "environment_result": "REALIZABLE",
+        "lustre": "--Historically\nnode H(X:bool) returns (Y:bool);\nlet\n    Y = X -> (X and (pre Y));\ntel\n\n--Y since inclusive X\nnode SI(X,Y: bool) returns (Z:bool);\nlet\nZ = Y and (X or (false -> pre Z));\ntel\n\n--Y since X\nnode S(X,Y: bool) returns (Z:bool);\nlet\nZ = X or (Y and (false -> pre Z));\ntel\n\n--Y triggered X\nnode T(X,Y: bool) returns(Z:bool);\nlet\nZ = (X and (Y or (true -> pre Z)));\ntel\n\n--Once\nnode O(X:bool) returns (Y:bool);\nlet\n Y = X or (false -> pre Y);\ntel\n\n--Timed Once: less than or equal to N\nnode OTlore( N: int; X: bool) returns (Y: bool);\n    var C:int;\nlet\n    C = if X then 0\n        else (-1 -> pre C + (if pre C <0 then 0 else 1));\n\n    Y = 0 <= C and C <= N;\ntel\n\n--Timed Once: general case\nnode OT( L: int;  R: int; X: bool) returns (Y: bool);\nvar  D:bool;\nlet\n  D=delay(X, R);\n  Y=OTlore(L-R, D);\ntel\n\n-- Timed Historically: general case\nnode HT( L: int;  R: int; X: bool) returns (Y: bool);\nlet\n  Y = not OT(L, R, not X);\ntel\n\n-- Timed Since: general case\nnode ST( L: int;  R: int; X: bool; Y: bool)  returns (Z: bool);\nlet\n  Z = S(X, Y) and OT(L, R, X);\ntel\n\n-- Timed Since Inclusive: general case\nnode SIT( L: int;  R: int; X: bool; Y: bool) returns (Z: bool);\nlet\n  Z = SI(X, Y) and OT(L, R, X);\ntel\n\n-- Timed Triggered: general case\nnode TT( L: int;  R: int; X: bool; Y: bool)  returns (Z: bool);\nlet\n  Z = T(X, Y) or HT(L, R, X);\ntel\n\n-- Pre for integers, with an initial value at FTP\nnode preInt(InitialValue, X: int) returns (Y:int);\nlet\n  Y = InitialValue -> pre X;\ntel\n\n-- Pre for reals, with an initial value at FTP\nnode preReal(InitialValue, X: real) returns (Y:real);\nlet\n  Y = InitialValue -> pre X;\ntel\n\n-- Pre for booleans, with an initial value at FTP\nnode preBool(InitialValue, X: bool) returns (Y:bool);\nlet\n  Y = InitialValue -> pre X;\ntel\n\n-- The equivalent of LTL's Y in Lustre.\nnode YtoPre(X: bool) returns (Y:bool);\nlet\n  Y = false -> pre X;\ntel\n\n-- The equivalent of LTL's Z in Lustre.\nnode ZtoPre(X: bool) returns (Y:bool);\nlet\n  Y = true -> pre X;\ntel\n\n-- Absolute value for reals\nnode absReal(x:real) returns(y: real);\nlet\n  y = if (x >= 0.0) then x else -x;\ntel\n\n-- Absolute value for integers\nnode absInt(x:int) returns(y: int);\nlet\n  y = if (x >= 0) then x else -x;\ntel\n\n-- Maximum value between two reals\nnode maxReal (a : real; b : real)\nreturns (z : real);\nlet\n  z = (if (((a) >= (b))) then (a) else (b));\ntel\n\n-- Maximum value between two integers\nnode maxInt (a : int; b : int)\nreturns (z : int);\nlet\n  z = (if (((a) >= (b))) then (a) else (b));\ntel\n\n-- Minimum value between two integers\nnode minInt (a : int; b : int)\nreturns (z : int);\nlet\n  z = (if (((a) <= (b))) then (a) else (b));\ntel\n\n-- Minimum value between two reals\nnode minReal (a : real; b : real)\nreturns (z : real);\nlet\n  z = (if (((a) <= (b))) then (a) else (b));\ntel\n\nnode delay(X:bool;  R:int) returns(Y:bool);\nlet\n\n  Y = X;\ntel\n\n\nnode imported FretContract( fret_v_0:bool ; fret_v_1:real ; fret_v_2:real ; fret_v_4:real ; fret_v_5:real ; fret_v_7:real ; fret_v_8:real ) returns ( fret_v_3:real ;  fret_v_6:real ;  fret_v_9:real  );\n(*@contract\n\n\n\n\nvar __FTP : bool = true -> false;\n\n\n\n(* fret_r_0  *)\n\n\nguarantee \"fret_r_0\" H((fret_v_0 => (fret_v_3 = (fret_v_1 + fret_v_2))));\n\n(* fret_r_1  *)\n\n\nguarantee \"fret_r_1\" H(((fret_v_0 and ((fret_v_1 + fret_v_2) <> 0.0)) => ((fret_v_6 = (fret_v_4 + (((fret_v_5 - fret_v_4) * fret_v_2) / (fret_v_1 + fret_v_2)))) and (fret_v_9 = ((((fret_v_1 * fret_v_7) + (fret_v_2 * fret_v_8)) + (((((fret_v_5 - fret_v_4) * (fret_v_5 - fret_v_4)) * fret_v_1) * fret_v_2) / (fret_v_1 + fret_v_2))) / (fret_v_1 + fret_v_2))))));\n\n\r\n*)\n",
+        "lustre_digest": "sha256:371b34bffabb2af916aa1037908eb19a4792902a1e005e37a403b54e5fc3e513",
+        "command": [
+          "kind2",
+          "--lus_main",
+          "FretContract",
+          "-json",
+          "--enable",
+          "CONTRACTCK",
+          "--timeout",
+          "60",
+          "/tmp/fret-historical-replay-YYVh7P/FretContract.lus"
+        ],
+        "stdout": "[\n{\n  \"objectType\" : \"log\",\n  \"level\" : \"info\",\n  \"source\" : \"parse\",\n  \"value\" : \"kind2 v2.2.0\"\n}\n,\n{\n  \"objectType\" : \"kind2Options\",\n  \"enabled\" :\n  [\n    \"contractck\"\n  ],\n  \"timeout\" : 60.000000,\n  \"bmcMax\" : 0,\n  \"compositional\" : false,\n  \"modular\" : false\n}\n,\n{\n  \"objectType\" : \"analysisStart\",\n  \"top\" : \"FretContract\",\n  \"context\" : \"contract\"\n}\n,\n{\n  \"objectType\" : \"realizabilityCheck\",\n  \"runtime\" : {\"unit\" : \"sec\", \"timeout\" : false, \"value\" : 0.148},\n  \"result\" : \"realizable\"\n}\n,\n{\"objectType\" : \"analysisStop\"}\n,\n{\n  \"objectType\" : \"analysisStart\",\n  \"top\" : \"FretContract\",\n  \"context\" : \"environment\"\n}\n,\n{\n  \"objectType\" : \"realizabilityCheck\",\n  \"runtime\" : {\"unit\" : \"sec\", \"timeout\" : false, \"value\" : 0.000},\n  \"result\" : \"realizable\"\n}\n,\n{\"objectType\" : \"analysisStop\"}\n]\n",
+        "stderr": "",
+        "exit_code": 0,
+        "counterexample": {
+          "contract": null,
+          "environment": null
+        }
+      }
+    ],
+    "diagnosis": {
+      "status": "not_needed",
+      "conflicts": [],
+      "message": null
+    }
+  }
+}

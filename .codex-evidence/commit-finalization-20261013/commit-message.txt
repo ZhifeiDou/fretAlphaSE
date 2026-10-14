@@ -1,0 +1,14 @@
+Add authenticated FRET MCP analysis and typed preflight
+
+Expose formalization, durable component realizability jobs, conflict diagnosis,
+and cancellation through authenticated Streamable HTTP. Include the locked
+Node build, pinned Kind2/Z3 Docker runtime, and native computation support.
+
+Add strict optional variable declarations through the shared native compiler,
+freeze historical model regressions, and fix prototype-name rule indexing.
+Preserve JKind counterexample generation for minimal desktop conflicts.
+
+Validation: 112 Node tests passed (38 Linux-only skipped), 108 Linux tests
+passed, and 21 AlphaSE integration tests passed. Build the verified Docker
+image from the staged Git tree to check that the commit is self-contained.
+JKind trace rechecks are covered by controlled tests; JKind is not installed.

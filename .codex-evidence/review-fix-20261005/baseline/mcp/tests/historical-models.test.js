@@ -1,0 +1,157 @@
+const assert = require('node:assert/strict');
+const { test } = require('node:test');
+const fs = require('node:fs');
+const path = require('node:path');
+const { tmpdir } = require('node:os');
+const { formalizeRequirements } = require('../dist/formalize.cjs');
+const { analyzeRequirements } = require('../dist/analysis.cjs');
+const { contentDigest } = require('../src/schemas');
+const historical = require('./fixtures/historical-failed-models.json');
+const corrected = require('./fixtures/historical-corrected-models.json');
+
+const linux = { skip: process.platform !== 'linux' && 'Real analysis runs in the Linux Docker image.' };
+const representations = ['pt-lustre', 'pt-smv', 'ft-inf', 'ft-fin'];
+const typeErrorColumns = {
+  'SRS-10-08:remaining_fraction': [10, 75],
+  'SRS-18-11:clear_counters': [40],
+  'SRS-23-04:combined_moments': [28],
+  'SRS-23-03:combined_moments': [27],
+  'SRS-23-05:combined_moments': [28],
+  'SRS-23-08:ones_initialization': [87],
+  'SRS-23-08:squared_gradient_update': [186],
+  'SRS-23-08:gradient_average_update': [132],
+  'SRS-23-08:uncentered_denominator': [37, 113],
+  'SRS-23-08:centered_denominator': [36, 150],
+  'SRS-23-08:plain_parameter_update': [25, 45],
+  'SRS-23-08:momentum_parameter_update': [25, 45]
+};
+
+function preflight(input) {
+  return formalizeRequirements({
+    requirements: input.requirements.map(({ id, fretish }) => ({ id, fretish })),
+    representations,
+    variables: input.variables.map(({ name, type }) => ({ name, type }))
+  });
+}
+
+test('the historical corpus preserves all 16 original job inputs and report digests', () => {
+  assert.equal(historical.cases.length, 16);
+  assert.equal(new Set(historical.cases.map(item => item.original.job_id)).size, 16);
+  assert.equal(corrected.cases.length, 16);
+  assert.equal(historical.cases.filter(item => item.original.report.result === 'invalid').length, 10);
+  assert.equal(historical.cases.filter(item => item.original.report.result === 'error').length, 6);
+  for (const { component, original, provenance } of historical.cases) {
+    assert.equal(original.input.component, component);
+    assert.equal(contentDigest(original.input), original.input_digest);
+    assert.equal(original.report.input_digest, original.input_digest);
+    assert.equal(contentDigest(original.report), original.report_digest);
+    assert.equal(original.report.toolchain.fret, 'sha256:c45764cc1cc48928217709c243e3b800bddd47101d81254862dd1fdc4ac37ce4');
+    assert.match(provenance.archive_sha256, /^sha256:[a-f0-9]{64}$/);
+    assert.match(provenance.raw_output_sha256, /^sha256:[a-f0-9]{64}$/);
+    assert.ok(provenance.session_id && provenance.part_id && provenance.message_id);
+    for (const check of original.report.checks) assert.equal(contentDigest(check.lustre), check.lustre_digest);
+
+    const candidate = corrected.cases.find(item => item.original_job_id === original.job_id);
+    assert.ok(candidate, component);
+    assert.ok(candidate.remaining_gaps.length, component);
+    const restored = structuredClone(candidate.input);
+    const changes = new Map(candidate.changes.map(change => [change.id, change]));
+    assert.equal(changes.size, candidate.changes.length);
+    for (const requirement of restored.requirements) {
+      const change = changes.get(requirement.id);
+      if (!change) continue;
+      assert.equal(requirement.fretish, change.after);
+      assert.notEqual(change.before, change.after);
+      assert.ok(change.rationale.length);
+      requirement.fretish = change.before;
+      changes.delete(requirement.id);
+    }
+    assert.equal(changes.size, 0);
+    assert.deepEqual(restored, original.input, 'Corrections may change only their explicitly documented FRETish clauses.');
+  }
+});
+
+for (const { component, original } of historical.cases) {
+  const candidate = corrected.cases.find(item => item.original_job_id === original.job_id);
+
+  test(`historical original ${component}: public typed preflight rejects the exact failed clauses`, () => {
+    const output = preflight(original.input);
+    assert.deepEqual(output.results.map(item => item.id), original.report.requested_ids);
+    assert.deepEqual(output.results.filter(item => item.status === 'invalid').map(item => item.id),
+      candidate.changes.map(item => item.id));
+    for (const result of output.results) {
+      if (result.status === 'formalized') {
+        assert.deepEqual(result.diagnostics, []);
+        continue;
+      }
+      assert.equal(result.status, 'invalid', result.id);
+      assert.deepEqual(result.formulas, []);
+      if (original.report.result === 'invalid') {
+        const archived = original.report.formalization.results.find(item => item.id === result.id);
+        assert.deepEqual(result.diagnostics, archived.diagnostics);
+      } else {
+        assert.deepEqual(result.diagnostics.map(item => item.code), typeErrorColumns[result.id].map(() => 'type_error'));
+        assert.deepEqual(result.diagnostics.map(item => item.location), typeErrorColumns[result.id].map(column => ({ line: 1, column })));
+        for (const diagnostic of result.diagnostics) assert.match(diagnostic.message, /real, int|int, real/);
+      }
+    }
+  });
+
+  test(`historical corrected ${component}: every retained clause compiles through public declarations`, () => {
+    const output = preflight(candidate.input);
+    assert.deepEqual(output.results.map(item => item.id), original.report.requested_ids);
+    for (const result of output.results) {
+      assert.equal(result.status, 'formalized', JSON.stringify(result));
+      assert.deepEqual(result.diagnostics, []);
+      assert.deepEqual(result.formulas.map(item => item.representation), representations);
+    }
+  });
+
+  test(`historical analysis ${component}: original stops before solving; corrected retains the complete contract`, linux, async t => {
+    const directory = fs.mkdtempSync(path.join(tmpdir(), 'fret-historical-test-'));
+    t.after(() => fs.rmSync(directory, { recursive: true, force: true }));
+    const rejected = await analyzeRequirements(original.input, directory);
+    assert.equal(rejected.input_digest, original.input_digest);
+    assert.equal(rejected.result, 'invalid');
+    assert.deepEqual(rejected.checks, []);
+    assert.deepEqual(rejected.analyzed_ids, []);
+    assert.deepEqual(rejected.requested_ids, original.report.requested_ids);
+    assert.deepEqual(rejected.formalization, preflight(original.input));
+
+    const report = await analyzeRequirements(candidate.input, directory);
+    t.diagnostic(JSON.stringify({ component, corrected_input_digest: report.input_digest, result: report.result,
+      contract_result: report.contract_result, environment_result: report.environment_result,
+      diagnostics: report.diagnostics, toolchain: report.toolchain,
+      checks: report.checks.map(check => ({ result: check.result, lustre_digest: check.lustre_digest, exit_code: check.exit_code })) }));
+    assert.equal(report.input_digest, contentDigest(candidate.input));
+    assert.deepEqual(report.requested_ids, original.report.requested_ids);
+    assert.deepEqual(report.formalization, preflight(candidate.input));
+    assert.ok(report.checks.length, JSON.stringify(report.diagnostics));
+    assert.deepEqual(report.checks[0].requirement_ids, original.report.requested_ids);
+    for (const check of report.checks) {
+      assert.equal(check.lustre_digest, contentDigest(check.lustre));
+      assert.equal(check.command[0], 'kind2');
+      assert.ok(check.stdout.length);
+    }
+    assert.deepEqual(report.analyzed_ids, original.report.requested_ids);
+    if (component === 'RMSpropTFLikeNumerics') {
+      // The intact nine-clause nonlinear contract timed out in the frozen
+      // 60-second budget on Kind 2 2.2.0 / Z3 4.14.1. Unknown is not a proof.
+      assert.equal(report.result, 'unknown');
+      assert.equal(report.contract_result, 'unknown');
+      assert.equal(report.environment_result, 'unknown');
+      assert.deepEqual(report.diagnostics.map(item => item.code), ['unknown_environment']);
+      assert.equal(report.checks[0].result, 'UNKNOWN');
+      assert.equal(report.checks[0].exit_code, 30);
+      const events = JSON.parse(report.checks[0].stdout);
+      assert.ok(events.some(event => event.objectType === 'log' && event.value === 'Wallclock timeout.'));
+    } else {
+      assert.equal(report.result, 'realizable', JSON.stringify(report.diagnostics));
+      assert.equal(report.contract_result, 'realizable');
+      assert.equal(report.environment_result, 'realizable');
+      assert.deepEqual(report.diagnostics, []);
+      assert.equal(report.checks[0].result, 'REALIZABLE');
+      assert.equal(report.checks[0].exit_code, 0);
+    }
+  });
+}

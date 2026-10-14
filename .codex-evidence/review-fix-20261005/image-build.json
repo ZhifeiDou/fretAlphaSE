@@ -1,0 +1,31 @@
+﻿{
+  "node": "v22.17.0",
+  "toolchain": {
+    "fret": "sha256:4a026a056b52d6c6659d51f14cbfbc2f94fba3497b177c911b9411c2a481b2ae",
+    "adapter": "0.2.0",
+    "kind2": "kind2 v2.2.0",
+    "z3": "Z3 version 4.14.1 - 64 bit"
+  },
+  "bundles": [
+    {
+      "path": "mcp/dist/analysis-worker.cjs",
+      "sha256": "sha256:01485bce0718a253dd445b17680a7ca037cc1d7e492faa99aafa90076932ae14"
+    },
+    {
+      "path": "mcp/dist/analysis.cjs",
+      "sha256": "sha256:a9bb603c22febb2b3a222ae1f4fcfbdde37204451549a75ddf79c7cfe407e576"
+    },
+    {
+      "path": "mcp/dist/formalize.cjs",
+      "sha256": "sha256:faafe44cce83ad97924aed2c0fe585ee02e0edd03a999b25cca7f034997fcc28"
+    },
+    {
+      "path": "mcp/dist/server.cjs",
+      "sha256": "sha256:2a698ba1dceed47ec3fd8a0f3c1d814d244587b9b57964d0828c34359df2803d"
+    },
+    {
+      "path": "mcp/dist/worker.cjs",
+      "sha256": "sha256:a3ede497255f34657867d6f9b5d11139aa39ace1a0a3cdeb4df6829b99a1e155"
+    }
+  ]
+}

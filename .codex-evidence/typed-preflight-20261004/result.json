@@ -1,0 +1,171 @@
+{
+  "recorded_at": "2026-10-05T02:55:25.775Z",
+  "scope": "FRET side of batch 2 typed preflight; AlphaSE follow-up remains in Cawl.",
+  "status": "Implemented and verified; RMSprop historical corrected model remains inconclusive under its original timeout.",
+  "head": "cf0f913cc15c41705e803593297e89cd6056b839",
+  "preexisting_dirty_work_preserved": true,
+  "files": [
+    {
+      "path": "mcp/tests/mcp.test.js",
+      "change": "modified",
+      "before_sha256": "22dad30da2ef836dcdca2779ee0e98a5c960c7da4ad0d10ae044b81ef5eb8c13",
+      "after_sha256": "5e14ed9436734e4fe551091767ad2964fdd1ea417cee0e2a852ed0990365a907"
+    },
+    {
+      "path": "mcp/tests/formalize.test.js",
+      "change": "modified",
+      "before_sha256": "6f0722ce3b80a21f0fb9394bedf148ed317d88e15cdb1c3da94c0e98f3bb968b",
+      "after_sha256": "fa56e093319d268033b2570c219d0ec255ac5419b1bd984183baa9e326173747"
+    },
+    {
+      "path": "mcp/tests/analysis.test.js",
+      "change": "modified",
+      "before_sha256": "691fcdaec514059ec691c17c1f6ae9403b483ba5847d4de3a31adcdd2b4389b8",
+      "after_sha256": "c40dd4c6f4f005534b2e8c6af242245075efd954fd4b65711604ff3f31959571"
+    },
+    {
+      "path": "mcp/src/server.js",
+      "change": "modified",
+      "before_sha256": "bab419883d45efd25d9fef5abfbedc7a1e9ed09f993f3f2cfac1886c787214fd",
+      "after_sha256": "a599f15d547e95fad9624332aca74e100590df92fd7125cad2325f3c2043ee29"
+    },
+    {
+      "path": "mcp/src/schemas.js",
+      "change": "modified",
+      "before_sha256": "51f53c15fb4771bd65e15c0c0f6d8dcb01a33b6701a320c81b2a8ef2a89b55cd",
+      "after_sha256": "bde794d161e7f3c3d8e5c3fa856b2d703b67e42b3986c54f6e361184a2a622fa"
+    },
+    {
+      "path": "mcp/src/formalize.js",
+      "change": "modified",
+      "before_sha256": "25b996fea340c34ed0dbe0f779130f1c104e133197adc501336b1f5c1d790b17",
+      "after_sha256": "7d17c2d381ba71fabb4c20984d9a7aa70afbf4367cc689aad93ebbbcfd05f11a"
+    },
+    {
+      "path": "mcp/src/analysis.js",
+      "change": "modified",
+      "before_sha256": "ad3b344fe1dba2005add52d41cb0c7e151b5da6d4b5cafe1b97b29381e5482bd",
+      "after_sha256": "b59e38bd6bcb4371cfdc99ca47eb0f827efc4cedafc4b4d52005e00e3d679887"
+    },
+    {
+      "path": "mcp/README.md",
+      "change": "modified",
+      "before_sha256": "303c62ba53d5e0d4c626806e4a5335d1fc258b0d1ad7e21138c6d7b4230c1e80",
+      "after_sha256": "96f963c5f0c083f42e4c41f6596b197a60e486f3572dd12bdd946064b5762923"
+    },
+    {
+      "path": "mcp/tests/historical-models.test.js",
+      "change": "added",
+      "before_sha256": null,
+      "after_sha256": "cef50d838ce10a3815705844fa7c7d42145eb54d0bb80a16f7513830e589c0bd"
+    },
+    {
+      "path": "mcp/tests/fixtures/historical-failed-models.json",
+      "change": "added",
+      "before_sha256": null,
+      "after_sha256": "d507093014f47f9f71012454bc41f07dd634cc9bc2970993cfc81966ffd39872"
+    },
+    {
+      "path": "mcp/tests/fixtures/historical-corrected-models.json",
+      "change": "added",
+      "before_sha256": null,
+      "after_sha256": "fc3620f8ae7d4ae1ca099b5eb1e41ca610dce5f8b5154ee93eafea27edefbedf"
+    }
+  ],
+  "source_manifest_sha256": "sha256:fdcdbb2b8c9cfb7357525405a6d8fb1d0eb600e79739f7da073df0e5560e3d82",
+  "source_manifest": "source-build.json",
+  "image": {
+    "tag": "alphase/fret-mcp:typed-preflight-20261004-r1",
+    "id": "sha256:6dcf4d5be231e177af224f38915333aa429db429c82b064e1d363de4bf4c7a49",
+    "local_and_image_bundles_identical": true,
+    "manifest": "image-build.json"
+  },
+  "toolchain": {
+    "node": "v22.17.0",
+    "npm": "10.9.2",
+    "webpack": "5.111.1",
+    "fret": "sha256:be0a44be39cbfc40d736ca28a45f23d5610209e975ea5afa59f78fa7e72a7f18",
+    "adapter": "0.2.0",
+    "kind2": "kind2 v2.2.0",
+    "z3": "Z3 version 4.14.1 - 64 bit"
+  },
+  "validation": [
+    {
+      "layer": "baseline Windows Node",
+      "command": "npm.cmd test",
+      "cwd": "C:/fretAlphaSE/mcp",
+      "exit_code": 0,
+      "passed": 48,
+      "failed": 0,
+      "skipped": 18,
+      "log": "node-before.log"
+    },
+    {
+      "layer": "final Windows Node",
+      "command": "npm.cmd test",
+      "cwd": "C:/fretAlphaSE/mcp",
+      "exit_code": 0,
+      "passed": 88,
+      "failed": 0,
+      "skipped": 38,
+      "log": "node-after.log"
+    },
+    {
+      "layer": "Linux image build",
+      "command": "docker build --file mcp/Dockerfile --tag alphase/fret-mcp:typed-preflight-20261004-r1 .",
+      "cwd": "C:/fretAlphaSE",
+      "exit_code": 0,
+      "log": "docker-build.log"
+    },
+    {
+      "layer": "Linux analysis/lifecycle/MCP",
+      "command": "docker run --rm --init --network none --mount type=bind,source=C:\\fretAlphaSE\\mcp\\tests,target=/opt/fret-mcp/tests,readonly --mount type=bind,source=C:\\fretAlphaSE\\mcp\\src,target=/opt/fret-mcp/src,readonly alphase/fret-mcp:typed-preflight-20261004-r1 node --test tests/analysis.test.js tests/analysis-lifecycle.test.js tests/mcp.test.js",
+      "exit_code": 0,
+      "passed": 41,
+      "failed": 0,
+      "skipped": 0,
+      "log": "linux-after.log"
+    },
+    {
+      "layer": "Linux exact historical regression",
+      "command": "docker run --rm --init --network none --mount type=bind,source=C:\\fretAlphaSE\\mcp\\tests,target=/opt/fret-mcp/tests,readonly --mount type=bind,source=C:\\fretAlphaSE\\mcp\\src,target=/opt/fret-mcp/src,readonly alphase/fret-mcp:typed-preflight-20261004-r1 node --test tests/historical-models.test.js",
+      "exit_code": 0,
+      "passed": 49,
+      "failed": 0,
+      "skipped": 0,
+      "log": "historical/linux-tests.log"
+    }
+  ],
+  "historical": {
+    "frozen_models": 16,
+    "retained_clauses": 38,
+    "explicitly_corrected_clauses": 28,
+    "exact_originals_invalid_without_contract_solving": 16,
+    "corrected_models_compiled": 16,
+    "corrected_realizable": 15,
+    "corrected_unknown": 1,
+    "unresolved": {
+      "component": "RMSpropTFLikeNumerics",
+      "timeout_ms": 60000,
+      "kind2_exit_code": 30,
+      "diagnostic": "unknown_environment",
+      "backend_evidence": "Wallclock timeout.",
+      "proof_obtained": false
+    },
+    "evidence": "historical/result.json"
+  },
+  "unexecuted": [
+    "AlphaSE four-file incremental integration",
+    "AlphaSE integration tests against this image",
+    "Real author typed tool-use acceptance",
+    "Independent Approver semantic acceptance",
+    "Live five-Approver latency acceptance",
+    "Full SB3 smoke test",
+    "Deployment"
+  ],
+  "quality_review": "Independent source and archive/correction review found no blocking issue or fragile workaround. Native parser, worker/executor, Dockerfile and lockfile unchanged.",
+  "handoff": {
+    "path": "FRET_TYPED_PREFLIGHT_HANDOFF.txt",
+    "sha256": "sha256:be16acec5e2fde58856b29d4155957a04ff2f5cb5ffcf7ada20aa0ef6b2795b8"
+  }
+}

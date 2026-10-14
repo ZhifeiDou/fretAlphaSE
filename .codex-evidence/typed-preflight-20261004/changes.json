@@ -1,0 +1,68 @@
+[
+  {
+    "path": "mcp/tests/mcp.test.js",
+    "change": "modified",
+    "before_sha256": "22dad30da2ef836dcdca2779ee0e98a5c960c7da4ad0d10ae044b81ef5eb8c13",
+    "after_sha256": "5e14ed9436734e4fe551091767ad2964fdd1ea417cee0e2a852ed0990365a907"
+  },
+  {
+    "path": "mcp/tests/formalize.test.js",
+    "change": "modified",
+    "before_sha256": "6f0722ce3b80a21f0fb9394bedf148ed317d88e15cdb1c3da94c0e98f3bb968b",
+    "after_sha256": "fa56e093319d268033b2570c219d0ec255ac5419b1bd984183baa9e326173747"
+  },
+  {
+    "path": "mcp/tests/analysis.test.js",
+    "change": "modified",
+    "before_sha256": "691fcdaec514059ec691c17c1f6ae9403b483ba5847d4de3a31adcdd2b4389b8",
+    "after_sha256": "c40dd4c6f4f005534b2e8c6af242245075efd954fd4b65711604ff3f31959571"
+  },
+  {
+    "path": "mcp/src/server.js",
+    "change": "modified",
+    "before_sha256": "bab419883d45efd25d9fef5abfbedc7a1e9ed09f993f3f2cfac1886c787214fd",
+    "after_sha256": "a599f15d547e95fad9624332aca74e100590df92fd7125cad2325f3c2043ee29"
+  },
+  {
+    "path": "mcp/src/schemas.js",
+    "change": "modified",
+    "before_sha256": "51f53c15fb4771bd65e15c0c0f6d8dcb01a33b6701a320c81b2a8ef2a89b55cd",
+    "after_sha256": "bde794d161e7f3c3d8e5c3fa856b2d703b67e42b3986c54f6e361184a2a622fa"
+  },
+  {
+    "path": "mcp/src/formalize.js",
+    "change": "modified",
+    "before_sha256": "25b996fea340c34ed0dbe0f779130f1c104e133197adc501336b1f5c1d790b17",
+    "after_sha256": "7d17c2d381ba71fabb4c20984d9a7aa70afbf4367cc689aad93ebbbcfd05f11a"
+  },
+  {
+    "path": "mcp/src/analysis.js",
+    "change": "modified",
+    "before_sha256": "ad3b344fe1dba2005add52d41cb0c7e151b5da6d4b5cafe1b97b29381e5482bd",
+    "after_sha256": "b59e38bd6bcb4371cfdc99ca47eb0f827efc4cedafc4b4d52005e00e3d679887"
+  },
+  {
+    "path": "mcp/README.md",
+    "change": "modified",
+    "before_sha256": "303c62ba53d5e0d4c626806e4a5335d1fc258b0d1ad7e21138c6d7b4230c1e80",
+    "after_sha256": "96f963c5f0c083f42e4c41f6596b197a60e486f3572dd12bdd946064b5762923"
+  },
+  {
+    "path": "mcp/tests/historical-models.test.js",
+    "change": "added",
+    "before_sha256": null,
+    "after_sha256": "cef50d838ce10a3815705844fa7c7d42145eb54d0bb80a16f7513830e589c0bd"
+  },
+  {
+    "path": "mcp/tests/fixtures/historical-failed-models.json",
+    "change": "added",
+    "before_sha256": null,
+    "after_sha256": "d507093014f47f9f71012454bc41f07dd634cc9bc2970993cfc81966ffd39872"
+  },
+  {
+    "path": "mcp/tests/fixtures/historical-corrected-models.json",
+    "change": "added",
+    "before_sha256": null,
+    "after_sha256": "fc3620f8ae7d4ae1ca099b5eb1e41ca610dce5f8b5154ee93eafea27edefbedf"
+  }
+]

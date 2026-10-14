@@ -1,0 +1,1208 @@
+{
+  "component": "RMSpropTFLikeNumerics",
+  "original_job_id": "76b84558-b0a2-4e6f-85b1-824b7af11d98",
+  "original_input": {
+    "request_id": "c3a961ad-7ac0-5f8b-b60e-3811f1d9d91b",
+    "component": "RMSpropTFLikeNumerics",
+    "requirements": [
+      {
+        "id": "SRS-23-08:ones_initialization",
+        "fretish": "whenever initializing_squared_average RMSpropTFLikeNumerics shall immediately satisfy squared_average_initial = 1.",
+        "kind": "guarantee",
+        "source_refs": [
+          "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#source_refs[2].quote"
+        ]
+      },
+      {
+        "id": "SRS-23-08:closure_return",
+        "fretish": "whenever step_return & closure_provided RMSpropTFLikeNumerics shall immediately satisfy returned_loss = closure_loss & !returns_none.",
+        "kind": "guarantee",
+        "source_refs": [
+          "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#source_refs[1].quote"
+        ]
+      },
+      {
+        "id": "SRS-23-08:no_closure_return",
+        "fretish": "whenever step_return & !closure_provided RMSpropTFLikeNumerics shall immediately satisfy returns_none.",
+        "kind": "guarantee",
+        "source_refs": [
+          "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#statement",
+          "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#source_refs[0].quote"
+        ]
+      },
+      {
+        "id": "SRS-23-08:squared_gradient_update",
+        "fretish": "whenever step_return RMSpropTFLikeNumerics shall immediately satisfy effective_gradient = raw_gradient + weight_decay * old_parameter & squared_average = alpha * old_squared_average + (1 - alpha) * effective_gradient * effective_gradient.",
+        "kind": "guarantee",
+        "source_refs": [
+          "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#statement",
+          "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#source_refs[3].quote",
+          "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#source_refs[4].quote"
+        ]
+      },
+      {
+        "id": "SRS-23-08:gradient_average_update",
+        "fretish": "whenever step_return & centered RMSpropTFLikeNumerics shall immediately satisfy gradient_average = alpha * old_gradient_average + (1 - alpha) * effective_gradient.",
+        "kind": "guarantee",
+        "source_refs": [
+          "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#statement",
+          "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#source_refs[3].quote"
+        ]
+      },
+      {
+        "id": "SRS-23-08:uncentered_denominator",
+        "fretish": "whenever step_return & !centered & (squared_average + eps >= 0) RMSpropTFLikeNumerics shall immediately satisfy denominator >= 0 & denominator * denominator = squared_average + eps.",
+        "kind": "guarantee",
+        "source_refs": [
+          "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#source_refs[2].quote",
+          "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#source_refs[3].quote"
+        ]
+      },
+      {
+        "id": "SRS-23-08:centered_denominator",
+        "fretish": "whenever step_return & centered & (squared_average - gradient_average * gradient_average + eps >= 0) RMSpropTFLikeNumerics shall immediately satisfy denominator >= 0 & denominator * denominator = squared_average - gradient_average * gradient_average + eps.",
+        "kind": "guarantee",
+        "source_refs": [
+          "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#source_refs[2].quote",
+          "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#source_refs[3].quote"
+        ]
+      },
+      {
+        "id": "SRS-23-08:plain_parameter_update",
+        "fretish": "whenever step_return & (denominator > 0) & (momentum = 0) RMSpropTFLikeNumerics shall immediately satisfy new_parameter = old_parameter - lr * effective_gradient / denominator.",
+        "kind": "guarantee",
+        "source_refs": [
+          "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#statement",
+          "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#source_refs[3].quote",
+          "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#source_refs[4].quote"
+        ]
+      },
+      {
+        "id": "SRS-23-08:momentum_parameter_update",
+        "fretish": "whenever step_return & (denominator > 0) & (momentum != 0) RMSpropTFLikeNumerics shall immediately satisfy new_buffer = momentum * old_buffer + effective_gradient / denominator & new_parameter = old_parameter - lr * new_buffer.",
+        "kind": "guarantee",
+        "source_refs": [
+          "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#statement",
+          "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#source_refs[3].quote",
+          "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#source_refs[4].quote"
+        ]
+      }
+    ],
+    "variables": [
+      {
+        "name": "initializing_squared_average",
+        "type": "bool",
+        "role": "input",
+        "meaning": "Observation of squared-gradient state initialization."
+      },
+      {
+        "name": "squared_average_initial",
+        "type": "real",
+        "role": "output",
+        "meaning": "Initial squared-gradient-average component."
+      },
+      {
+        "name": "step_return",
+        "type": "bool",
+        "role": "input",
+        "meaning": "Observation of a completed optimization step."
+      },
+      {
+        "name": "closure_provided",
+        "type": "bool",
+        "role": "input",
+        "meaning": "Whether this step was supplied a closure."
+      },
+      {
+        "name": "closure_loss",
+        "type": "real",
+        "role": "input",
+        "meaning": "Loss recomputed by the supplied closure."
+      },
+      {
+        "name": "returned_loss",
+        "type": "real",
+        "role": "output",
+        "meaning": "Step-returned closure loss."
+      },
+      {
+        "name": "returns_none",
+        "type": "bool",
+        "role": "output",
+        "meaning": "Whether step returns None rather than loss."
+      },
+      {
+        "name": "old_parameter",
+        "type": "real",
+        "role": "input",
+        "meaning": "One parameter component before this step."
+      },
+      {
+        "name": "raw_gradient",
+        "type": "real",
+        "role": "input",
+        "meaning": "Corresponding raw gradient component supplied for this step."
+      },
+      {
+        "name": "weight_decay",
+        "type": "real",
+        "role": "input",
+        "meaning": "Configured L2 penalty coefficient."
+      },
+      {
+        "name": "alpha",
+        "type": "real",
+        "role": "input",
+        "meaning": "Configured smoothing constant."
+      },
+      {
+        "name": "eps",
+        "type": "real",
+        "role": "input",
+        "meaning": "Configured denominator stability term."
+      },
+      {
+        "name": "lr",
+        "type": "real",
+        "role": "input",
+        "meaning": "Configured learning rate."
+      },
+      {
+        "name": "momentum",
+        "type": "real",
+        "role": "input",
+        "meaning": "Configured momentum factor."
+      },
+      {
+        "name": "centered",
+        "type": "bool",
+        "role": "input",
+        "meaning": "Whether centered RMSprop is selected."
+      },
+      {
+        "name": "old_squared_average",
+        "type": "real",
+        "role": "input",
+        "meaning": "Previous squared-gradient-average component from optimizer state, including initialization or restoration."
+      },
+      {
+        "name": "old_gradient_average",
+        "type": "real",
+        "role": "input",
+        "meaning": "Previous moving gradient-average component used by centering."
+      },
+      {
+        "name": "old_buffer",
+        "type": "real",
+        "role": "input",
+        "meaning": "Previous momentum-buffer component."
+      },
+      {
+        "name": "effective_gradient",
+        "type": "real",
+        "role": "output",
+        "meaning": "Effective gradient after L2 weight decay, a mathematical output observation not a prescribed public attribute."
+      },
+      {
+        "name": "squared_average",
+        "type": "real",
+        "role": "output",
+        "meaning": "Squared-gradient-average component after this step."
+      },
+      {
+        "name": "gradient_average",
+        "type": "real",
+        "role": "output",
+        "meaning": "Moving gradient-average component after this step when centering is selected."
+      },
+      {
+        "name": "denominator",
+        "type": "real",
+        "role": "output",
+        "meaning": "Nonnegative square-root normalization denominator, a mathematical observation not a prescribed public attribute."
+      },
+      {
+        "name": "new_buffer",
+        "type": "real",
+        "role": "output",
+        "meaning": "Momentum-buffer component after this step when momentum is configured."
+      },
+      {
+        "name": "new_parameter",
+        "type": "real",
+        "role": "output",
+        "meaning": "Parameter component after this step."
+      }
+    ],
+    "time_model": {
+      "kind": "discrete_steps",
+      "description": "Logical observations of state initialization and completed optimization steps with pre/post-call snapshots. Previous-state inputs bind to initialization, restoration or the preceding optimizer state in execution evidence; no physical sampling, performance bound or public observation attribute is imposed."
+    },
+    "options": {
+      "timeout_ms": 60000,
+      "diagnose": true
+    }
+  },
+  "original_replay": {
+    "schema_version": 1,
+    "input_digest": "sha256:e24c9972a01f3679eb71b942ce4230a7a952d3a8e65bafda3766bd3f4faa9b98",
+    "result": "invalid",
+    "contract_result": null,
+    "environment_result": null,
+    "requested_ids": [
+      "SRS-23-08:ones_initialization",
+      "SRS-23-08:closure_return",
+      "SRS-23-08:no_closure_return",
+      "SRS-23-08:squared_gradient_update",
+      "SRS-23-08:gradient_average_update",
+      "SRS-23-08:uncentered_denominator",
+      "SRS-23-08:centered_denominator",
+      "SRS-23-08:plain_parameter_update",
+      "SRS-23-08:momentum_parameter_update"
+    ],
+    "analyzed_ids": [],
+    "diagnostics": [
+      {
+        "id": "SRS-23-08:ones_initialization",
+        "code": "type_error",
+        "message": "Comparison squared_average_initial=1 requires matching operand types; received (real, int)."
+      },
+      {
+        "id": "SRS-23-08:squared_gradient_update",
+        "code": "type_error",
+        "message": "Expression 1-alpha requires matching numeric operands; received (int, real)."
+      },
+      {
+        "id": "SRS-23-08:gradient_average_update",
+        "code": "type_error",
+        "message": "Expression 1-alpha requires matching numeric operands; received (int, real)."
+      },
+      {
+        "id": "SRS-23-08:uncentered_denominator",
+        "code": "type_error",
+        "message": "Comparison squared_average+eps>=0 requires matching numeric types; received (real, int)."
+      },
+      {
+        "id": "SRS-23-08:uncentered_denominator",
+        "code": "type_error",
+        "message": "Comparison denominator>=0 requires matching numeric types; received (real, int)."
+      },
+      {
+        "id": "SRS-23-08:centered_denominator",
+        "code": "type_error",
+        "message": "Comparison squared_average-gradient_average*gradient_average+eps>=0 requires matching numeric types; received (real, int)."
+      },
+      {
+        "id": "SRS-23-08:centered_denominator",
+        "code": "type_error",
+        "message": "Comparison denominator>=0 requires matching numeric types; received (real, int)."
+      },
+      {
+        "id": "SRS-23-08:plain_parameter_update",
+        "code": "type_error",
+        "message": "Comparison denominator>0 requires matching numeric types; received (real, int)."
+      },
+      {
+        "id": "SRS-23-08:plain_parameter_update",
+        "code": "type_error",
+        "message": "Comparison momentum=0 requires matching operand types; received (real, int)."
+      },
+      {
+        "id": "SRS-23-08:momentum_parameter_update",
+        "code": "type_error",
+        "message": "Comparison denominator>0 requires matching numeric types; received (real, int)."
+      },
+      {
+        "id": "SRS-23-08:momentum_parameter_update",
+        "code": "type_error",
+        "message": "Comparison momentum!=0 requires matching operand types; received (real, int)."
+      }
+    ],
+    "formalization": {
+      "representations": [
+        "pt-lustre",
+        "pt-smv",
+        "ft-inf",
+        "ft-fin"
+      ],
+      "time_basis": "discrete_steps",
+      "results": [
+        {
+          "id": "SRS-23-08:ones_initialization",
+          "status": "invalid",
+          "formulas": [],
+          "explanation": null,
+          "diagnostics": [
+            {
+              "code": "type_error",
+              "message": "Comparison squared_average_initial=1 requires matching operand types; received (real, int).",
+              "location": {
+                "line": 1,
+                "column": 87
+              }
+            }
+          ]
+        },
+        {
+          "id": "SRS-23-08:closure_return",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "H(((step_return and closure_provided) => ((returned_loss = closure_loss) and not (returns_none))))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "(H ((step_return & closure_provided) -> ((returned_loss = closure_loss) & (! returns_none))))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(G ((step_return & closure_provided) -> ((returned_loss = closure_loss) & (! returns_none))))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "(LAST V ((step_return & closure_provided) -> ((returned_loss = closure_loss) & (! returns_none))))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(step_return & closure_provided)</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(returned_loss = closure_loss & ! returns_none)</i></b> also holds at the same time point."
+          },
+          "diagnostics": []
+        },
+        {
+          "id": "SRS-23-08:no_closure_return",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "H(((step_return and not (closure_provided)) => returns_none))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "(H ((step_return & (! closure_provided)) -> returns_none))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(G ((step_return & (! closure_provided)) -> returns_none))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "(LAST V ((step_return & (! closure_provided)) -> returns_none))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(step_return & ! closure_provided)</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(returns_none)</i></b> also holds at the same time point."
+          },
+          "diagnostics": []
+        },
+        {
+          "id": "SRS-23-08:squared_gradient_update",
+          "status": "invalid",
+          "formulas": [],
+          "explanation": null,
+          "diagnostics": [
+            {
+              "code": "type_error",
+              "message": "Expression 1-alpha requires matching numeric operands; received (int, real).",
+              "location": {
+                "line": 1,
+                "column": 186
+              }
+            }
+          ]
+        },
+        {
+          "id": "SRS-23-08:gradient_average_update",
+          "status": "invalid",
+          "formulas": [],
+          "explanation": null,
+          "diagnostics": [
+            {
+              "code": "type_error",
+              "message": "Expression 1-alpha requires matching numeric operands; received (int, real).",
+              "location": {
+                "line": 1,
+                "column": 132
+              }
+            }
+          ]
+        },
+        {
+          "id": "SRS-23-08:uncentered_denominator",
+          "status": "invalid",
+          "formulas": [],
+          "explanation": null,
+          "diagnostics": [
+            {
+              "code": "type_error",
+              "message": "Comparison squared_average+eps>=0 requires matching numeric types; received (real, int).",
+              "location": {
+                "line": 1,
+                "column": 37
+              }
+            },
+            {
+              "code": "type_error",
+              "message": "Comparison denominator>=0 requires matching numeric types; received (real, int).",
+              "location": {
+                "line": 1,
+                "column": 113
+              }
+            }
+          ]
+        },
+        {
+          "id": "SRS-23-08:centered_denominator",
+          "status": "invalid",
+          "formulas": [],
+          "explanation": null,
+          "diagnostics": [
+            {
+              "code": "type_error",
+              "message": "Comparison squared_average-gradient_average*gradient_average+eps>=0 requires matching numeric types; received (real, int).",
+              "location": {
+                "line": 1,
+                "column": 36
+              }
+            },
+            {
+              "code": "type_error",
+              "message": "Comparison denominator>=0 requires matching numeric types; received (real, int).",
+              "location": {
+                "line": 1,
+                "column": 150
+              }
+            }
+          ]
+        },
+        {
+          "id": "SRS-23-08:plain_parameter_update",
+          "status": "invalid",
+          "formulas": [],
+          "explanation": null,
+          "diagnostics": [
+            {
+              "code": "type_error",
+              "message": "Comparison denominator>0 requires matching numeric types; received (real, int).",
+              "location": {
+                "line": 1,
+                "column": 25
+              }
+            },
+            {
+              "code": "type_error",
+              "message": "Comparison momentum=0 requires matching operand types; received (real, int).",
+              "location": {
+                "line": 1,
+                "column": 45
+              }
+            }
+          ]
+        },
+        {
+          "id": "SRS-23-08:momentum_parameter_update",
+          "status": "invalid",
+          "formulas": [],
+          "explanation": null,
+          "diagnostics": [
+            {
+              "code": "type_error",
+              "message": "Comparison denominator>0 requires matching numeric types; received (real, int).",
+              "location": {
+                "line": 1,
+                "column": 25
+              }
+            },
+            {
+              "code": "type_error",
+              "message": "Comparison momentum!=0 requires matching operand types; received (real, int).",
+              "location": {
+                "line": 1,
+                "column": 45
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "toolchain": {
+      "fret": "sha256:be0a44be39cbfc40d736ca28a45f23d5610209e975ea5afa59f78fa7e72a7f18",
+      "adapter": "0.2.0",
+      "kind2": "kind2 v2.2.0",
+      "z3": "Z3 version 4.14.1 - 64 bit"
+    },
+    "time_model": {
+      "kind": "discrete_steps",
+      "description": "Logical observations of state initialization and completed optimization steps with pre/post-call snapshots. Previous-state inputs bind to initialization, restoration or the preceding optimizer state in execution evidence; no physical sampling, performance bound or public observation attribute is imposed."
+    },
+    "assumption_ids": [],
+    "guarantee_ids": [
+      "SRS-23-08:ones_initialization",
+      "SRS-23-08:closure_return",
+      "SRS-23-08:no_closure_return",
+      "SRS-23-08:squared_gradient_update",
+      "SRS-23-08:gradient_average_update",
+      "SRS-23-08:uncentered_denominator",
+      "SRS-23-08:centered_denominator",
+      "SRS-23-08:plain_parameter_update",
+      "SRS-23-08:momentum_parameter_update"
+    ],
+    "variable_mapping": {
+      "fret_v_0": "initializing_squared_average",
+      "fret_v_1": "squared_average_initial",
+      "fret_v_2": "step_return",
+      "fret_v_3": "closure_provided",
+      "fret_v_4": "closure_loss",
+      "fret_v_5": "returned_loss",
+      "fret_v_6": "returns_none",
+      "fret_v_7": "old_parameter",
+      "fret_v_8": "raw_gradient",
+      "fret_v_9": "weight_decay",
+      "fret_v_10": "alpha",
+      "fret_v_11": "eps",
+      "fret_v_12": "lr",
+      "fret_v_13": "momentum",
+      "fret_v_14": "centered",
+      "fret_v_15": "old_squared_average",
+      "fret_v_16": "old_gradient_average",
+      "fret_v_17": "old_buffer",
+      "fret_v_18": "effective_gradient",
+      "fret_v_19": "squared_average",
+      "fret_v_20": "gradient_average",
+      "fret_v_21": "denominator",
+      "fret_v_22": "new_buffer",
+      "fret_v_23": "new_parameter"
+    },
+    "checks": [],
+    "diagnosis": {
+      "status": "not_run",
+      "conflicts": [],
+      "message": null
+    }
+  },
+  "corrected_input": {
+    "request_id": "c3a961ad-7ac0-5f8b-b60e-3811f1d9d91b",
+    "component": "RMSpropTFLikeNumerics",
+    "requirements": [
+      {
+        "id": "SRS-23-08:ones_initialization",
+        "fretish": "whenever initializing_squared_average RMSpropTFLikeNumerics shall immediately satisfy squared_average_initial = 1.0.",
+        "kind": "guarantee",
+        "source_refs": [
+          "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#source_refs[2].quote"
+        ]
+      },
+      {
+        "id": "SRS-23-08:closure_return",
+        "fretish": "whenever step_return & closure_provided RMSpropTFLikeNumerics shall immediately satisfy returned_loss = closure_loss & !returns_none.",
+        "kind": "guarantee",
+        "source_refs": [
+          "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#source_refs[1].quote"
+        ]
+      },
+      {
+        "id": "SRS-23-08:no_closure_return",
+        "fretish": "whenever step_return & !closure_provided RMSpropTFLikeNumerics shall immediately satisfy returns_none.",
+        "kind": "guarantee",
+        "source_refs": [
+          "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#statement",
+          "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#source_refs[0].quote"
+        ]
+      },
+      {
+        "id": "SRS-23-08:squared_gradient_update",
+        "fretish": "whenever step_return RMSpropTFLikeNumerics shall immediately satisfy effective_gradient = raw_gradient + weight_decay * old_parameter & squared_average = alpha * old_squared_average + (1.0 - alpha) * effective_gradient * effective_gradient.",
+        "kind": "guarantee",
+        "source_refs": [
+          "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#statement",
+          "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#source_refs[3].quote",
+          "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#source_refs[4].quote"
+        ]
+      },
+      {
+        "id": "SRS-23-08:gradient_average_update",
+        "fretish": "whenever step_return & centered RMSpropTFLikeNumerics shall immediately satisfy gradient_average = alpha * old_gradient_average + (1.0 - alpha) * effective_gradient.",
+        "kind": "guarantee",
+        "source_refs": [
+          "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#statement",
+          "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#source_refs[3].quote"
+        ]
+      },
+      {
+        "id": "SRS-23-08:uncentered_denominator",
+        "fretish": "whenever step_return & !centered & (squared_average + eps >= 0.0) RMSpropTFLikeNumerics shall immediately satisfy denominator >= 0.0 & denominator * denominator = squared_average + eps.",
+        "kind": "guarantee",
+        "source_refs": [
+          "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#source_refs[2].quote",
+          "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#source_refs[3].quote"
+        ]
+      },
+      {
+        "id": "SRS-23-08:centered_denominator",
+        "fretish": "whenever step_return & centered & (squared_average - gradient_average * gradient_average + eps >= 0.0) RMSpropTFLikeNumerics shall immediately satisfy denominator >= 0.0 & denominator * denominator = squared_average - gradient_average * gradient_average + eps.",
+        "kind": "guarantee",
+        "source_refs": [
+          "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#source_refs[2].quote",
+          "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#source_refs[3].quote"
+        ]
+      },
+      {
+        "id": "SRS-23-08:plain_parameter_update",
+        "fretish": "whenever step_return & (denominator > 0.0) & (momentum = 0.0) RMSpropTFLikeNumerics shall immediately satisfy new_parameter = old_parameter - lr * effective_gradient / denominator.",
+        "kind": "guarantee",
+        "source_refs": [
+          "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#statement",
+          "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#source_refs[3].quote",
+          "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#source_refs[4].quote"
+        ]
+      },
+      {
+        "id": "SRS-23-08:momentum_parameter_update",
+        "fretish": "whenever step_return & (denominator > 0.0) & (momentum != 0.0) RMSpropTFLikeNumerics shall immediately satisfy new_buffer = momentum * old_buffer + effective_gradient / denominator & new_parameter = old_parameter - lr * new_buffer.",
+        "kind": "guarantee",
+        "source_refs": [
+          "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#statement",
+          "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#source_refs[3].quote",
+          "SRS-23-08@sha256:5821114bc2d13e8aca2a676f4017712366595b7dbe56a1cdb81ad9cdd4f11fcc#source_refs[4].quote"
+        ]
+      }
+    ],
+    "variables": [
+      {
+        "name": "initializing_squared_average",
+        "type": "bool",
+        "role": "input",
+        "meaning": "Observation of squared-gradient state initialization."
+      },
+      {
+        "name": "squared_average_initial",
+        "type": "real",
+        "role": "output",
+        "meaning": "Initial squared-gradient-average component."
+      },
+      {
+        "name": "step_return",
+        "type": "bool",
+        "role": "input",
+        "meaning": "Observation of a completed optimization step."
+      },
+      {
+        "name": "closure_provided",
+        "type": "bool",
+        "role": "input",
+        "meaning": "Whether this step was supplied a closure."
+      },
+      {
+        "name": "closure_loss",
+        "type": "real",
+        "role": "input",
+        "meaning": "Loss recomputed by the supplied closure."
+      },
+      {
+        "name": "returned_loss",
+        "type": "real",
+        "role": "output",
+        "meaning": "Step-returned closure loss."
+      },
+      {
+        "name": "returns_none",
+        "type": "bool",
+        "role": "output",
+        "meaning": "Whether step returns None rather than loss."
+      },
+      {
+        "name": "old_parameter",
+        "type": "real",
+        "role": "input",
+        "meaning": "One parameter component before this step."
+      },
+      {
+        "name": "raw_gradient",
+        "type": "real",
+        "role": "input",
+        "meaning": "Corresponding raw gradient component supplied for this step."
+      },
+      {
+        "name": "weight_decay",
+        "type": "real",
+        "role": "input",
+        "meaning": "Configured L2 penalty coefficient."
+      },
+      {
+        "name": "alpha",
+        "type": "real",
+        "role": "input",
+        "meaning": "Configured smoothing constant."
+      },
+      {
+        "name": "eps",
+        "type": "real",
+        "role": "input",
+        "meaning": "Configured denominator stability term."
+      },
+      {
+        "name": "lr",
+        "type": "real",
+        "role": "input",
+        "meaning": "Configured learning rate."
+      },
+      {
+        "name": "momentum",
+        "type": "real",
+        "role": "input",
+        "meaning": "Configured momentum factor."
+      },
+      {
+        "name": "centered",
+        "type": "bool",
+        "role": "input",
+        "meaning": "Whether centered RMSprop is selected."
+      },
+      {
+        "name": "old_squared_average",
+        "type": "real",
+        "role": "input",
+        "meaning": "Previous squared-gradient-average component from optimizer state, including initialization or restoration."
+      },
+      {
+        "name": "old_gradient_average",
+        "type": "real",
+        "role": "input",
+        "meaning": "Previous moving gradient-average component used by centering."
+      },
+      {
+        "name": "old_buffer",
+        "type": "real",
+        "role": "input",
+        "meaning": "Previous momentum-buffer component."
+      },
+      {
+        "name": "effective_gradient",
+        "type": "real",
+        "role": "output",
+        "meaning": "Effective gradient after L2 weight decay, a mathematical output observation not a prescribed public attribute."
+      },
+      {
+        "name": "squared_average",
+        "type": "real",
+        "role": "output",
+        "meaning": "Squared-gradient-average component after this step."
+      },
+      {
+        "name": "gradient_average",
+        "type": "real",
+        "role": "output",
+        "meaning": "Moving gradient-average component after this step when centering is selected."
+      },
+      {
+        "name": "denominator",
+        "type": "real",
+        "role": "output",
+        "meaning": "Nonnegative square-root normalization denominator, a mathematical observation not a prescribed public attribute."
+      },
+      {
+        "name": "new_buffer",
+        "type": "real",
+        "role": "output",
+        "meaning": "Momentum-buffer component after this step when momentum is configured."
+      },
+      {
+        "name": "new_parameter",
+        "type": "real",
+        "role": "output",
+        "meaning": "Parameter component after this step."
+      }
+    ],
+    "time_model": {
+      "kind": "discrete_steps",
+      "description": "Logical observations of state initialization and completed optimization steps with pre/post-call snapshots. Previous-state inputs bind to initialization, restoration or the preceding optimizer state in execution evidence; no physical sampling, performance bound or public observation attribute is imposed."
+    },
+    "options": {
+      "timeout_ms": 60000,
+      "diagnose": true
+    }
+  },
+  "corrected_report": {
+    "schema_version": 1,
+    "input_digest": "sha256:84ed0bb30ee2ebc3889d482e83969b683c6706f220eee6c6f93051de511597e2",
+    "result": "unknown",
+    "contract_result": "unknown",
+    "environment_result": "unknown",
+    "requested_ids": [
+      "SRS-23-08:ones_initialization",
+      "SRS-23-08:closure_return",
+      "SRS-23-08:no_closure_return",
+      "SRS-23-08:squared_gradient_update",
+      "SRS-23-08:gradient_average_update",
+      "SRS-23-08:uncentered_denominator",
+      "SRS-23-08:centered_denominator",
+      "SRS-23-08:plain_parameter_update",
+      "SRS-23-08:momentum_parameter_update"
+    ],
+    "analyzed_ids": [
+      "SRS-23-08:ones_initialization",
+      "SRS-23-08:closure_return",
+      "SRS-23-08:no_closure_return",
+      "SRS-23-08:squared_gradient_update",
+      "SRS-23-08:gradient_average_update",
+      "SRS-23-08:uncentered_denominator",
+      "SRS-23-08:centered_denominator",
+      "SRS-23-08:plain_parameter_update",
+      "SRS-23-08:momentum_parameter_update"
+    ],
+    "diagnostics": [
+      {
+        "id": null,
+        "code": "unknown_environment",
+        "message": "The backend did not establish environment realizability."
+      }
+    ],
+    "formalization": {
+      "representations": [
+        "pt-lustre",
+        "pt-smv",
+        "ft-inf",
+        "ft-fin"
+      ],
+      "time_basis": "discrete_steps",
+      "results": [
+        {
+          "id": "SRS-23-08:ones_initialization",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "H((initializing_squared_average => (squared_average_initial = 1.0)))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "(H (initializing_squared_average -> (squared_average_initial = 1.0)))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(G (initializing_squared_average -> (squared_average_initial = 1.0)))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "(LAST V (initializing_squared_average -> (squared_average_initial = 1.0)))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(initializing_squared_average)</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(squared_average_initial = 1.0)</i></b> also holds at the same time point."
+          },
+          "diagnostics": []
+        },
+        {
+          "id": "SRS-23-08:closure_return",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "H(((step_return and closure_provided) => ((returned_loss = closure_loss) and not (returns_none))))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "(H ((step_return & closure_provided) -> ((returned_loss = closure_loss) & (! returns_none))))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(G ((step_return & closure_provided) -> ((returned_loss = closure_loss) & (! returns_none))))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "(LAST V ((step_return & closure_provided) -> ((returned_loss = closure_loss) & (! returns_none))))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(step_return & closure_provided)</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(returned_loss = closure_loss & ! returns_none)</i></b> also holds at the same time point."
+          },
+          "diagnostics": []
+        },
+        {
+          "id": "SRS-23-08:no_closure_return",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "H(((step_return and not (closure_provided)) => returns_none))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "(H ((step_return & (! closure_provided)) -> returns_none))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(G ((step_return & (! closure_provided)) -> returns_none))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "(LAST V ((step_return & (! closure_provided)) -> returns_none))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(step_return & ! closure_provided)</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(returns_none)</i></b> also holds at the same time point."
+          },
+          "diagnostics": []
+        },
+        {
+          "id": "SRS-23-08:squared_gradient_update",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "H((step_return => ((effective_gradient = (raw_gradient + (weight_decay * old_parameter))) and (squared_average = ((alpha * old_squared_average) + (((1.0 - alpha) * effective_gradient) * effective_gradient))))))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "(H (step_return -> ((effective_gradient = (raw_gradient + (weight_decay * old_parameter))) & (squared_average = ((alpha * old_squared_average) + (((1.0 - alpha) * effective_gradient) * effective_gradient))))))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(G (step_return -> ((effective_gradient = (raw_gradient + (weight_decay * old_parameter))) & (squared_average = ((alpha * old_squared_average) + (((1.0 - alpha) * effective_gradient) * effective_gradient))))))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "(LAST V (step_return -> ((effective_gradient = (raw_gradient + (weight_decay * old_parameter))) & (squared_average = ((alpha * old_squared_average) + (((1.0 - alpha) * effective_gradient) * effective_gradient))))))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(step_return)</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(effective_gradient = raw_gradient + weight_decay * old_parameter & squared_average = alpha * old_squared_average + ( 1.0 - alpha ) * effective_gradient * effective_gradient)</i></b> also holds at the same time point."
+          },
+          "diagnostics": []
+        },
+        {
+          "id": "SRS-23-08:gradient_average_update",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "H(((step_return and centered) => (gradient_average = ((alpha * old_gradient_average) + ((1.0 - alpha) * effective_gradient)))))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "(H ((step_return & centered) -> (gradient_average = ((alpha * old_gradient_average) + ((1.0 - alpha) * effective_gradient)))))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(G ((step_return & centered) -> (gradient_average = ((alpha * old_gradient_average) + ((1.0 - alpha) * effective_gradient)))))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "(LAST V ((step_return & centered) -> (gradient_average = ((alpha * old_gradient_average) + ((1.0 - alpha) * effective_gradient)))))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(step_return & centered)</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(gradient_average = alpha * old_gradient_average + ( 1.0 - alpha ) * effective_gradient)</i></b> also holds at the same time point."
+          },
+          "diagnostics": []
+        },
+        {
+          "id": "SRS-23-08:uncentered_denominator",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "H((((step_return and not (centered)) and ((squared_average + eps) >= 0.0)) => ((denominator >= 0.0) and ((denominator * denominator) = (squared_average + eps)))))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "(H (((step_return & (! centered)) & ((squared_average + eps) >= 0.0)) -> ((denominator >= 0.0) & ((denominator * denominator) = (squared_average + eps)))))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(G (((step_return & (! centered)) & ((squared_average + eps) >= 0.0)) -> ((denominator >= 0.0) & ((denominator * denominator) = (squared_average + eps)))))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "(LAST V (((step_return & (! centered)) & ((squared_average + eps) >= 0.0)) -> ((denominator >= 0.0) & ((denominator * denominator) = (squared_average + eps)))))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(step_return & ! centered & ( squared_average + eps >= 0.0 ))</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(denominator >= 0.0 & denominator * denominator = squared_average + eps)</i></b> also holds at the same time point."
+          },
+          "diagnostics": []
+        },
+        {
+          "id": "SRS-23-08:centered_denominator",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "H((((step_return and centered) and (((squared_average - (gradient_average * gradient_average)) + eps) >= 0.0)) => ((denominator >= 0.0) and ((denominator * denominator) = ((squared_average - (gradient_average * gradient_average)) + eps)))))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "(H (((step_return & centered) & (((squared_average - (gradient_average * gradient_average)) + eps) >= 0.0)) -> ((denominator >= 0.0) & ((denominator * denominator) = ((squared_average - (gradient_average * gradient_average)) + eps)))))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(G (((step_return & centered) & (((squared_average - (gradient_average * gradient_average)) + eps) >= 0.0)) -> ((denominator >= 0.0) & ((denominator * denominator) = ((squared_average - (gradient_average * gradient_average)) + eps)))))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "(LAST V (((step_return & centered) & (((squared_average - (gradient_average * gradient_average)) + eps) >= 0.0)) -> ((denominator >= 0.0) & ((denominator * denominator) = ((squared_average - (gradient_average * gradient_average)) + eps)))))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(step_return & centered & ( squared_average - gradient_average * gradient_average + eps >= 0.0 ))</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(denominator >= 0.0 & denominator * denominator = squared_average - gradient_average * gradient_average + eps)</i></b> also holds at the same time point."
+          },
+          "diagnostics": []
+        },
+        {
+          "id": "SRS-23-08:plain_parameter_update",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "H((((step_return and (denominator > 0.0)) and (momentum = 0.0)) => (new_parameter = (old_parameter - ((lr * effective_gradient) / denominator)))))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "(H (((step_return & (denominator > 0.0)) & (momentum = 0.0)) -> (new_parameter = (old_parameter - ((lr * effective_gradient) / denominator)))))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(G (((step_return & (denominator > 0.0)) & (momentum = 0.0)) -> (new_parameter = (old_parameter - ((lr * effective_gradient) / denominator)))))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "(LAST V (((step_return & (denominator > 0.0)) & (momentum = 0.0)) -> (new_parameter = (old_parameter - ((lr * effective_gradient) / denominator)))))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(step_return & ( denominator > 0.0 ) & ( momentum = 0.0 ))</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(new_parameter = old_parameter - lr * effective_gradient / denominator)</i></b> also holds at the same time point."
+          },
+          "diagnostics": []
+        },
+        {
+          "id": "SRS-23-08:momentum_parameter_update",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "H((((step_return and (denominator > 0.0)) and (momentum <> 0.0)) => ((new_buffer = ((momentum * old_buffer) + (effective_gradient / denominator))) and (new_parameter = (old_parameter - (lr * new_buffer))))))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "(H (((step_return & (denominator > 0.0)) & (momentum != 0.0)) -> ((new_buffer = ((momentum * old_buffer) + (effective_gradient / denominator))) & (new_parameter = (old_parameter - (lr * new_buffer))))))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(G (((step_return & (denominator > 0.0)) & (momentum != 0.0)) -> ((new_buffer = ((momentum * old_buffer) + (effective_gradient / denominator))) & (new_parameter = (old_parameter - (lr * new_buffer))))))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "(LAST V (((step_return & (denominator > 0.0)) & (momentum != 0.0)) -> ((new_buffer = ((momentum * old_buffer) + (effective_gradient / denominator))) & (new_parameter = (old_parameter - (lr * new_buffer))))))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(step_return & ( denominator > 0.0 ) & ( momentum != 0.0 ))</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(new_buffer = momentum * old_buffer + effective_gradient / denominator & new_parameter = old_parameter - lr * new_buffer)</i></b> also holds at the same time point."
+          },
+          "diagnostics": []
+        }
+      ]
+    },
+    "toolchain": {
+      "fret": "sha256:be0a44be39cbfc40d736ca28a45f23d5610209e975ea5afa59f78fa7e72a7f18",
+      "adapter": "0.2.0",
+      "kind2": "kind2 v2.2.0",
+      "z3": "Z3 version 4.14.1 - 64 bit"
+    },
+    "time_model": {
+      "kind": "discrete_steps",
+      "description": "Logical observations of state initialization and completed optimization steps with pre/post-call snapshots. Previous-state inputs bind to initialization, restoration or the preceding optimizer state in execution evidence; no physical sampling, performance bound or public observation attribute is imposed."
+    },
+    "assumption_ids": [],
+    "guarantee_ids": [
+      "SRS-23-08:ones_initialization",
+      "SRS-23-08:closure_return",
+      "SRS-23-08:no_closure_return",
+      "SRS-23-08:squared_gradient_update",
+      "SRS-23-08:gradient_average_update",
+      "SRS-23-08:uncentered_denominator",
+      "SRS-23-08:centered_denominator",
+      "SRS-23-08:plain_parameter_update",
+      "SRS-23-08:momentum_parameter_update"
+    ],
+    "variable_mapping": {
+      "fret_v_0": "initializing_squared_average",
+      "fret_v_1": "squared_average_initial",
+      "fret_v_2": "step_return",
+      "fret_v_3": "closure_provided",
+      "fret_v_4": "closure_loss",
+      "fret_v_5": "returned_loss",
+      "fret_v_6": "returns_none",
+      "fret_v_7": "old_parameter",
+      "fret_v_8": "raw_gradient",
+      "fret_v_9": "weight_decay",
+      "fret_v_10": "alpha",
+      "fret_v_11": "eps",
+      "fret_v_12": "lr",
+      "fret_v_13": "momentum",
+      "fret_v_14": "centered",
+      "fret_v_15": "old_squared_average",
+      "fret_v_16": "old_gradient_average",
+      "fret_v_17": "old_buffer",
+      "fret_v_18": "effective_gradient",
+      "fret_v_19": "squared_average",
+      "fret_v_20": "gradient_average",
+      "fret_v_21": "denominator",
+      "fret_v_22": "new_buffer",
+      "fret_v_23": "new_parameter"
+    },
+    "checks": [
+      {
+        "name": "FretContract.lus",
+        "requirement_ids": [
+          "SRS-23-08:ones_initialization",
+          "SRS-23-08:closure_return",
+          "SRS-23-08:no_closure_return",
+          "SRS-23-08:squared_gradient_update",
+          "SRS-23-08:gradient_average_update",
+          "SRS-23-08:uncentered_denominator",
+          "SRS-23-08:centered_denominator",
+          "SRS-23-08:plain_parameter_update",
+          "SRS-23-08:momentum_parameter_update"
+        ],
+        "result": "UNKNOWN",
+        "environment_result": "UNKNOWN",
+        "lustre": "--Historically\nnode H(X:bool) returns (Y:bool);\nlet\n    Y = X -> (X and (pre Y));\ntel\n\n--Y since inclusive X\nnode SI(X,Y: bool) returns (Z:bool);\nlet\nZ = Y and (X or (false -> pre Z));\ntel\n\n--Y since X\nnode S(X,Y: bool) returns (Z:bool);\nlet\nZ = X or (Y and (false -> pre Z));\ntel\n\n--Y triggered X\nnode T(X,Y: bool) returns(Z:bool);\nlet\nZ = (X and (Y or (true -> pre Z)));\ntel\n\n--Once\nnode O(X:bool) returns (Y:bool);\nlet\n Y = X or (false -> pre Y);\ntel\n\n--Timed Once: less than or equal to N\nnode OTlore( N: int; X: bool) returns (Y: bool);\n    var C:int;\nlet\n    C = if X then 0\n        else (-1 -> pre C + (if pre C <0 then 0 else 1));\n\n    Y = 0 <= C and C <= N;\ntel\n\n--Timed Once: general case\nnode OT( L: int;  R: int; X: bool) returns (Y: bool);\nvar  D:bool;\nlet\n  D=delay(X, R);\n  Y=OTlore(L-R, D);\ntel\n\n-- Timed Historically: general case\nnode HT( L: int;  R: int; X: bool) returns (Y: bool);\nlet\n  Y = not OT(L, R, not X);\ntel\n\n-- Timed Since: general case\nnode ST( L: int;  R: int; X: bool; Y: bool)  returns (Z: bool);\nlet\n  Z = S(X, Y) and OT(L, R, X);\ntel\n\n-- Timed Since Inclusive: general case\nnode SIT( L: int;  R: int; X: bool; Y: bool) returns (Z: bool);\nlet\n  Z = SI(X, Y) and OT(L, R, X);\ntel\n\n-- Timed Triggered: general case\nnode TT( L: int;  R: int; X: bool; Y: bool)  returns (Z: bool);\nlet\n  Z = T(X, Y) or HT(L, R, X);\ntel\n\n-- Pre for integers, with an initial value at FTP\nnode preInt(InitialValue, X: int) returns (Y:int);\nlet\n  Y = InitialValue -> pre X;\ntel\n\n-- Pre for reals, with an initial value at FTP\nnode preReal(InitialValue, X: real) returns (Y:real);\nlet\n  Y = InitialValue -> pre X;\ntel\n\n-- Pre for booleans, with an initial value at FTP\nnode preBool(InitialValue, X: bool) returns (Y:bool);\nlet\n  Y = InitialValue -> pre X;\ntel\n\n-- The equivalent of LTL's Y in Lustre.\nnode YtoPre(X: bool) returns (Y:bool);\nlet\n  Y = false -> pre X;\ntel\n\n-- The equivalent of LTL's Z in Lustre.\nnode ZtoPre(X: bool) returns (Y:bool);\nlet\n  Y = true -> pre X;\ntel\n\n-- Absolute value for reals\nnode absReal(x:real) returns(y: real);\nlet\n  y = if (x >= 0.0) then x else -x;\ntel\n\n-- Absolute value for integers\nnode absInt(x:int) returns(y: int);\nlet\n  y = if (x >= 0) then x else -x;\ntel\n\n-- Maximum value between two reals\nnode maxReal (a : real; b : real)\nreturns (z : real);\nlet\n  z = (if (((a) >= (b))) then (a) else (b));\ntel\n\n-- Maximum value between two integers\nnode maxInt (a : int; b : int)\nreturns (z : int);\nlet\n  z = (if (((a) >= (b))) then (a) else (b));\ntel\n\n-- Minimum value between two integers\nnode minInt (a : int; b : int)\nreturns (z : int);\nlet\n  z = (if (((a) <= (b))) then (a) else (b));\ntel\n\n-- Minimum value between two reals\nnode minReal (a : real; b : real)\nreturns (z : real);\nlet\n  z = (if (((a) <= (b))) then (a) else (b));\ntel\n\nnode delay(X:bool;  R:int) returns(Y:bool);\nlet\n\n  Y = X;\ntel\n\n\nnode imported FretContract( fret_v_0:bool ; fret_v_2:bool ; fret_v_3:bool ; fret_v_4:real ; fret_v_7:real ; fret_v_8:real ; fret_v_9:real ; fret_v_10:real ; fret_v_11:real ; fret_v_12:real ; fret_v_13:real ; fret_v_14:bool ; fret_v_15:real ; fret_v_16:real ; fret_v_17:real ) returns ( fret_v_1:real ;  fret_v_5:real ;  fret_v_6:bool ;  fret_v_18:real ;  fret_v_19:real ;  fret_v_20:real ;  fret_v_21:real ;  fret_v_22:real ;  fret_v_23:real  );\n(*@contract\n\n\n\n\nvar __FTP : bool = true -> false;\n\n\n\n(* fret_r_0  *)\n\n\nguarantee \"fret_r_0\" H((fret_v_0 => (fret_v_1 = 1.0)));\n\n(* fret_r_1  *)\n\n\nguarantee \"fret_r_1\" H(((fret_v_2 and fret_v_3) => ((fret_v_5 = fret_v_4) and not (fret_v_6))));\n\n(* fret_r_2  *)\n\n\nguarantee \"fret_r_2\" H(((fret_v_2 and not (fret_v_3)) => fret_v_6));\n\n(* fret_r_3  *)\n\n\nguarantee \"fret_r_3\" H((fret_v_2 => ((fret_v_18 = (fret_v_8 + (fret_v_9 * fret_v_7))) and (fret_v_19 = ((fret_v_10 * fret_v_15) + (((1.0 - fret_v_10) * fret_v_18) * fret_v_18))))));\n\n(* fret_r_4  *)\n\n\nguarantee \"fret_r_4\" H(((fret_v_2 and fret_v_14) => (fret_v_20 = ((fret_v_10 * fret_v_16) + ((1.0 - fret_v_10) * fret_v_18)))));\n\n(* fret_r_5  *)\n\n\nguarantee \"fret_r_5\" H((((fret_v_2 and not (fret_v_14)) and ((fret_v_19 + fret_v_11) >= 0.0)) => ((fret_v_21 >= 0.0) and ((fret_v_21 * fret_v_21) = (fret_v_19 + fret_v_11)))));\n\n(* fret_r_6  *)\n\n\nguarantee \"fret_r_6\" H((((fret_v_2 and fret_v_14) and (((fret_v_19 - (fret_v_20 * fret_v_20)) + fret_v_11) >= 0.0)) => ((fret_v_21 >= 0.0) and ((fret_v_21 * fret_v_21) = ((fret_v_19 - (fret_v_20 * fret_v_20)) + fret_v_11)))));\n\n(* fret_r_7  *)\n\n\nguarantee \"fret_r_7\" H((((fret_v_2 and (fret_v_21 > 0.0)) and (fret_v_13 = 0.0)) => (fret_v_23 = (fret_v_7 - ((fret_v_12 * fret_v_18) / fret_v_21)))));\n\n(* fret_r_8  *)\n\n\nguarantee \"fret_r_8\" H((((fret_v_2 and (fret_v_21 > 0.0)) and (fret_v_13 <> 0.0)) => ((fret_v_22 = ((fret_v_13 * fret_v_17) + (fret_v_18 / fret_v_21))) and (fret_v_23 = (fret_v_7 - (fret_v_12 * fret_v_22))))));\n\n\r\n*)\n",
+        "lustre_digest": "sha256:24a57a82a1b981bc7eeeacd588636e6c82d80fe00509cb349d7f6d00c7365ea6",
+        "command": [
+          "kind2",
+          "--lus_main",
+          "FretContract",
+          "-json",
+          "--enable",
+          "CONTRACTCK",
+          "--timeout",
+          "60",
+          "/tmp/fret-historical-replay-n6pvC4/FretContract.lus"
+        ],
+        "stdout": "[\n{\n  \"objectType\" : \"log\",\n  \"level\" : \"info\",\n  \"source\" : \"parse\",\n  \"value\" : \"kind2 v2.2.0\"\n}\n,\n{\n  \"objectType\" : \"kind2Options\",\n  \"enabled\" :\n  [\n    \"contractck\"\n  ],\n  \"timeout\" : 60.000000,\n  \"bmcMax\" : 0,\n  \"compositional\" : false,\n  \"modular\" : false\n}\n,\n{\n  \"objectType\" : \"analysisStart\",\n  \"top\" : \"FretContract\",\n  \"context\" : \"contract\"\n}\n,\n{\n  \"objectType\" : \"log\",\n  \"level\" : \"note\",\n  \"source\" : \"parse\",\n  \"value\" : \"Incomplete analysis result: Not all imported nodes could be proven realizable\"\n}\n,\n{\n  \"objectType\" : \"log\",\n  \"level\" : \"fatal\",\n  \"source\" : \"parse\",\n  \"value\" : \"Wallclock timeout.\"\n}\n,\n{\"objectType\" : \"analysisStop\"}\n]\n",
+        "stderr": "",
+        "exit_code": 30,
+        "counterexample": {
+          "contract": null,
+          "environment": null
+        }
+      }
+    ],
+    "diagnosis": {
+      "status": "not_run",
+      "conflicts": [],
+      "message": null
+    }
+  }
+}

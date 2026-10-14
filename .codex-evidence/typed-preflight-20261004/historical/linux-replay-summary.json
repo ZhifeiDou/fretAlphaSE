@@ -1,0 +1,328 @@
+[
+  {
+    "component": "WrapperRetrieval",
+    "original_result": "invalid",
+    "original_checks": 0,
+    "corrected_result": "realizable",
+    "corrected_input_digest": "sha256:44a57e1cb3586bc5bb02c8e2b1babd2cde8f3e1d03945f5d1103fa6dfaf195b0",
+    "corrected_diagnostics": [],
+    "toolchain": {
+      "fret": "sha256:be0a44be39cbfc40d736ca28a45f23d5610209e975ea5afa59f78fa7e72a7f18",
+      "adapter": "0.2.0",
+      "kind2": "kind2 v2.2.0",
+      "z3": "Z3 version 4.14.1 - 64 bit"
+    },
+    "checks": [
+      {
+        "result": "REALIZABLE",
+        "exit_code": 0
+      }
+    ]
+  },
+  {
+    "component": "StickyActionEnv",
+    "original_result": "invalid",
+    "original_checks": 0,
+    "corrected_result": "realizable",
+    "corrected_input_digest": "sha256:187c56e9344a61731492d23066a7aa65391ba3fa42a7f94ac480d4edd3684d29",
+    "corrected_diagnostics": [],
+    "toolchain": {
+      "fret": "sha256:be0a44be39cbfc40d736ca28a45f23d5610209e975ea5afa59f78fa7e72a7f18",
+      "adapter": "0.2.0",
+      "kind2": "kind2 v2.2.0",
+      "z3": "Z3 version 4.14.1 - 64 bit"
+    },
+    "checks": [
+      {
+        "result": "REALIZABLE",
+        "exit_code": 0
+      }
+    ]
+  },
+  {
+    "component": "TrainingProgress",
+    "original_result": "invalid",
+    "original_checks": 0,
+    "corrected_result": "realizable",
+    "corrected_input_digest": "sha256:aa82ec8c9748a69cff90b4107a1b468d090115d3e865a4dc489397f38a3f7a8c",
+    "corrected_diagnostics": [],
+    "toolchain": {
+      "fret": "sha256:be0a44be39cbfc40d736ca28a45f23d5610209e975ea5afa59f78fa7e72a7f18",
+      "adapter": "0.2.0",
+      "kind2": "kind2 v2.2.0",
+      "z3": "Z3 version 4.14.1 - 64 bit"
+    },
+    "checks": [
+      {
+        "result": "REALIZABLE",
+        "exit_code": 0
+      }
+    ]
+  },
+  {
+    "component": "CallbackLifecycle",
+    "original_result": "invalid",
+    "original_checks": 0,
+    "corrected_result": "realizable",
+    "corrected_input_digest": "sha256:96162cf3fe77ac4f98413dd5abd3bb6fe9422815c2d9a2b0294ff24dac243942",
+    "corrected_diagnostics": [],
+    "toolchain": {
+      "fret": "sha256:be0a44be39cbfc40d736ca28a45f23d5610209e975ea5afa59f78fa7e72a7f18",
+      "adapter": "0.2.0",
+      "kind2": "kind2 v2.2.0",
+      "z3": "Z3 version 4.14.1 - 64 bit"
+    },
+    "checks": [
+      {
+        "result": "REALIZABLE",
+        "exit_code": 0
+      }
+    ]
+  },
+  {
+    "component": "EventComposition",
+    "original_result": "invalid",
+    "original_checks": 0,
+    "corrected_result": "realizable",
+    "corrected_input_digest": "sha256:687f3f243e6b6ffa1a7b62cb2e8fe3953d8f832f56254a8a5f4619954236cf7b",
+    "corrected_diagnostics": [],
+    "toolchain": {
+      "fret": "sha256:be0a44be39cbfc40d736ca28a45f23d5610209e975ea5afa59f78fa7e72a7f18",
+      "adapter": "0.2.0",
+      "kind2": "kind2 v2.2.0",
+      "z3": "Z3 version 4.14.1 - 64 bit"
+    },
+    "checks": [
+      {
+        "result": "REALIZABLE",
+        "exit_code": 0
+      }
+    ]
+  },
+  {
+    "component": "ListComposition",
+    "original_result": "invalid",
+    "original_checks": 0,
+    "corrected_result": "realizable",
+    "corrected_input_digest": "sha256:917b79f9fdb561af4ef06f0af3da8cde704d43c817feda6bd22eb375d4805cc6",
+    "corrected_diagnostics": [],
+    "toolchain": {
+      "fret": "sha256:be0a44be39cbfc40d736ca28a45f23d5610209e975ea5afa59f78fa7e72a7f18",
+      "adapter": "0.2.0",
+      "kind2": "kind2 v2.2.0",
+      "z3": "Z3 version 4.14.1 - 64 bit"
+    },
+    "checks": [
+      {
+        "result": "REALIZABLE",
+        "exit_code": 0
+      }
+    ]
+  },
+  {
+    "component": "VecMonitorReset",
+    "original_result": "invalid",
+    "original_checks": 0,
+    "corrected_result": "realizable",
+    "corrected_input_digest": "sha256:7eb3d14393797e8c3c6df299cbb7ac0396ec4540d37dc825d315cd0632c3314f",
+    "corrected_diagnostics": [],
+    "toolchain": {
+      "fret": "sha256:be0a44be39cbfc40d736ca28a45f23d5610209e975ea5afa59f78fa7e72a7f18",
+      "adapter": "0.2.0",
+      "kind2": "kind2 v2.2.0",
+      "z3": "Z3 version 4.14.1 - 64 bit"
+    },
+    "checks": [
+      {
+        "result": "REALIZABLE",
+        "exit_code": 0
+      }
+    ]
+  },
+  {
+    "component": "ResultsFilter",
+    "original_result": "invalid",
+    "original_checks": 0,
+    "corrected_result": "realizable",
+    "corrected_input_digest": "sha256:df574e63b72b9c738b4c57c889091e97a2b4b7f6c1ff2c19aee07508a680d4e1",
+    "corrected_diagnostics": [],
+    "toolchain": {
+      "fret": "sha256:be0a44be39cbfc40d736ca28a45f23d5610209e975ea5afa59f78fa7e72a7f18",
+      "adapter": "0.2.0",
+      "kind2": "kind2 v2.2.0",
+      "z3": "Z3 version 4.14.1 - 64 bit"
+    },
+    "checks": [
+      {
+        "result": "REALIZABLE",
+        "exit_code": 0
+      }
+    ]
+  },
+  {
+    "component": "RunningMeanStdMoments",
+    "original_result": "invalid",
+    "original_checks": 0,
+    "corrected_result": "realizable",
+    "corrected_input_digest": "sha256:f74da701d24c30647ac6fd24586f7295e1696302bedd49cde2ad5ec30abcd186",
+    "corrected_diagnostics": [],
+    "toolchain": {
+      "fret": "sha256:be0a44be39cbfc40d736ca28a45f23d5610209e975ea5afa59f78fa7e72a7f18",
+      "adapter": "0.2.0",
+      "kind2": "kind2 v2.2.0",
+      "z3": "Z3 version 4.14.1 - 64 bit"
+    },
+    "checks": [
+      {
+        "result": "REALIZABLE",
+        "exit_code": 0
+      }
+    ]
+  },
+  {
+    "component": "RMSpropTFLikeNumerics",
+    "original_result": "invalid",
+    "original_checks": 0,
+    "corrected_result": "unknown",
+    "corrected_input_digest": "sha256:84ed0bb30ee2ebc3889d482e83969b683c6706f220eee6c6f93051de511597e2",
+    "corrected_diagnostics": [
+      {
+        "id": null,
+        "code": "unknown_environment",
+        "message": "The backend did not establish environment realizability."
+      }
+    ],
+    "toolchain": {
+      "fret": "sha256:be0a44be39cbfc40d736ca28a45f23d5610209e975ea5afa59f78fa7e72a7f18",
+      "adapter": "0.2.0",
+      "kind2": "kind2 v2.2.0",
+      "z3": "Z3 version 4.14.1 - 64 bit"
+    },
+    "checks": [
+      {
+        "result": "UNKNOWN",
+        "exit_code": 30
+      }
+    ]
+  },
+  {
+    "component": "RunningMeanStdUpdate",
+    "original_result": "invalid",
+    "original_checks": 0,
+    "corrected_result": "realizable",
+    "corrected_input_digest": "sha256:4c0d3e7103efc08782ddbc8bf0df81d7bea2e3fcdada49dd24f21e54884aefef",
+    "corrected_diagnostics": [],
+    "toolchain": {
+      "fret": "sha256:be0a44be39cbfc40d736ca28a45f23d5610209e975ea5afa59f78fa7e72a7f18",
+      "adapter": "0.2.0",
+      "kind2": "kind2 v2.2.0",
+      "z3": "Z3 version 4.14.1 - 64 bit"
+    },
+    "checks": [
+      {
+        "result": "REALIZABLE",
+        "exit_code": 0
+      }
+    ]
+  },
+  {
+    "component": "RunningMeanStdCombine",
+    "original_result": "invalid",
+    "original_checks": 0,
+    "corrected_result": "realizable",
+    "corrected_input_digest": "sha256:63e0395ad112a8429d30ea39a01460490a6615a78c5ddf987d0a3f2696125999",
+    "corrected_diagnostics": [],
+    "toolchain": {
+      "fret": "sha256:be0a44be39cbfc40d736ca28a45f23d5610209e975ea5afa59f78fa7e72a7f18",
+      "adapter": "0.2.0",
+      "kind2": "kind2 v2.2.0",
+      "z3": "Z3 version 4.14.1 - 64 bit"
+    },
+    "checks": [
+      {
+        "result": "REALIZABLE",
+        "exit_code": 0
+      }
+    ]
+  },
+  {
+    "component": "NatureExtractor",
+    "original_result": "invalid",
+    "original_checks": 0,
+    "corrected_result": "realizable",
+    "corrected_input_digest": "sha256:c4551e3a6371bb5079acf3f91ffbf8449b64cb1d5d9e2fd05c67f032370cf92b",
+    "corrected_diagnostics": [],
+    "toolchain": {
+      "fret": "sha256:be0a44be39cbfc40d736ca28a45f23d5610209e975ea5afa59f78fa7e72a7f18",
+      "adapter": "0.2.0",
+      "kind2": "kind2 v2.2.0",
+      "z3": "Z3 version 4.14.1 - 64 bit"
+    },
+    "checks": [
+      {
+        "result": "REALIZABLE",
+        "exit_code": 0
+      }
+    ]
+  },
+  {
+    "component": "CombinedExtractorConfiguration",
+    "original_result": "invalid",
+    "original_checks": 0,
+    "corrected_result": "realizable",
+    "corrected_input_digest": "sha256:f83f9a3d4e5145935937ec51f52c90a57bad92677b905ba413de0726baeb26f7",
+    "corrected_diagnostics": [],
+    "toolchain": {
+      "fret": "sha256:be0a44be39cbfc40d736ca28a45f23d5610209e975ea5afa59f78fa7e72a7f18",
+      "adapter": "0.2.0",
+      "kind2": "kind2 v2.2.0",
+      "z3": "Z3 version 4.14.1 - 64 bit"
+    },
+    "checks": [
+      {
+        "result": "REALIZABLE",
+        "exit_code": 0
+      }
+    ]
+  },
+  {
+    "component": "HerStorage",
+    "original_result": "invalid",
+    "original_checks": 0,
+    "corrected_result": "realizable",
+    "corrected_input_digest": "sha256:b36a79b89c02c6b6fe6e763dd280ce6821c267316e8413b72bf1445ff73ecb61",
+    "corrected_diagnostics": [],
+    "toolchain": {
+      "fret": "sha256:be0a44be39cbfc40d736ca28a45f23d5610209e975ea5afa59f78fa7e72a7f18",
+      "adapter": "0.2.0",
+      "kind2": "kind2 v2.2.0",
+      "z3": "Z3 version 4.14.1 - 64 bit"
+    },
+    "checks": [
+      {
+        "result": "REALIZABLE",
+        "exit_code": 0
+      }
+    ]
+  },
+  {
+    "component": "HerGoals",
+    "original_result": "invalid",
+    "original_checks": 0,
+    "corrected_result": "realizable",
+    "corrected_input_digest": "sha256:da01594b5ffe2848c0daf4cafb0fa1873b333d1907b1aea898cc41c2779044f8",
+    "corrected_diagnostics": [],
+    "toolchain": {
+      "fret": "sha256:be0a44be39cbfc40d736ca28a45f23d5610209e975ea5afa59f78fa7e72a7f18",
+      "adapter": "0.2.0",
+      "kind2": "kind2 v2.2.0",
+      "z3": "Z3 version 4.14.1 - 64 bit"
+    },
+    "checks": [
+      {
+        "result": "REALIZABLE",
+        "exit_code": 0
+      }
+    ]
+  }
+]

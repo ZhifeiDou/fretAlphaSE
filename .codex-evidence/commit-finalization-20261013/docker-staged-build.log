@@ -1,0 +1,126 @@
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load remote build context
+#1 DONE 0.4s
+
+#1 [internal] load remote build context
+#1 DONE 0.4s
+
+#2 copy /context /
+#2 DONE 0.1s
+
+#3 [internal] load metadata for docker.io/library/node:22.17.0-bookworm-slim@sha256:b04ce4ae4e95b522112c2e5c52f781471a5cbc3b594527bcddedee9bc48c03a0
+#3 DONE 0.9s
+
+#4 [backends 4/6] ADD --checksum=sha256:76f797c849ae1487ce08840321d3334720434e0eb1a23e1bd755c3818ffb7265 https://github.com/Z3Prover/z3/releases/download/z3-4.14.1/z3-4.14.1-x64-glibc-2.35.zip /tmp/z3.zip
+#4 DONE 0.0s
+
+#5 [backends 3/6] ADD --checksum=sha256:f571fff5f82a85727b9cae68f8305d69b67e0c3ee56098f97fad5dca27516f81 https://github.com/kind2-mc/kind2/releases/download/v2.2.0/kind2-v2.2.0-linux-x86_64.tar.gz /tmp/kind2.tar.gz
+#5 DONE 0.0s
+
+#6 [backends 5/6] ADD --checksum=sha256:e352f632b47ae583ce2a1831b57a069462e4fafba2b2e613e6c7e1ffcfe5541f https://raw.githubusercontent.com/kind2-mc/kind2/v2.2.0/LICENSE.rst /tmp/Kind2-LICENSE.rst
+#6 DONE 0.0s
+
+#7 [build  1/10] FROM docker.io/library/node:22.17.0-bookworm-slim@sha256:b04ce4ae4e95b522112c2e5c52f781471a5cbc3b594527bcddedee9bc48c03a0
+#7 DONE 0.0s
+
+#8 [backends 5/6] ADD --checksum=sha256:e352f632b47ae583ce2a1831b57a069462e4fafba2b2e613e6c7e1ffcfe5541f https://raw.githubusercontent.com/kind2-mc/kind2/v2.2.0/LICENSE.rst /tmp/Kind2-LICENSE.rst
+#8 CACHED
+
+#9 [runtime  4/11] COPY --from=backends /backends/kind2 /backends/z3 /usr/local/bin/
+#9 CACHED
+
+#10 [backends 2/6] RUN test "amd64" = amd64
+#10 CACHED
+
+#11 [backends 4/6] ADD --checksum=sha256:76f797c849ae1487ce08840321d3334720434e0eb1a23e1bd755c3818ffb7265 https://github.com/Z3Prover/z3/releases/download/z3-4.14.1/z3-4.14.1-x64-glibc-2.35.zip /tmp/z3.zip
+#11 CACHED
+
+#12 [runtime  6/11] COPY --from=backends /tmp/Kind2-LICENSE.rst ./Kind2-LICENSE.rst
+#12 CACHED
+
+#13 [runtime  3/11] RUN apt-get update && apt-get install -y --no-install-recommends libgmp10     && rm -rf /var/lib/apt/lists/*     && mkdir -p /var/lib/fret-mcp && chown node:node /var/lib/fret-mcp
+#13 CACHED
+
+#14 [runtime  5/11] COPY --from=backends /backends/Z3-LICENSE.txt ./Z3-LICENSE.txt
+#14 CACHED
+
+#15 [backends 3/6] ADD --checksum=sha256:f571fff5f82a85727b9cae68f8305d69b67e0c3ee56098f97fad5dca27516f81 https://github.com/kind2-mc/kind2/releases/download/v2.2.0/kind2-v2.2.0-linux-x86_64.tar.gz /tmp/kind2.tar.gz
+#15 CACHED
+
+#16 [runtime  2/11] WORKDIR /opt/fret-mcp
+#16 CACHED
+
+#17 [backends 6/6] RUN apt-get update && apt-get install -y --no-install-recommends unzip     && mkdir /backends && tar -xzf /tmp/kind2.tar.gz -C /backends     && unzip -p /tmp/z3.zip z3-4.14.1-x64-glibc-2.35/bin/z3 > /backends/z3     && unzip -p /tmp/z3.zip z3-4.14.1-x64-glibc-2.35/LICENSE.txt > /backends/Z3-LICENSE.txt     && chmod 755 /backends/kind2 /backends/z3
+#17 CACHED
+
+#18 [runtime  7/11] RUN kind2 --version && z3 --version
+#18 CACHED
+
+#19 [build  2/10] WORKDIR /build/mcp
+#19 CACHED
+
+#20 [build  3/10] COPY mcp/package.json mcp/package-lock.json ./
+#20 DONE 0.2s
+
+#21 [runtime  8/11] COPY mcp/package.json mcp/package-lock.json ./
+#21 DONE 0.2s
+
+#22 [runtime  9/11] RUN npm ci --omit=dev --no-audit --no-fund && npm cache clean --force
+#22 4.638 
+#22 4.638 added 109 packages in 3s
+#22 4.638 npm notice
+#22 4.638 npm notice New major version of npm available! 10.9.2 -> 12.2.0
+#22 4.638 npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+#22 4.638 npm notice To update run: npm install -g npm@12.2.0
+#22 4.638 npm notice
+#22 4.893 npm warn using --force Recommended protections disabled.
+#22 DONE 5.3s
+
+#23 [build  4/10] RUN npm ci --no-audit --no-fund
+#23 5.383 
+#23 5.383 added 192 packages in 4s
+#23 5.384 npm notice
+#23 5.384 npm notice New major version of npm available! 10.9.2 -> 12.2.0
+#23 5.384 npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+#23 5.384 npm notice To update run: npm install -g npm@12.2.0
+#23 5.384 npm notice
+#23 DONE 5.7s
+
+#24 [build  5/10] COPY mcp/src ./src
+#24 DONE 0.1s
+
+#25 [build  6/10] COPY mcp/webpack.config.cjs ./
+#25 DONE 0.1s
+
+#26 [build  7/10] COPY fret-electron/app/parser /build/fret-electron/app/parser
+#26 DONE 0.1s
+
+#27 [build  8/10] COPY fret-electron/support /build/fret-electron/support
+#27 DONE 0.1s
+
+#28 [build  9/10] COPY fret-electron/analysis /build/fret-electron/analysis
+#28 DONE 0.1s
+
+#29 [build 10/10] RUN npm run build
+#29 0.396 
+#29 0.396 > @fret-alphase/mcp@0.2.0 build
+#29 0.396 > webpack --config webpack.config.cjs --fail-on-warnings
+#29 0.396 
+#29 1.711 5 assets
+#29 1.711 223 modules
+#29 1.711 webpack 5.111.1 compiled successfully in 997 ms
+#29 DONE 1.9s
+
+#30 [runtime 10/11] COPY --from=build /build/mcp/dist ./dist
+#30 DONE 0.1s
+
+#31 [runtime 11/11] COPY LICENSE.pdf ./LICENSE.pdf
+#31 DONE 0.1s
+
+#32 exporting to image
+#32 exporting layers
+#32 exporting layers 0.6s done
+#32 writing image sha256:c8eadd5a9adbbc413b06aa8e89b985b42c2ce7c734cd5f637751007d7427970f done
+#32 naming to docker.io/alphase/fret-mcp:commit-20261013-r1 0.0s done
+#32 DONE 0.6s

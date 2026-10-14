@@ -1,0 +1,438 @@
+{
+  "component": "HerGoals",
+  "original_job_id": "19fcfbd5-b2ec-4158-9ae6-3cbc43aefaa9",
+  "original_input": {
+    "request_id": "358e4f01-c7bc-5db6-92bc-99ed4749711b",
+    "component": "HerGoals",
+    "requirements": [
+      {
+        "id": "SRS-28-07:future_goal",
+        "fretish": "HerGoals whenever strategy_code = 0 shall immediately satisfy same_episode & selected_step > current_step.",
+        "kind": "guarantee",
+        "source_refs": [
+          "SRS-28-07@sha256:7b097f1c2410fdae1d985e1ae314254fba60e70f010d1e7bdc8da457b4a25699#statement",
+          "SRS-28-07@sha256:7b097f1c2410fdae1d985e1ae314254fba60e70f010d1e7bdc8da457b4a25699#source_refs[2].quote"
+        ]
+      },
+      {
+        "id": "SRS-28-07:final_goal",
+        "fretish": "HerGoals whenever strategy_code = 1 shall immediately satisfy same_episode & selected_step = last_step.",
+        "kind": "guarantee",
+        "source_refs": [
+          "SRS-28-07@sha256:7b097f1c2410fdae1d985e1ae314254fba60e70f010d1e7bdc8da457b4a25699#statement",
+          "SRS-28-07@sha256:7b097f1c2410fdae1d985e1ae314254fba60e70f010d1e7bdc8da457b4a25699#source_refs[2].quote"
+        ]
+      },
+      {
+        "id": "SRS-28-07:episode_goal",
+        "fretish": "HerGoals whenever strategy_code = 2 shall immediately satisfy same_episode.",
+        "kind": "guarantee",
+        "source_refs": [
+          "SRS-28-07@sha256:7b097f1c2410fdae1d985e1ae314254fba60e70f010d1e7bdc8da457b4a25699#statement",
+          "SRS-28-07@sha256:7b097f1c2410fdae1d985e1ae314254fba60e70f010d1e7bdc8da457b4a25699#source_refs[2].quote"
+        ]
+      }
+    ],
+    "variables": [
+      {
+        "name": "strategy_code",
+        "type": "int",
+        "role": "input",
+        "meaning": "Configured strategy code: FUTURE=0, FINAL=1, EPISODE=2."
+      },
+      {
+        "name": "current_step",
+        "type": "int",
+        "role": "input",
+        "meaning": "Current transition's episode-relative step position, not its circular buffer index."
+      },
+      {
+        "name": "last_step",
+        "type": "int",
+        "role": "input",
+        "meaning": "Episode-relative position of the final achieved goal."
+      },
+      {
+        "name": "selected_step",
+        "type": "int",
+        "role": "output",
+        "meaning": "Episode-relative position at which the returned goal was achieved."
+      },
+      {
+        "name": "same_episode",
+        "type": "bool",
+        "role": "output",
+        "meaning": "Returned achieved goal belongs to the indexed transition's episode."
+      }
+    ],
+    "time_model": {
+      "kind": "discrete_steps",
+      "description": "One logical step per completed goal selection for a representative indexed transition. Episode-relative positions describe where the selected goal was achieved, not physical elapsed time."
+    },
+    "options": {
+      "timeout_ms": 60000,
+      "diagnose": true
+    }
+  },
+  "original_replay": {
+    "schema_version": 1,
+    "input_digest": "sha256:f2425d1a5dddb6a3db4d7ddaf4527933c15851e790fdd10c1e847458406d4deb",
+    "result": "invalid",
+    "contract_result": null,
+    "environment_result": null,
+    "requested_ids": [
+      "SRS-28-07:future_goal",
+      "SRS-28-07:final_goal",
+      "SRS-28-07:episode_goal"
+    ],
+    "analyzed_ids": [],
+    "diagnostics": [
+      {
+        "id": "SRS-28-07:future_goal",
+        "code": "syntax_error",
+        "message": "mismatched input 'whenever' expecting SHALL"
+      },
+      {
+        "id": "SRS-28-07:final_goal",
+        "code": "syntax_error",
+        "message": "mismatched input 'whenever' expecting SHALL"
+      },
+      {
+        "id": "SRS-28-07:episode_goal",
+        "code": "syntax_error",
+        "message": "mismatched input 'whenever' expecting SHALL"
+      }
+    ],
+    "formalization": {
+      "representations": [
+        "pt-lustre",
+        "pt-smv",
+        "ft-inf",
+        "ft-fin"
+      ],
+      "time_basis": "discrete_steps",
+      "results": [
+        {
+          "id": "SRS-28-07:future_goal",
+          "status": "invalid",
+          "formulas": [],
+          "explanation": null,
+          "diagnostics": [
+            {
+              "code": "syntax_error",
+              "message": "mismatched input 'whenever' expecting SHALL",
+              "location": {
+                "line": 1,
+                "column": 10
+              }
+            }
+          ]
+        },
+        {
+          "id": "SRS-28-07:final_goal",
+          "status": "invalid",
+          "formulas": [],
+          "explanation": null,
+          "diagnostics": [
+            {
+              "code": "syntax_error",
+              "message": "mismatched input 'whenever' expecting SHALL",
+              "location": {
+                "line": 1,
+                "column": 10
+              }
+            }
+          ]
+        },
+        {
+          "id": "SRS-28-07:episode_goal",
+          "status": "invalid",
+          "formulas": [],
+          "explanation": null,
+          "diagnostics": [
+            {
+              "code": "syntax_error",
+              "message": "mismatched input 'whenever' expecting SHALL",
+              "location": {
+                "line": 1,
+                "column": 10
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "toolchain": {
+      "fret": "sha256:be0a44be39cbfc40d736ca28a45f23d5610209e975ea5afa59f78fa7e72a7f18",
+      "adapter": "0.2.0",
+      "kind2": "kind2 v2.2.0",
+      "z3": "Z3 version 4.14.1 - 64 bit"
+    },
+    "time_model": {
+      "kind": "discrete_steps",
+      "description": "One logical step per completed goal selection for a representative indexed transition. Episode-relative positions describe where the selected goal was achieved, not physical elapsed time."
+    },
+    "assumption_ids": [],
+    "guarantee_ids": [
+      "SRS-28-07:future_goal",
+      "SRS-28-07:final_goal",
+      "SRS-28-07:episode_goal"
+    ],
+    "variable_mapping": {
+      "fret_v_0": "strategy_code",
+      "fret_v_1": "current_step",
+      "fret_v_2": "last_step",
+      "fret_v_3": "selected_step",
+      "fret_v_4": "same_episode"
+    },
+    "checks": [],
+    "diagnosis": {
+      "status": "not_run",
+      "conflicts": [],
+      "message": null
+    }
+  },
+  "corrected_input": {
+    "request_id": "358e4f01-c7bc-5db6-92bc-99ed4749711b",
+    "component": "HerGoals",
+    "requirements": [
+      {
+        "id": "SRS-28-07:future_goal",
+        "fretish": "whenever strategy_code = 0 HerGoals shall immediately satisfy same_episode & selected_step > current_step.",
+        "kind": "guarantee",
+        "source_refs": [
+          "SRS-28-07@sha256:7b097f1c2410fdae1d985e1ae314254fba60e70f010d1e7bdc8da457b4a25699#statement",
+          "SRS-28-07@sha256:7b097f1c2410fdae1d985e1ae314254fba60e70f010d1e7bdc8da457b4a25699#source_refs[2].quote"
+        ]
+      },
+      {
+        "id": "SRS-28-07:final_goal",
+        "fretish": "whenever strategy_code = 1 HerGoals shall immediately satisfy same_episode & selected_step = last_step.",
+        "kind": "guarantee",
+        "source_refs": [
+          "SRS-28-07@sha256:7b097f1c2410fdae1d985e1ae314254fba60e70f010d1e7bdc8da457b4a25699#statement",
+          "SRS-28-07@sha256:7b097f1c2410fdae1d985e1ae314254fba60e70f010d1e7bdc8da457b4a25699#source_refs[2].quote"
+        ]
+      },
+      {
+        "id": "SRS-28-07:episode_goal",
+        "fretish": "whenever strategy_code = 2 HerGoals shall immediately satisfy same_episode.",
+        "kind": "guarantee",
+        "source_refs": [
+          "SRS-28-07@sha256:7b097f1c2410fdae1d985e1ae314254fba60e70f010d1e7bdc8da457b4a25699#statement",
+          "SRS-28-07@sha256:7b097f1c2410fdae1d985e1ae314254fba60e70f010d1e7bdc8da457b4a25699#source_refs[2].quote"
+        ]
+      }
+    ],
+    "variables": [
+      {
+        "name": "strategy_code",
+        "type": "int",
+        "role": "input",
+        "meaning": "Configured strategy code: FUTURE=0, FINAL=1, EPISODE=2."
+      },
+      {
+        "name": "current_step",
+        "type": "int",
+        "role": "input",
+        "meaning": "Current transition's episode-relative step position, not its circular buffer index."
+      },
+      {
+        "name": "last_step",
+        "type": "int",
+        "role": "input",
+        "meaning": "Episode-relative position of the final achieved goal."
+      },
+      {
+        "name": "selected_step",
+        "type": "int",
+        "role": "output",
+        "meaning": "Episode-relative position at which the returned goal was achieved."
+      },
+      {
+        "name": "same_episode",
+        "type": "bool",
+        "role": "output",
+        "meaning": "Returned achieved goal belongs to the indexed transition's episode."
+      }
+    ],
+    "time_model": {
+      "kind": "discrete_steps",
+      "description": "One logical step per completed goal selection for a representative indexed transition. Episode-relative positions describe where the selected goal was achieved, not physical elapsed time."
+    },
+    "options": {
+      "timeout_ms": 60000,
+      "diagnose": true
+    }
+  },
+  "corrected_report": {
+    "schema_version": 1,
+    "input_digest": "sha256:da01594b5ffe2848c0daf4cafb0fa1873b333d1907b1aea898cc41c2779044f8",
+    "result": "realizable",
+    "contract_result": "realizable",
+    "environment_result": "realizable",
+    "requested_ids": [
+      "SRS-28-07:future_goal",
+      "SRS-28-07:final_goal",
+      "SRS-28-07:episode_goal"
+    ],
+    "analyzed_ids": [
+      "SRS-28-07:future_goal",
+      "SRS-28-07:final_goal",
+      "SRS-28-07:episode_goal"
+    ],
+    "diagnostics": [],
+    "formalization": {
+      "representations": [
+        "pt-lustre",
+        "pt-smv",
+        "ft-inf",
+        "ft-fin"
+      ],
+      "time_basis": "discrete_steps",
+      "results": [
+        {
+          "id": "SRS-28-07:future_goal",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "H(((strategy_code = 0) => (same_episode and (selected_step > current_step))))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "(H ((strategy_code = 0) -> (same_episode & (selected_step > current_step))))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(G ((strategy_code = 0) -> (same_episode & (selected_step > current_step))))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "(LAST V ((strategy_code = 0) -> (same_episode & (selected_step > current_step))))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(strategy_code = 0)</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(same_episode & selected_step > current_step)</i></b> also holds at the same time point."
+          },
+          "diagnostics": []
+        },
+        {
+          "id": "SRS-28-07:final_goal",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "H(((strategy_code = 1) => (same_episode and (selected_step = last_step))))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "(H ((strategy_code = 1) -> (same_episode & (selected_step = last_step))))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(G ((strategy_code = 1) -> (same_episode & (selected_step = last_step))))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "(LAST V ((strategy_code = 1) -> (same_episode & (selected_step = last_step))))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(strategy_code = 1)</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(same_episode & selected_step = last_step)</i></b> also holds at the same time point."
+          },
+          "diagnostics": []
+        },
+        {
+          "id": "SRS-28-07:episode_goal",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "H(((strategy_code = 2) => same_episode))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "(H ((strategy_code = 2) -> same_episode))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(G ((strategy_code = 2) -> same_episode))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "(LAST V ((strategy_code = 2) -> same_episode))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(strategy_code = 2)</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(same_episode)</i></b> also holds at the same time point."
+          },
+          "diagnostics": []
+        }
+      ]
+    },
+    "toolchain": {
+      "fret": "sha256:be0a44be39cbfc40d736ca28a45f23d5610209e975ea5afa59f78fa7e72a7f18",
+      "adapter": "0.2.0",
+      "kind2": "kind2 v2.2.0",
+      "z3": "Z3 version 4.14.1 - 64 bit"
+    },
+    "time_model": {
+      "kind": "discrete_steps",
+      "description": "One logical step per completed goal selection for a representative indexed transition. Episode-relative positions describe where the selected goal was achieved, not physical elapsed time."
+    },
+    "assumption_ids": [],
+    "guarantee_ids": [
+      "SRS-28-07:future_goal",
+      "SRS-28-07:final_goal",
+      "SRS-28-07:episode_goal"
+    ],
+    "variable_mapping": {
+      "fret_v_0": "strategy_code",
+      "fret_v_1": "current_step",
+      "fret_v_2": "last_step",
+      "fret_v_3": "selected_step",
+      "fret_v_4": "same_episode"
+    },
+    "checks": [
+      {
+        "name": "FretContract.lus",
+        "requirement_ids": [
+          "SRS-28-07:future_goal",
+          "SRS-28-07:final_goal",
+          "SRS-28-07:episode_goal"
+        ],
+        "result": "REALIZABLE",
+        "environment_result": "REALIZABLE",
+        "lustre": "--Historically\nnode H(X:bool) returns (Y:bool);\nlet\n    Y = X -> (X and (pre Y));\ntel\n\n--Y since inclusive X\nnode SI(X,Y: bool) returns (Z:bool);\nlet\nZ = Y and (X or (false -> pre Z));\ntel\n\n--Y since X\nnode S(X,Y: bool) returns (Z:bool);\nlet\nZ = X or (Y and (false -> pre Z));\ntel\n\n--Y triggered X\nnode T(X,Y: bool) returns(Z:bool);\nlet\nZ = (X and (Y or (true -> pre Z)));\ntel\n\n--Once\nnode O(X:bool) returns (Y:bool);\nlet\n Y = X or (false -> pre Y);\ntel\n\n--Timed Once: less than or equal to N\nnode OTlore( N: int; X: bool) returns (Y: bool);\n    var C:int;\nlet\n    C = if X then 0\n        else (-1 -> pre C + (if pre C <0 then 0 else 1));\n\n    Y = 0 <= C and C <= N;\ntel\n\n--Timed Once: general case\nnode OT( L: int;  R: int; X: bool) returns (Y: bool);\nvar  D:bool;\nlet\n  D=delay(X, R);\n  Y=OTlore(L-R, D);\ntel\n\n-- Timed Historically: general case\nnode HT( L: int;  R: int; X: bool) returns (Y: bool);\nlet\n  Y = not OT(L, R, not X);\ntel\n\n-- Timed Since: general case\nnode ST( L: int;  R: int; X: bool; Y: bool)  returns (Z: bool);\nlet\n  Z = S(X, Y) and OT(L, R, X);\ntel\n\n-- Timed Since Inclusive: general case\nnode SIT( L: int;  R: int; X: bool; Y: bool) returns (Z: bool);\nlet\n  Z = SI(X, Y) and OT(L, R, X);\ntel\n\n-- Timed Triggered: general case\nnode TT( L: int;  R: int; X: bool; Y: bool)  returns (Z: bool);\nlet\n  Z = T(X, Y) or HT(L, R, X);\ntel\n\n-- Pre for integers, with an initial value at FTP\nnode preInt(InitialValue, X: int) returns (Y:int);\nlet\n  Y = InitialValue -> pre X;\ntel\n\n-- Pre for reals, with an initial value at FTP\nnode preReal(InitialValue, X: real) returns (Y:real);\nlet\n  Y = InitialValue -> pre X;\ntel\n\n-- Pre for booleans, with an initial value at FTP\nnode preBool(InitialValue, X: bool) returns (Y:bool);\nlet\n  Y = InitialValue -> pre X;\ntel\n\n-- The equivalent of LTL's Y in Lustre.\nnode YtoPre(X: bool) returns (Y:bool);\nlet\n  Y = false -> pre X;\ntel\n\n-- The equivalent of LTL's Z in Lustre.\nnode ZtoPre(X: bool) returns (Y:bool);\nlet\n  Y = true -> pre X;\ntel\n\n-- Absolute value for reals\nnode absReal(x:real) returns(y: real);\nlet\n  y = if (x >= 0.0) then x else -x;\ntel\n\n-- Absolute value for integers\nnode absInt(x:int) returns(y: int);\nlet\n  y = if (x >= 0) then x else -x;\ntel\n\n-- Maximum value between two reals\nnode maxReal (a : real; b : real)\nreturns (z : real);\nlet\n  z = (if (((a) >= (b))) then (a) else (b));\ntel\n\n-- Maximum value between two integers\nnode maxInt (a : int; b : int)\nreturns (z : int);\nlet\n  z = (if (((a) >= (b))) then (a) else (b));\ntel\n\n-- Minimum value between two integers\nnode minInt (a : int; b : int)\nreturns (z : int);\nlet\n  z = (if (((a) <= (b))) then (a) else (b));\ntel\n\n-- Minimum value between two reals\nnode minReal (a : real; b : real)\nreturns (z : real);\nlet\n  z = (if (((a) <= (b))) then (a) else (b));\ntel\n\nnode delay(X:bool;  R:int) returns(Y:bool);\nlet\n\n  Y = X;\ntel\n\n\nnode imported FretContract( fret_v_0:int ; fret_v_1:int ; fret_v_2:int ) returns ( fret_v_3:int ;  fret_v_4:bool  );\n(*@contract\n\n\n\n\nvar __FTP : bool = true -> false;\n\n\n\n(* fret_r_0  *)\n\n\nguarantee \"fret_r_0\" H(((fret_v_0 = 0) => (fret_v_4 and (fret_v_3 > fret_v_1))));\n\n(* fret_r_1  *)\n\n\nguarantee \"fret_r_1\" H(((fret_v_0 = 1) => (fret_v_4 and (fret_v_3 = fret_v_2))));\n\n(* fret_r_2  *)\n\n\nguarantee \"fret_r_2\" H(((fret_v_0 = 2) => fret_v_4));\n\n\r\n*)\n",
+        "lustre_digest": "sha256:8ded9609ff50bd9848c440b627bcd9dded7c63857b0b69c1081e50a84c3be4f1",
+        "command": [
+          "kind2",
+          "--lus_main",
+          "FretContract",
+          "-json",
+          "--enable",
+          "CONTRACTCK",
+          "--timeout",
+          "60",
+          "/tmp/fret-historical-replay-k5w41W/FretContract.lus"
+        ],
+        "stdout": "[\n{\n  \"objectType\" : \"log\",\n  \"level\" : \"info\",\n  \"source\" : \"parse\",\n  \"value\" : \"kind2 v2.2.0\"\n}\n,\n{\n  \"objectType\" : \"kind2Options\",\n  \"enabled\" :\n  [\n    \"contractck\"\n  ],\n  \"timeout\" : 60.000000,\n  \"bmcMax\" : 0,\n  \"compositional\" : false,\n  \"modular\" : false\n}\n,\n{\n  \"objectType\" : \"analysisStart\",\n  \"top\" : \"FretContract\",\n  \"context\" : \"contract\"\n}\n,\n{\n  \"objectType\" : \"realizabilityCheck\",\n  \"runtime\" : {\"unit\" : \"sec\", \"timeout\" : false, \"value\" : 0.127},\n  \"result\" : \"realizable\"\n}\n,\n{\"objectType\" : \"analysisStop\"}\n,\n{\n  \"objectType\" : \"analysisStart\",\n  \"top\" : \"FretContract\",\n  \"context\" : \"environment\"\n}\n,\n{\n  \"objectType\" : \"realizabilityCheck\",\n  \"runtime\" : {\"unit\" : \"sec\", \"timeout\" : false, \"value\" : 0.000},\n  \"result\" : \"realizable\"\n}\n,\n{\"objectType\" : \"analysisStop\"}\n]\n",
+        "stderr": "",
+        "exit_code": 0,
+        "counterexample": {
+          "contract": null,
+          "environment": null
+        }
+      }
+    ],
+    "diagnosis": {
+      "status": "not_needed",
+      "conflicts": [],
+      "message": null
+    }
+  }
+}

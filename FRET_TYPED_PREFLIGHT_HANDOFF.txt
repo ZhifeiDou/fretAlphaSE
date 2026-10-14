@@ -1,0 +1,166 @@
+FRET typed preflight：实施结果与 AlphaSE 接续
+日期：2026-10-04 America/Toronto（执行记录可能为 2026-10-05 UTC）
+工作区：C:\fretAlphaSE
+原交接：C:\Cawl\FRET_IMPROVEMENT_HANDOFF.txt
+
+本轮完成范围
+
+第二批 FRET 公开带类型预检已实现；正式 analysis 已统一到相同声明入口。
+16 个历史原输入已精确冻结并重放，修正版保留全部 38 条需求。
+15 个修正版获得可实现结论；RMSpropTFLikeNumerics 的完整 9 条非线性模型
+在原有 60000ms 预算内返回 unknown，仍未证明。未缩减模型或提高 timeout。
+本轮只修改 FRET 仓库；没有修改 AlphaSE，没有部署、重启服务、运行完整 SB3 或提交 Git。
+
+接口合同
+
+formalize_requirements 输入新增可选 variables，每项严格只有 name/type，
+type 为 bool/int/real；名字、重复声明和完整请求结构先校验。
+省略 variables：保持无声明类型检查的编译。
+提供 variables（包括 []）：由请求生成局部 Map，复用原生 compile 的类型检查。
+[] 声明零个产品变量，原生常量和内置符号保留本来语义。
+每个带类型批次只容许一个由原生语义识别的 component；成功编译出多个组件时，
+所有具有组件的结果均为 invalid/component_mismatch、无公式、location=null。
+原本有语法/类型错误的条目保留真实诊断。无类型跨组件调用不变。
+声明不会跨调用、worker 或会话污染，real/int 不隐式转换，不重写数字字面量。
+analysis 投影自己的真实 name/type 调用 formalize；角色/来源/组件/I-O/保留符号/
+时长/全部条目覆盖等检查仍保留，第二次原生语义读取仍用于构造合同。
+非法输入检查可能执行后端版本探测，但不会执行合同/诊断求解，checks=[]。
+
+示例（示意输入，不是独立分析证据）：
+{
+  "requirements": [{"id":"R1","fretish":"Controller shall always satisfy reward >= 0.0"}],
+  "representations": ["ft-inf","pt-lustre"],
+  "variables": [{"name":"reward","type":"real"}]
+}
+
+formalized 仅说明请求的表示已生成；是否检查声明取决于实际输入。
+必须保留输入和输出配对。typed 成功不是 analysis-ready、可实现、忠实表达来源、
+Requirement-to-Spec 时序细化或实现正确的证明。没有增加缓存、签名、新工具或 UI。
+
+本轮实际文件增量
+
+修改 8 个既有文件：
+- mcp/src/schemas.js：共享严格 name/type schema，公开可选声明和重复校验。
+- mcp/src/formalize.js：统一请求入口、局部类型环境、组件边界、调用说明。
+- mcp/src/analysis.js：投影真实声明，经公开路径 formalize。
+- mcp/src/server.js：工具发现中的合同与证据边界说明。
+- mcp/tests/formalize.test.js：公开类型路径、空声明、混合组件、结构校验与隔离。
+- mcp/tests/mcp.test.js：真实 MCP schema、worker 传递、类型诊断、跨会话并发隔离。
+- mcp/tests/analysis.test.js：无求解拒绝、真实诊断、分析专属约束及合法数值/独立组件。
+- mcp/README.md：输入例子、证据边界、历史回归方法及实际结果。
+
+新增 3 个测试/数据文件：
+- mcp/tests/historical-models.test.js
+- mcp/tests/fixtures/historical-failed-models.json
+- mcp/tests/fixtures/historical-corrected-models.json
+
+另新增本交接及 .codex-evidence/typed-preflight-20261004/ 下的基线、哈希、日志、
+来源提取/重放脚本与完整新报告。changes.json 给出上述 11 文件本轮前后 SHA256。
+未修改原生 FretSemantics/SemanticsAnalyzer、语法、worker/executor、Dockerfile 或锁文件。
+接手前已有 dirty 文件和整个未跟踪 mcp/ 都不是本轮创建；没有提交整个工作树。
+
+验证结果（不跨层相加）
+
+- 接手基线 npm.cmd test：48 passed、18 skipped、0 failed。
+- 最终 npm.cmd test：88 passed、38 skipped、0 failed，126 tests。
+  Windows 跳过项为真实 Linux 分析；不把跳过计作通过。
+- 新镜像 Linux analysis.test.js + analysis-lifecycle.test.js + mcp.test.js：
+  41 passed、0 skipped、0 failed。
+- 同一新镜像 Linux historical-models.test.js：49 passed、0 skipped、0 failed。
+  其中16项是原始+修正模型的真实后端回归；其余是来源绑定与编译回归。
+- 历史精确归档：16/16 原 input/report/Lustre digest 核验通过；独立复核原归档
+  文件、session/message/part、原始输出及4个资源包装绑定，全部一致。
+- 16原模型：28条错误条目被公开预检拒绝；正式重放全部 invalid/checks=[]。
+  六个历史 backend_error 现在提前得到原文行列的 type_error。
+- 修正版：38/38原有条目编译；15模型 realizable，1模型 unknown。
+  测试通过包括“正确保留 unknown/timeout 证据”，不等于16模型全部证明成功。
+- AlphaSE四处接入、AlphaSE集成、实际作者调用/Approver判断、实时五审核延迟、
+  完整SB3：本轮 unexecuted，不能由上述测试替代。
+
+历史逐项结果（旧结果 → 当前原文结果 → 修正版结果）
+
+WrapperRetrieval / SRS-12-01：invalid → invalid → realizable；Bool等价语法。
+StickyActionEnv / SRS-9-01：invalid → invalid → realizable；条件位置、real端点字面量。
+TrainingProgress / SRS-10-08：error → invalid → realizable；real常量，完整比例关系保留。
+CallbackLifecycle / SRS-13-03：invalid → invalid → realizable；implies改为原生蕴含运算。
+EventComposition / SRS-13-06：invalid → invalid → realizable；and改为原生合取。
+ListComposition / SRS-13-07：invalid → invalid → realizable；and改为原生合取。
+VecMonitorReset / SRS-18-11：error → invalid → realizable；real零值，Real计数抽象保留。
+ResultsFilter / SRS-18-19：invalid → invalid → realizable；Bool等价组合语法。
+RunningMeanStdMoments / SRS-23-04：error → invalid → realizable；real零值，完整非线性关系保留。
+RMSpropTFLikeNumerics / SRS-23-08：error → invalid → unknown；real常量。
+  Kind2 exit 30、Wallclock timeout，contract/environment均unknown，diagnostic为
+  unknown_environment。仍保留完整9条关系；没有获得可实现性或不可实现性结论。
+RunningMeanStdUpdate / SRS-23-03：error → invalid → realizable；real零值。
+RunningMeanStdCombine / SRS-23-05：error → invalid → realizable；real零值。
+NatureExtractor / SRS-25-03：invalid → invalid → realizable；Bool等价语法。
+CombinedExtractorConfiguration / SRS-25-05：invalid → invalid → realizable；Bool等价语法。
+HerStorage / SRS-28-03：invalid → invalid → realizable；条件位置。
+HerGoals / SRS-28-07：invalid → invalid → realizable；条件位置。
+
+精确 before/after、修改理由及每项 remaining_gaps 均在 corrected fixture。
+这些是明确列出的测试候选修正，不是生产代码自动字符串修补，也不是经作者批准的新工件。
+未删除公式、改 guarantee 为 assumption、变更 I/O、业务阈值、时基或原选项。
+冻结候选保留旧 request_id 以做比较；通过持久 MCP 提交修正输入时必须使用新 request_id。
+Real计数整数性、对象/数组身份、独立观测、历史绑定、概率分布与来源全覆盖等缺口仍在。
+
+源码、构建与日志身份
+
+HEAD：cf0f913cc15c41705e803593297e89cd6056b839（dirty；HEAD不是完整源码身份）。
+Node v22.17.0，npm 10.9.2，webpack 5.111.1，adapter 0.2.0。
+Kind2 2.2.0，Z3 4.14.1。
+隔离测试tag：alphase/fret-mcp:typed-preflight-20261004-r1
+image ID：sha256:6dcf4d5be231e177af224f38915333aa429db429c82b064e1d363de4bf4c7a49
+报告 toolchain.fret：sha256:be0a44be39cbfc40d736ca28a45f23d5610209e975ea5afa59f78fa7e72a7f18
+相关源码清单摘要：sha256:fdcdbb2b8c9cfb7357525405a6d8fb1d0eb600e79739f7da073df0e5560e3d82
+后者覆盖201个原生/MCP源码、包/锁/构建配置文件，详见 source-build.json。
+本地5份bundle与新镜像5份bundle逐字节SHA256一致，详见 image-build.json。
+历史 toolchain.fret 保持归档值 c45764...；没有把它当作历史 Docker image ID。
+
+证据根目录：.codex-evidence/typed-preflight-20261004/
+- baseline.json、baseline/：修改前副本与SHA256。
+- changes.json、source-build.json、image-build.json、toolchain.json、result.json。
+- node-before.log、node-after.log、linux-after.log、docker-build.log。
+- historical/public-preflight.json：逐项当前预检。
+- historical/linux-replay-summary.json、historical/<component>.json：完整新旧输入与新报告。
+- historical/linux-replay.log、historical/linux-tests.log：真实Linux执行日志。
+
+复现命令（仓库根目录，PowerShell；均为隔离测试）
+
+Set-Location C:\fretAlphaSE\mcp
+npm.cmd test
+
+Set-Location C:\fretAlphaSE
+docker build --file mcp/Dockerfile --tag <全新测试tag> .
+docker run --rm --init --network none `
+  --mount "type=bind,source=$PWD/mcp/tests,target=/opt/fret-mcp/tests,readonly" `
+  --mount "type=bind,source=$PWD/mcp/src,target=/opt/fret-mcp/src,readonly" `
+  <全新测试tag> node --test `
+  tests/analysis.test.js tests/analysis-lifecycle.test.js tests/mcp.test.js `
+  tests/historical-models.test.js
+
+AlphaSE下一步（回 C:\Cawl 执行；已有原交接授权，不需重新设计接口）
+
+1. .alphase/opencode/agents/requirement_specifier.md
+2. .alphase/opencode/agents/specifier.md
+   角色协议必须携带最终候选真实 name/type，按真实 component 分批，文本或类型变更后重检。
+3. mcps/artifact/tests/test_fret_mcp.py
+   添加实际MCP声明传递回归；保留并区分旧无类型调用与新带类型调用的证明边界。
+4. docs/formal-verification.md
+   更新支持状态，保留作者预检与Artifact绑定正式证据的区别。
+
+可使用本轮已构建镜像验证AlphaSE真实集成（这不是部署或完整SB3）：
+Set-Location C:\Cawl
+$env:ALPHASE_TEST_FRET_IMAGE = 'alphase/fret-mcp:typed-preflight-20261004-r1'
+& .\mcps\artifact\.venv\Scripts\python.exe -m pytest mcps/artifact/tests/test_fret_mcp.py -q -p no:cacheprovider
+
+随后仍需创建生产报告绑定的 component-independent/component-fragmented 两个语义用例，
+执行真实作者与独立Approver行为验收；原交接中的OpenCode EEXIST要按实际环境解决，
+不得改HOME或伪造配置。实时五审核延迟与完整SB3仍是独立验收。
+禁止把作者 passed=true、无输入配对的formalized或RMSprop unknown当正式成功证据。
+
+质量审查
+
+未发现需要外层补丁或原生解析器改动的缺陷；本轮没有引入已知脆弱workaround。
+尚无把握的是未获结论的RMSprop模型与各模型明示的语义/实现边界，已保留原事实。
+不要为了消除unknown而删公式、改I/O、放宽义务或无限调高timeout。

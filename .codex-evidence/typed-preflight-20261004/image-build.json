@@ -1,0 +1,25 @@
+﻿{
+  "node": "v22.17.0",
+  "bundles": [
+    {
+      "path": "mcp/dist/analysis-worker.cjs",
+      "sha256": "sha256:896bad947249977e552ce5f84d650c7808951adf3b30757547b7751440ddb4fb"
+    },
+    {
+      "path": "mcp/dist/analysis.cjs",
+      "sha256": "sha256:c081f17959a1f467dfbc42f5d87a5210eb3534d8fd1c3cdfb7917ceba3262e32"
+    },
+    {
+      "path": "mcp/dist/formalize.cjs",
+      "sha256": "sha256:d357e0d6746febe93847d6f662a0a4344093a92c164906fc6ec94f1945b9741c"
+    },
+    {
+      "path": "mcp/dist/server.cjs",
+      "sha256": "sha256:1a80e620716549dc6f8fd27ec3714ac3b071f5936b0e536f9282dfd0e7b51f25"
+    },
+    {
+      "path": "mcp/dist/worker.cjs",
+      "sha256": "sha256:a0be75fbc4dee42f1f33294c989e1ff990143a737f5002010e88585c01eb8923"
+    }
+  ]
+}

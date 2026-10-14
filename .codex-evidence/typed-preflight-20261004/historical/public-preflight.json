@@ -1,0 +1,2186 @@
+[
+  {
+    "component": "WrapperRetrieval",
+    "original": {
+      "representations": [
+        "pt-lustre",
+        "pt-smv",
+        "ft-inf",
+        "ft-fin"
+      ],
+      "time_basis": "discrete_steps",
+      "results": [
+        {
+          "id": "SRS-12-01:absence_result",
+          "status": "invalid",
+          "formulas": [],
+          "explanation": null,
+          "diagnostics": [
+            {
+              "code": "syntax_error",
+              "message": "extraneous input '!' expecting {'(', '-', ID, NUMBER}",
+              "location": {
+                "line": 1,
+                "column": 55
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "corrected": {
+      "representations": [
+        "pt-lustre",
+        "pt-smv",
+        "ft-inf",
+        "ft-fin"
+      ],
+      "time_basis": "discrete_steps",
+      "results": [
+        {
+          "id": "SRS-12-01:absence_result",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "H((returned_none = not (has_wrapper)))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "(H (returned_none <-> (! has_wrapper)))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(G (returned_none <-> (! has_wrapper)))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "(LAST V (returned_none <-> (! has_wrapper)))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: first point in the interval.<br>REQUIRED BEHAVIOR: for every trigger, <b><i>(( returned_none <-> ! has_wrapper ))</i></b> must hold at all time points between (and including) the trigger and the end of the interval."
+          },
+          "diagnostics": []
+        }
+      ]
+    }
+  },
+  {
+    "component": "StickyActionEnv",
+    "original": {
+      "representations": [
+        "pt-lustre",
+        "pt-smv",
+        "ft-inf",
+        "ft-fin"
+      ],
+      "time_basis": "discrete_steps",
+      "results": [
+        {
+          "id": "SRS-9-01:allowed_actions",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "O(((executed_action = previous_action) or (executed_action = intended_action)))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "(O ((executed_action = previous_action) | (executed_action = intended_action)))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(F ((executed_action = previous_action) | (executed_action = intended_action)))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "((! LAST) U ((executed_action = previous_action) | (executed_action = intended_action)))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: first point in the interval.<br>REQUIRED BEHAVIOR: for every trigger, <b><i>(executed_action = previous_action | executed_action = intended_action)</i></b> must hold at some time point between (and including) the trigger and the end of the interval."
+          },
+          "diagnostics": []
+        },
+        {
+          "id": "SRS-9-01:zero_repeat_probability",
+          "status": "invalid",
+          "formulas": [],
+          "explanation": null,
+          "diagnostics": [
+            {
+              "code": "syntax_error",
+              "message": "mismatched input 'whenever' expecting SHALL",
+              "location": {
+                "line": 1,
+                "column": 17
+              }
+            }
+          ]
+        },
+        {
+          "id": "SRS-9-01:certain_repeat_probability",
+          "status": "invalid",
+          "formulas": [],
+          "explanation": null,
+          "diagnostics": [
+            {
+              "code": "syntax_error",
+              "message": "mismatched input 'whenever' expecting SHALL",
+              "location": {
+                "line": 1,
+                "column": 17
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "corrected": {
+      "representations": [
+        "pt-lustre",
+        "pt-smv",
+        "ft-inf",
+        "ft-fin"
+      ],
+      "time_basis": "discrete_steps",
+      "results": [
+        {
+          "id": "SRS-9-01:allowed_actions",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "O(((executed_action = previous_action) or (executed_action = intended_action)))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "(O ((executed_action = previous_action) | (executed_action = intended_action)))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(F ((executed_action = previous_action) | (executed_action = intended_action)))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "((! LAST) U ((executed_action = previous_action) | (executed_action = intended_action)))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: first point in the interval.<br>REQUIRED BEHAVIOR: for every trigger, <b><i>(executed_action = previous_action | executed_action = intended_action)</i></b> must hold at some time point between (and including) the trigger and the end of the interval."
+          },
+          "diagnostics": []
+        },
+        {
+          "id": "SRS-9-01:zero_repeat_probability",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "(H(not ((repeat_probability = 0.0))) or not (SI((repeat_probability = 0.0),not ((executed_action = intended_action)))))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "((H (! (repeat_probability = 0.0))) | (! ((! (executed_action = intended_action)) S ((! (executed_action = intended_action)) & (repeat_probability = 0.0)))))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(G ((repeat_probability = 0.0) -> (F (executed_action = intended_action))))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "(LAST V ((repeat_probability = 0.0) -> ((! LAST) U (executed_action = intended_action))))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(repeat_probability = 0.0)</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, <b><i>(executed_action = intended_action)</i></b> must hold at some time point between (and including) the trigger and the end of the interval."
+          },
+          "diagnostics": []
+        },
+        {
+          "id": "SRS-9-01:certain_repeat_probability",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "(H(not ((repeat_probability = 1.0))) or not (SI((repeat_probability = 1.0),not ((executed_action = previous_action)))))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "((H (! (repeat_probability = 1.0))) | (! ((! (executed_action = previous_action)) S ((! (executed_action = previous_action)) & (repeat_probability = 1.0)))))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(G ((repeat_probability = 1.0) -> (F (executed_action = previous_action))))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "(LAST V ((repeat_probability = 1.0) -> ((! LAST) U (executed_action = previous_action))))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(repeat_probability = 1.0)</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, <b><i>(executed_action = previous_action)</i></b> must hold at some time point between (and including) the trigger and the end of the interval."
+          },
+          "diagnostics": []
+        }
+      ]
+    }
+  },
+  {
+    "component": "TrainingProgress",
+    "original": {
+      "representations": [
+        "pt-lustre",
+        "pt-smv",
+        "ft-inf",
+        "ft-fin"
+      ],
+      "time_basis": "discrete_steps",
+      "results": [
+        {
+          "id": "SRS-10-08:remaining_fraction",
+          "status": "invalid",
+          "formulas": [],
+          "explanation": null,
+          "diagnostics": [
+            {
+              "code": "type_error",
+              "message": "Comparison total>0 requires matching numeric types; received (real, int).",
+              "location": {
+                "line": 1,
+                "column": 10
+              }
+            },
+            {
+              "code": "type_error",
+              "message": "Expression 1-current/total requires matching numeric operands; received (int, real).",
+              "location": {
+                "line": 1,
+                "column": 75
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "corrected": {
+      "representations": [
+        "pt-lustre",
+        "pt-smv",
+        "ft-inf",
+        "ft-fin"
+      ],
+      "time_basis": "discrete_steps",
+      "results": [
+        {
+          "id": "SRS-10-08:remaining_fraction",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "H(((total > 0.0) => (remaining = (1.0 - (current / total)))))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "(H ((total > 0.0) -> (remaining = (1.0 - (current / total)))))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(G ((total > 0.0) -> (remaining = (1.0 - (current / total)))))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "(LAST V ((total > 0.0) -> (remaining = (1.0 - (current / total)))))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(total > 0.0)</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(remaining = 1.0 - current / total)</i></b> also holds at the same time point."
+          },
+          "diagnostics": []
+        }
+      ]
+    }
+  },
+  {
+    "component": "CallbackLifecycle",
+    "original": {
+      "representations": [
+        "pt-lustre",
+        "pt-smv",
+        "ft-inf",
+        "ft-fin"
+      ],
+      "time_basis": "discrete_steps",
+      "results": [
+        {
+          "id": "SRS-13-03:lifecycle_dispatch",
+          "status": "invalid",
+          "formulas": [],
+          "explanation": null,
+          "diagnostics": [
+            {
+              "code": "syntax_error",
+              "message": "no viable alternative at input '(lifecycle_event implies'",
+              "location": {
+                "line": 1,
+                "column": 57
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "corrected": {
+      "representations": [
+        "pt-lustre",
+        "pt-smv",
+        "ft-inf",
+        "ft-fin"
+      ],
+      "time_basis": "discrete_steps",
+      "results": [
+        {
+          "id": "SRS-13-03:lifecycle_dispatch",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "H((lifecycle_event => hook_called))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "(H (lifecycle_event -> hook_called))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(G (lifecycle_event -> hook_called))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "(LAST V (lifecycle_event -> hook_called))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: first point in the interval.<br>REQUIRED BEHAVIOR: for every trigger, <b><i>(( lifecycle_event => hook_called ))</i></b> must hold at all time points between (and including) the trigger and the end of the interval."
+          },
+          "diagnostics": []
+        }
+      ]
+    }
+  },
+  {
+    "component": "EventComposition",
+    "original": {
+      "representations": [
+        "pt-lustre",
+        "pt-smv",
+        "ft-inf",
+        "ft-fin"
+      ],
+      "time_basis": "discrete_steps",
+      "results": [
+        {
+          "id": "SRS-13-06:trigger_child",
+          "status": "invalid",
+          "formulas": [],
+          "explanation": null,
+          "diagnostics": [
+            {
+              "code": "syntax_error",
+              "message": "no viable alternative at input '((child_present and'",
+              "location": {
+                "line": 1,
+                "column": 55
+              }
+            }
+          ]
+        },
+        {
+          "id": "SRS-13-06:return_child",
+          "status": "invalid",
+          "formulas": [],
+          "explanation": null,
+          "diagnostics": [
+            {
+              "code": "syntax_error",
+              "message": "no viable alternative at input '((child_present and'",
+              "location": {
+                "line": 1,
+                "column": 55
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "corrected": {
+      "representations": [
+        "pt-lustre",
+        "pt-smv",
+        "ft-inf",
+        "ft-fin"
+      ],
+      "time_basis": "discrete_steps",
+      "results": [
+        {
+          "id": "SRS-13-06:trigger_child",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "H(((child_present and event_dispatch) => child_called))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "(H ((child_present & event_dispatch) -> child_called))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(G ((child_present & event_dispatch) -> child_called))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "(LAST V ((child_present & event_dispatch) -> child_called))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: first point in the interval.<br>REQUIRED BEHAVIOR: for every trigger, <b><i>(( ( child_present & event_dispatch ) => child_called ))</i></b> must hold at all time points between (and including) the trigger and the end of the interval."
+          },
+          "diagnostics": []
+        },
+        {
+          "id": "SRS-13-06:return_child",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "H(((child_present and event_dispatch) => (event_result = child_result)))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "(H ((child_present & event_dispatch) -> (event_result = child_result)))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(G ((child_present & event_dispatch) -> (event_result = child_result)))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "(LAST V ((child_present & event_dispatch) -> (event_result = child_result)))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: first point in the interval.<br>REQUIRED BEHAVIOR: for every trigger, <b><i>(( ( child_present & event_dispatch ) => ( event_result = child_result ) ))</i></b> must hold at all time points between (and including) the trigger and the end of the interval."
+          },
+          "diagnostics": []
+        }
+      ]
+    }
+  },
+  {
+    "component": "ListComposition",
+    "original": {
+      "representations": [
+        "pt-lustre",
+        "pt-smv",
+        "ft-inf",
+        "ft-fin"
+      ],
+      "time_basis": "discrete_steps",
+      "results": [
+        {
+          "id": "SRS-13-07:any_false_stops",
+          "status": "invalid",
+          "formulas": [],
+          "explanation": null,
+          "diagnostics": [
+            {
+              "code": "syntax_error",
+              "message": "no viable alternative at input '((list_step and'",
+              "location": {
+                "line": 1,
+                "column": 50
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "corrected": {
+      "representations": [
+        "pt-lustre",
+        "pt-smv",
+        "ft-inf",
+        "ft-fin"
+      ],
+      "time_basis": "discrete_steps",
+      "results": [
+        {
+          "id": "SRS-13-07:any_false_stops",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "H(((list_step and any_child_false) => not (list_result)))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "(H ((list_step & any_child_false) -> (! list_result)))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(G ((list_step & any_child_false) -> (! list_result)))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "(LAST V ((list_step & any_child_false) -> (! list_result)))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: first point in the interval.<br>REQUIRED BEHAVIOR: for every trigger, <b><i>(( ( list_step & any_child_false ) => ! list_result ))</i></b> must hold at all time points between (and including) the trigger and the end of the interval."
+          },
+          "diagnostics": []
+        }
+      ]
+    }
+  },
+  {
+    "component": "VecMonitorReset",
+    "original": {
+      "representations": [
+        "pt-lustre",
+        "pt-smv",
+        "ft-inf",
+        "ft-fin"
+      ],
+      "time_basis": "discrete_steps",
+      "results": [
+        {
+          "id": "SRS-18-11:clear_counters",
+          "status": "invalid",
+          "formulas": [],
+          "explanation": null,
+          "diagnostics": [
+            {
+              "code": "type_error",
+              "message": "Comparison episode_return=0 requires matching operand types; received (real, int).",
+              "location": {
+                "line": 1,
+                "column": 40
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "corrected": {
+      "representations": [
+        "pt-lustre",
+        "pt-smv",
+        "ft-inf",
+        "ft-fin"
+      ],
+      "time_basis": "discrete_steps",
+      "results": [
+        {
+          "id": "SRS-18-11:clear_counters",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "(H((episode_return = 0.0)) and H((episode_length = 0)))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "((H (episode_return = 0.0)) & (H (episode_length = 0)))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(G ((episode_return = 0.0) & (episode_length = 0)))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "(LAST V ((episode_return = 0.0) & (episode_length = 0)))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: first point in the interval.<br>REQUIRED BEHAVIOR: for every trigger, <b><i>(( ( episode_return = 0.0 ) & ( episode_length = 0 ) ))</i></b> must hold at all time points between (and including) the trigger and the end of the interval."
+          },
+          "diagnostics": []
+        }
+      ]
+    }
+  },
+  {
+    "component": "ResultsFilter",
+    "original": {
+      "representations": [
+        "pt-lustre",
+        "pt-smv",
+        "ft-inf",
+        "ft-fin"
+      ],
+      "time_basis": "discrete_steps",
+      "results": [
+        {
+          "id": "SRS-18-19:strict_cutoff",
+          "status": "invalid",
+          "formulas": [],
+          "explanation": null,
+          "diagnostics": [
+            {
+              "code": "syntax_error",
+              "message": "mismatched input '<' expecting ')'",
+              "location": {
+                "line": 1,
+                "column": 99
+              }
+            }
+          ]
+        },
+        {
+          "id": "SRS-18-19:no_cutoff",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "H((not (cutoff_supplied) => passes_timestep_filter))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "(H ((! cutoff_supplied) -> passes_timestep_filter))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(G ((! cutoff_supplied) -> passes_timestep_filter))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "(LAST V ((! cutoff_supplied) -> passes_timestep_filter))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: first point in the interval.<br>REQUIRED BEHAVIOR: for every trigger, <b><i>(( ! cutoff_supplied => passes_timestep_filter ))</i></b> must hold at all time points between (and including) the trigger and the end of the interval."
+          },
+          "diagnostics": []
+        }
+      ]
+    },
+    "corrected": {
+      "representations": [
+        "pt-lustre",
+        "pt-smv",
+        "ft-inf",
+        "ft-fin"
+      ],
+      "time_basis": "discrete_steps",
+      "results": [
+        {
+          "id": "SRS-18-19:strict_cutoff",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "H((cutoff_supplied => (passes_timestep_filter = (point_timesteps < cutoff))))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "(H (cutoff_supplied -> (passes_timestep_filter <-> (point_timesteps < cutoff))))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(G (cutoff_supplied -> (passes_timestep_filter <-> (point_timesteps < cutoff))))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "(LAST V (cutoff_supplied -> (passes_timestep_filter <-> (point_timesteps < cutoff))))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: first point in the interval.<br>REQUIRED BEHAVIOR: for every trigger, <b><i>(( cutoff_supplied => ( passes_timestep_filter <-> ( point_timesteps < cutoff ) ) ))</i></b> must hold at all time points between (and including) the trigger and the end of the interval."
+          },
+          "diagnostics": []
+        },
+        {
+          "id": "SRS-18-19:no_cutoff",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "H((not (cutoff_supplied) => passes_timestep_filter))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "(H ((! cutoff_supplied) -> passes_timestep_filter))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(G ((! cutoff_supplied) -> passes_timestep_filter))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "(LAST V ((! cutoff_supplied) -> passes_timestep_filter))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: first point in the interval.<br>REQUIRED BEHAVIOR: for every trigger, <b><i>(( ! cutoff_supplied => passes_timestep_filter ))</i></b> must hold at all time points between (and including) the trigger and the end of the interval."
+          },
+          "diagnostics": []
+        }
+      ]
+    }
+  },
+  {
+    "component": "RunningMeanStdMoments",
+    "original": {
+      "representations": [
+        "pt-lustre",
+        "pt-smv",
+        "ft-inf",
+        "ft-fin"
+      ],
+      "time_basis": "discrete_steps",
+      "results": [
+        {
+          "id": "SRS-23-04:combined_count",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "H((moments_return => (new_count = (old_count + batch_count))))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "(H (moments_return -> (new_count = (old_count + batch_count))))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(G (moments_return -> (new_count = (old_count + batch_count))))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "(LAST V (moments_return -> (new_count = (old_count + batch_count))))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(moments_return)</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(new_count = old_count + batch_count)</i></b> also holds at the same time point."
+          },
+          "diagnostics": []
+        },
+        {
+          "id": "SRS-23-04:combined_moments",
+          "status": "invalid",
+          "formulas": [],
+          "explanation": null,
+          "diagnostics": [
+            {
+              "code": "type_error",
+              "message": "Comparison old_count+batch_count!=0 requires matching operand types; received (real, int).",
+              "location": {
+                "line": 1,
+                "column": 28
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "corrected": {
+      "representations": [
+        "pt-lustre",
+        "pt-smv",
+        "ft-inf",
+        "ft-fin"
+      ],
+      "time_basis": "discrete_steps",
+      "results": [
+        {
+          "id": "SRS-23-04:combined_count",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "H((moments_return => (new_count = (old_count + batch_count))))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "(H (moments_return -> (new_count = (old_count + batch_count))))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(G (moments_return -> (new_count = (old_count + batch_count))))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "(LAST V (moments_return -> (new_count = (old_count + batch_count))))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(moments_return)</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(new_count = old_count + batch_count)</i></b> also holds at the same time point."
+          },
+          "diagnostics": []
+        },
+        {
+          "id": "SRS-23-04:combined_moments",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "H(((moments_return and ((old_count + batch_count) <> 0.0)) => ((new_mean = (old_mean + (((batch_mean - old_mean) * batch_count) / (old_count + batch_count)))) and (new_variance = ((((old_count * old_variance) + (batch_count * batch_variance)) + (((((batch_mean - old_mean) * (batch_mean - old_mean)) * old_count) * batch_count) / (old_count + batch_count))) / (old_count + batch_count))))))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "(H ((moments_return & ((old_count + batch_count) != 0.0)) -> ((new_mean = (old_mean + (((batch_mean - old_mean) * batch_count) / (old_count + batch_count)))) & (new_variance = ((((old_count * old_variance) + (batch_count * batch_variance)) + (((((batch_mean - old_mean) * (batch_mean - old_mean)) * old_count) * batch_count) / (old_count + batch_count))) / (old_count + batch_count))))))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(G ((moments_return & ((old_count + batch_count) != 0.0)) -> ((new_mean = (old_mean + (((batch_mean - old_mean) * batch_count) / (old_count + batch_count)))) & (new_variance = ((((old_count * old_variance) + (batch_count * batch_variance)) + (((((batch_mean - old_mean) * (batch_mean - old_mean)) * old_count) * batch_count) / (old_count + batch_count))) / (old_count + batch_count))))))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "(LAST V ((moments_return & ((old_count + batch_count) != 0.0)) -> ((new_mean = (old_mean + (((batch_mean - old_mean) * batch_count) / (old_count + batch_count)))) & (new_variance = ((((old_count * old_variance) + (batch_count * batch_variance)) + (((((batch_mean - old_mean) * (batch_mean - old_mean)) * old_count) * batch_count) / (old_count + batch_count))) / (old_count + batch_count))))))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(moments_return & ( old_count + batch_count != 0.0 ))</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(new_mean = old_mean + ( batch_mean - old_mean ) * batch_count / ( old_count + batch_count ) & new_variance = ( old_count * old_variance + batch_count * batch_variance + ( batch_mean - old_mean ) * ( batch_mean - old_mean ) * old_count * batch_count / ( old_count + batch_count ) ) / ( old_count + batch_count ))</i></b> also holds at the same time point."
+          },
+          "diagnostics": []
+        }
+      ]
+    }
+  },
+  {
+    "component": "RMSpropTFLikeNumerics",
+    "original": {
+      "representations": [
+        "pt-lustre",
+        "pt-smv",
+        "ft-inf",
+        "ft-fin"
+      ],
+      "time_basis": "discrete_steps",
+      "results": [
+        {
+          "id": "SRS-23-08:ones_initialization",
+          "status": "invalid",
+          "formulas": [],
+          "explanation": null,
+          "diagnostics": [
+            {
+              "code": "type_error",
+              "message": "Comparison squared_average_initial=1 requires matching operand types; received (real, int).",
+              "location": {
+                "line": 1,
+                "column": 87
+              }
+            }
+          ]
+        },
+        {
+          "id": "SRS-23-08:closure_return",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "H(((step_return and closure_provided) => ((returned_loss = closure_loss) and not (returns_none))))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "(H ((step_return & closure_provided) -> ((returned_loss = closure_loss) & (! returns_none))))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(G ((step_return & closure_provided) -> ((returned_loss = closure_loss) & (! returns_none))))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "(LAST V ((step_return & closure_provided) -> ((returned_loss = closure_loss) & (! returns_none))))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(step_return & closure_provided)</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(returned_loss = closure_loss & ! returns_none)</i></b> also holds at the same time point."
+          },
+          "diagnostics": []
+        },
+        {
+          "id": "SRS-23-08:no_closure_return",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "H(((step_return and not (closure_provided)) => returns_none))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "(H ((step_return & (! closure_provided)) -> returns_none))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(G ((step_return & (! closure_provided)) -> returns_none))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "(LAST V ((step_return & (! closure_provided)) -> returns_none))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(step_return & ! closure_provided)</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(returns_none)</i></b> also holds at the same time point."
+          },
+          "diagnostics": []
+        },
+        {
+          "id": "SRS-23-08:squared_gradient_update",
+          "status": "invalid",
+          "formulas": [],
+          "explanation": null,
+          "diagnostics": [
+            {
+              "code": "type_error",
+              "message": "Expression 1-alpha requires matching numeric operands; received (int, real).",
+              "location": {
+                "line": 1,
+                "column": 186
+              }
+            }
+          ]
+        },
+        {
+          "id": "SRS-23-08:gradient_average_update",
+          "status": "invalid",
+          "formulas": [],
+          "explanation": null,
+          "diagnostics": [
+            {
+              "code": "type_error",
+              "message": "Expression 1-alpha requires matching numeric operands; received (int, real).",
+              "location": {
+                "line": 1,
+                "column": 132
+              }
+            }
+          ]
+        },
+        {
+          "id": "SRS-23-08:uncentered_denominator",
+          "status": "invalid",
+          "formulas": [],
+          "explanation": null,
+          "diagnostics": [
+            {
+              "code": "type_error",
+              "message": "Comparison squared_average+eps>=0 requires matching numeric types; received (real, int).",
+              "location": {
+                "line": 1,
+                "column": 37
+              }
+            },
+            {
+              "code": "type_error",
+              "message": "Comparison denominator>=0 requires matching numeric types; received (real, int).",
+              "location": {
+                "line": 1,
+                "column": 113
+              }
+            }
+          ]
+        },
+        {
+          "id": "SRS-23-08:centered_denominator",
+          "status": "invalid",
+          "formulas": [],
+          "explanation": null,
+          "diagnostics": [
+            {
+              "code": "type_error",
+              "message": "Comparison squared_average-gradient_average*gradient_average+eps>=0 requires matching numeric types; received (real, int).",
+              "location": {
+                "line": 1,
+                "column": 36
+              }
+            },
+            {
+              "code": "type_error",
+              "message": "Comparison denominator>=0 requires matching numeric types; received (real, int).",
+              "location": {
+                "line": 1,
+                "column": 150
+              }
+            }
+          ]
+        },
+        {
+          "id": "SRS-23-08:plain_parameter_update",
+          "status": "invalid",
+          "formulas": [],
+          "explanation": null,
+          "diagnostics": [
+            {
+              "code": "type_error",
+              "message": "Comparison denominator>0 requires matching numeric types; received (real, int).",
+              "location": {
+                "line": 1,
+                "column": 25
+              }
+            },
+            {
+              "code": "type_error",
+              "message": "Comparison momentum=0 requires matching operand types; received (real, int).",
+              "location": {
+                "line": 1,
+                "column": 45
+              }
+            }
+          ]
+        },
+        {
+          "id": "SRS-23-08:momentum_parameter_update",
+          "status": "invalid",
+          "formulas": [],
+          "explanation": null,
+          "diagnostics": [
+            {
+              "code": "type_error",
+              "message": "Comparison denominator>0 requires matching numeric types; received (real, int).",
+              "location": {
+                "line": 1,
+                "column": 25
+              }
+            },
+            {
+              "code": "type_error",
+              "message": "Comparison momentum!=0 requires matching operand types; received (real, int).",
+              "location": {
+                "line": 1,
+                "column": 45
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "corrected": {
+      "representations": [
+        "pt-lustre",
+        "pt-smv",
+        "ft-inf",
+        "ft-fin"
+      ],
+      "time_basis": "discrete_steps",
+      "results": [
+        {
+          "id": "SRS-23-08:ones_initialization",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "H((initializing_squared_average => (squared_average_initial = 1.0)))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "(H (initializing_squared_average -> (squared_average_initial = 1.0)))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(G (initializing_squared_average -> (squared_average_initial = 1.0)))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "(LAST V (initializing_squared_average -> (squared_average_initial = 1.0)))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(initializing_squared_average)</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(squared_average_initial = 1.0)</i></b> also holds at the same time point."
+          },
+          "diagnostics": []
+        },
+        {
+          "id": "SRS-23-08:closure_return",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "H(((step_return and closure_provided) => ((returned_loss = closure_loss) and not (returns_none))))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "(H ((step_return & closure_provided) -> ((returned_loss = closure_loss) & (! returns_none))))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(G ((step_return & closure_provided) -> ((returned_loss = closure_loss) & (! returns_none))))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "(LAST V ((step_return & closure_provided) -> ((returned_loss = closure_loss) & (! returns_none))))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(step_return & closure_provided)</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(returned_loss = closure_loss & ! returns_none)</i></b> also holds at the same time point."
+          },
+          "diagnostics": []
+        },
+        {
+          "id": "SRS-23-08:no_closure_return",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "H(((step_return and not (closure_provided)) => returns_none))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "(H ((step_return & (! closure_provided)) -> returns_none))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(G ((step_return & (! closure_provided)) -> returns_none))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "(LAST V ((step_return & (! closure_provided)) -> returns_none))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(step_return & ! closure_provided)</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(returns_none)</i></b> also holds at the same time point."
+          },
+          "diagnostics": []
+        },
+        {
+          "id": "SRS-23-08:squared_gradient_update",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "H((step_return => ((effective_gradient = (raw_gradient + (weight_decay * old_parameter))) and (squared_average = ((alpha * old_squared_average) + (((1.0 - alpha) * effective_gradient) * effective_gradient))))))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "(H (step_return -> ((effective_gradient = (raw_gradient + (weight_decay * old_parameter))) & (squared_average = ((alpha * old_squared_average) + (((1.0 - alpha) * effective_gradient) * effective_gradient))))))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(G (step_return -> ((effective_gradient = (raw_gradient + (weight_decay * old_parameter))) & (squared_average = ((alpha * old_squared_average) + (((1.0 - alpha) * effective_gradient) * effective_gradient))))))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "(LAST V (step_return -> ((effective_gradient = (raw_gradient + (weight_decay * old_parameter))) & (squared_average = ((alpha * old_squared_average) + (((1.0 - alpha) * effective_gradient) * effective_gradient))))))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(step_return)</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(effective_gradient = raw_gradient + weight_decay * old_parameter & squared_average = alpha * old_squared_average + ( 1.0 - alpha ) * effective_gradient * effective_gradient)</i></b> also holds at the same time point."
+          },
+          "diagnostics": []
+        },
+        {
+          "id": "SRS-23-08:gradient_average_update",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "H(((step_return and centered) => (gradient_average = ((alpha * old_gradient_average) + ((1.0 - alpha) * effective_gradient)))))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "(H ((step_return & centered) -> (gradient_average = ((alpha * old_gradient_average) + ((1.0 - alpha) * effective_gradient)))))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(G ((step_return & centered) -> (gradient_average = ((alpha * old_gradient_average) + ((1.0 - alpha) * effective_gradient)))))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "(LAST V ((step_return & centered) -> (gradient_average = ((alpha * old_gradient_average) + ((1.0 - alpha) * effective_gradient)))))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(step_return & centered)</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(gradient_average = alpha * old_gradient_average + ( 1.0 - alpha ) * effective_gradient)</i></b> also holds at the same time point."
+          },
+          "diagnostics": []
+        },
+        {
+          "id": "SRS-23-08:uncentered_denominator",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "H((((step_return and not (centered)) and ((squared_average + eps) >= 0.0)) => ((denominator >= 0.0) and ((denominator * denominator) = (squared_average + eps)))))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "(H (((step_return & (! centered)) & ((squared_average + eps) >= 0.0)) -> ((denominator >= 0.0) & ((denominator * denominator) = (squared_average + eps)))))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(G (((step_return & (! centered)) & ((squared_average + eps) >= 0.0)) -> ((denominator >= 0.0) & ((denominator * denominator) = (squared_average + eps)))))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "(LAST V (((step_return & (! centered)) & ((squared_average + eps) >= 0.0)) -> ((denominator >= 0.0) & ((denominator * denominator) = (squared_average + eps)))))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(step_return & ! centered & ( squared_average + eps >= 0.0 ))</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(denominator >= 0.0 & denominator * denominator = squared_average + eps)</i></b> also holds at the same time point."
+          },
+          "diagnostics": []
+        },
+        {
+          "id": "SRS-23-08:centered_denominator",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "H((((step_return and centered) and (((squared_average - (gradient_average * gradient_average)) + eps) >= 0.0)) => ((denominator >= 0.0) and ((denominator * denominator) = ((squared_average - (gradient_average * gradient_average)) + eps)))))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "(H (((step_return & centered) & (((squared_average - (gradient_average * gradient_average)) + eps) >= 0.0)) -> ((denominator >= 0.0) & ((denominator * denominator) = ((squared_average - (gradient_average * gradient_average)) + eps)))))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(G (((step_return & centered) & (((squared_average - (gradient_average * gradient_average)) + eps) >= 0.0)) -> ((denominator >= 0.0) & ((denominator * denominator) = ((squared_average - (gradient_average * gradient_average)) + eps)))))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "(LAST V (((step_return & centered) & (((squared_average - (gradient_average * gradient_average)) + eps) >= 0.0)) -> ((denominator >= 0.0) & ((denominator * denominator) = ((squared_average - (gradient_average * gradient_average)) + eps)))))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(step_return & centered & ( squared_average - gradient_average * gradient_average + eps >= 0.0 ))</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(denominator >= 0.0 & denominator * denominator = squared_average - gradient_average * gradient_average + eps)</i></b> also holds at the same time point."
+          },
+          "diagnostics": []
+        },
+        {
+          "id": "SRS-23-08:plain_parameter_update",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "H((((step_return and (denominator > 0.0)) and (momentum = 0.0)) => (new_parameter = (old_parameter - ((lr * effective_gradient) / denominator)))))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "(H (((step_return & (denominator > 0.0)) & (momentum = 0.0)) -> (new_parameter = (old_parameter - ((lr * effective_gradient) / denominator)))))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(G (((step_return & (denominator > 0.0)) & (momentum = 0.0)) -> (new_parameter = (old_parameter - ((lr * effective_gradient) / denominator)))))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "(LAST V (((step_return & (denominator > 0.0)) & (momentum = 0.0)) -> (new_parameter = (old_parameter - ((lr * effective_gradient) / denominator)))))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(step_return & ( denominator > 0.0 ) & ( momentum = 0.0 ))</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(new_parameter = old_parameter - lr * effective_gradient / denominator)</i></b> also holds at the same time point."
+          },
+          "diagnostics": []
+        },
+        {
+          "id": "SRS-23-08:momentum_parameter_update",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "H((((step_return and (denominator > 0.0)) and (momentum <> 0.0)) => ((new_buffer = ((momentum * old_buffer) + (effective_gradient / denominator))) and (new_parameter = (old_parameter - (lr * new_buffer))))))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "(H (((step_return & (denominator > 0.0)) & (momentum != 0.0)) -> ((new_buffer = ((momentum * old_buffer) + (effective_gradient / denominator))) & (new_parameter = (old_parameter - (lr * new_buffer))))))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(G (((step_return & (denominator > 0.0)) & (momentum != 0.0)) -> ((new_buffer = ((momentum * old_buffer) + (effective_gradient / denominator))) & (new_parameter = (old_parameter - (lr * new_buffer))))))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "(LAST V (((step_return & (denominator > 0.0)) & (momentum != 0.0)) -> ((new_buffer = ((momentum * old_buffer) + (effective_gradient / denominator))) & (new_parameter = (old_parameter - (lr * new_buffer))))))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(step_return & ( denominator > 0.0 ) & ( momentum != 0.0 ))</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(new_buffer = momentum * old_buffer + effective_gradient / denominator & new_parameter = old_parameter - lr * new_buffer)</i></b> also holds at the same time point."
+          },
+          "diagnostics": []
+        }
+      ]
+    }
+  },
+  {
+    "component": "RunningMeanStdUpdate",
+    "original": {
+      "representations": [
+        "pt-lustre",
+        "pt-smv",
+        "ft-inf",
+        "ft-fin"
+      ],
+      "time_basis": "discrete_steps",
+      "results": [
+        {
+          "id": "SRS-23-03:combined_count",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "H((update_return => (new_count = (old_count + batch_count))))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "(H (update_return -> (new_count = (old_count + batch_count))))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(G (update_return -> (new_count = (old_count + batch_count))))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "(LAST V (update_return -> (new_count = (old_count + batch_count))))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(update_return)</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(new_count = old_count + batch_count)</i></b> also holds at the same time point."
+          },
+          "diagnostics": []
+        },
+        {
+          "id": "SRS-23-03:combined_moments",
+          "status": "invalid",
+          "formulas": [],
+          "explanation": null,
+          "diagnostics": [
+            {
+              "code": "type_error",
+              "message": "Comparison old_count+batch_count!=0 requires matching operand types; received (real, int).",
+              "location": {
+                "line": 1,
+                "column": 27
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "corrected": {
+      "representations": [
+        "pt-lustre",
+        "pt-smv",
+        "ft-inf",
+        "ft-fin"
+      ],
+      "time_basis": "discrete_steps",
+      "results": [
+        {
+          "id": "SRS-23-03:combined_count",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "H((update_return => (new_count = (old_count + batch_count))))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "(H (update_return -> (new_count = (old_count + batch_count))))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(G (update_return -> (new_count = (old_count + batch_count))))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "(LAST V (update_return -> (new_count = (old_count + batch_count))))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(update_return)</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(new_count = old_count + batch_count)</i></b> also holds at the same time point."
+          },
+          "diagnostics": []
+        },
+        {
+          "id": "SRS-23-03:combined_moments",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "H(((update_return and ((old_count + batch_count) <> 0.0)) => ((new_mean = (old_mean + (((batch_mean - old_mean) * batch_count) / (old_count + batch_count)))) and (new_variance = ((((old_count * old_variance) + (batch_count * batch_variance)) + (((((batch_mean - old_mean) * (batch_mean - old_mean)) * old_count) * batch_count) / (old_count + batch_count))) / (old_count + batch_count))))))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "(H ((update_return & ((old_count + batch_count) != 0.0)) -> ((new_mean = (old_mean + (((batch_mean - old_mean) * batch_count) / (old_count + batch_count)))) & (new_variance = ((((old_count * old_variance) + (batch_count * batch_variance)) + (((((batch_mean - old_mean) * (batch_mean - old_mean)) * old_count) * batch_count) / (old_count + batch_count))) / (old_count + batch_count))))))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(G ((update_return & ((old_count + batch_count) != 0.0)) -> ((new_mean = (old_mean + (((batch_mean - old_mean) * batch_count) / (old_count + batch_count)))) & (new_variance = ((((old_count * old_variance) + (batch_count * batch_variance)) + (((((batch_mean - old_mean) * (batch_mean - old_mean)) * old_count) * batch_count) / (old_count + batch_count))) / (old_count + batch_count))))))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "(LAST V ((update_return & ((old_count + batch_count) != 0.0)) -> ((new_mean = (old_mean + (((batch_mean - old_mean) * batch_count) / (old_count + batch_count)))) & (new_variance = ((((old_count * old_variance) + (batch_count * batch_variance)) + (((((batch_mean - old_mean) * (batch_mean - old_mean)) * old_count) * batch_count) / (old_count + batch_count))) / (old_count + batch_count))))))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(update_return & ( old_count + batch_count != 0.0 ))</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(new_mean = old_mean + ( batch_mean - old_mean ) * batch_count / ( old_count + batch_count ) & new_variance = ( old_count * old_variance + batch_count * batch_variance + ( batch_mean - old_mean ) * ( batch_mean - old_mean ) * old_count * batch_count / ( old_count + batch_count ) ) / ( old_count + batch_count ))</i></b> also holds at the same time point."
+          },
+          "diagnostics": []
+        }
+      ]
+    }
+  },
+  {
+    "component": "RunningMeanStdCombine",
+    "original": {
+      "representations": [
+        "pt-lustre",
+        "pt-smv",
+        "ft-inf",
+        "ft-fin"
+      ],
+      "time_basis": "discrete_steps",
+      "results": [
+        {
+          "id": "SRS-23-05:merge_count",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "H((combine_return => (combined_count = (own_count + other_count))))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "(H (combine_return -> (combined_count = (own_count + other_count))))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(G (combine_return -> (combined_count = (own_count + other_count))))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "(LAST V (combine_return -> (combined_count = (own_count + other_count))))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(combine_return)</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(combined_count = own_count + other_count)</i></b> also holds at the same time point."
+          },
+          "diagnostics": []
+        },
+        {
+          "id": "SRS-23-05:combined_moments",
+          "status": "invalid",
+          "formulas": [],
+          "explanation": null,
+          "diagnostics": [
+            {
+              "code": "type_error",
+              "message": "Comparison own_count+other_count!=0 requires matching operand types; received (real, int).",
+              "location": {
+                "line": 1,
+                "column": 28
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "corrected": {
+      "representations": [
+        "pt-lustre",
+        "pt-smv",
+        "ft-inf",
+        "ft-fin"
+      ],
+      "time_basis": "discrete_steps",
+      "results": [
+        {
+          "id": "SRS-23-05:merge_count",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "H((combine_return => (combined_count = (own_count + other_count))))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "(H (combine_return -> (combined_count = (own_count + other_count))))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(G (combine_return -> (combined_count = (own_count + other_count))))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "(LAST V (combine_return -> (combined_count = (own_count + other_count))))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(combine_return)</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(combined_count = own_count + other_count)</i></b> also holds at the same time point."
+          },
+          "diagnostics": []
+        },
+        {
+          "id": "SRS-23-05:combined_moments",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "H(((combine_return and ((own_count + other_count) <> 0.0)) => ((combined_mean = (own_mean + (((other_mean - own_mean) * other_count) / (own_count + other_count)))) and (combined_variance = ((((own_count * own_variance) + (other_count * other_variance)) + (((((other_mean - own_mean) * (other_mean - own_mean)) * own_count) * other_count) / (own_count + other_count))) / (own_count + other_count))))))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "(H ((combine_return & ((own_count + other_count) != 0.0)) -> ((combined_mean = (own_mean + (((other_mean - own_mean) * other_count) / (own_count + other_count)))) & (combined_variance = ((((own_count * own_variance) + (other_count * other_variance)) + (((((other_mean - own_mean) * (other_mean - own_mean)) * own_count) * other_count) / (own_count + other_count))) / (own_count + other_count))))))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(G ((combine_return & ((own_count + other_count) != 0.0)) -> ((combined_mean = (own_mean + (((other_mean - own_mean) * other_count) / (own_count + other_count)))) & (combined_variance = ((((own_count * own_variance) + (other_count * other_variance)) + (((((other_mean - own_mean) * (other_mean - own_mean)) * own_count) * other_count) / (own_count + other_count))) / (own_count + other_count))))))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "(LAST V ((combine_return & ((own_count + other_count) != 0.0)) -> ((combined_mean = (own_mean + (((other_mean - own_mean) * other_count) / (own_count + other_count)))) & (combined_variance = ((((own_count * own_variance) + (other_count * other_variance)) + (((((other_mean - own_mean) * (other_mean - own_mean)) * own_count) * other_count) / (own_count + other_count))) / (own_count + other_count))))))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(combine_return & ( own_count + other_count != 0.0 ))</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(combined_mean = own_mean + ( other_mean - own_mean ) * other_count / ( own_count + other_count ) & combined_variance = ( own_count * own_variance + other_count * other_variance + ( other_mean - own_mean ) * ( other_mean - own_mean ) * own_count * other_count / ( own_count + other_count ) ) / ( own_count + other_count ))</i></b> also holds at the same time point."
+          },
+          "diagnostics": []
+        }
+      ]
+    }
+  },
+  {
+    "component": "NatureExtractor",
+    "original": {
+      "representations": [
+        "pt-lustre",
+        "pt-smv",
+        "ft-inf",
+        "ft-fin"
+      ],
+      "time_basis": "discrete_steps",
+      "results": [
+        {
+          "id": "SRS-25-03:output_dimension",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "H((output_features = configured_features))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "(H (output_features = configured_features))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(G (output_features = configured_features))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "(LAST V (output_features = configured_features))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(true)</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(output_features = configured_features)</i></b> also holds at the same time point."
+          },
+          "diagnostics": []
+        },
+        {
+          "id": "SRS-25-03:last_layer_dimension",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "H((last_layer_units = configured_features))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "(H (last_layer_units = configured_features))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(G (last_layer_units = configured_features))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "(LAST V (last_layer_units = configured_features))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(true)</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(last_layer_units = configured_features)</i></b> also holds at the same time point."
+          },
+          "diagnostics": []
+        },
+        {
+          "id": "SRS-25-03:dtype_check_selection",
+          "status": "invalid",
+          "formulas": [],
+          "explanation": null,
+          "diagnostics": [
+            {
+              "code": "syntax_error",
+              "message": "extraneous input '!' expecting {'(', '-', ID, NUMBER}",
+              "location": {
+                "line": 1,
+                "column": 73
+              }
+            }
+          ]
+        },
+        {
+          "id": "SRS-25-03:bounds_check_selection",
+          "status": "invalid",
+          "formulas": [],
+          "explanation": null,
+          "diagnostics": [
+            {
+              "code": "syntax_error",
+              "message": "extraneous input '!' expecting {'(', '-', ID, NUMBER}",
+              "location": {
+                "line": 1,
+                "column": 74
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "corrected": {
+      "representations": [
+        "pt-lustre",
+        "pt-smv",
+        "ft-inf",
+        "ft-fin"
+      ],
+      "time_basis": "discrete_steps",
+      "results": [
+        {
+          "id": "SRS-25-03:output_dimension",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "H((output_features = configured_features))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "(H (output_features = configured_features))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(G (output_features = configured_features))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "(LAST V (output_features = configured_features))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(true)</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(output_features = configured_features)</i></b> also holds at the same time point."
+          },
+          "diagnostics": []
+        },
+        {
+          "id": "SRS-25-03:last_layer_dimension",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "H((last_layer_units = configured_features))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "(H (last_layer_units = configured_features))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(G (last_layer_units = configured_features))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "(LAST V (last_layer_units = configured_features))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(true)</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(last_layer_units = configured_features)</i></b> also holds at the same time point."
+          },
+          "diagnostics": []
+        },
+        {
+          "id": "SRS-25-03:dtype_check_selection",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "H((dtype_checked = not (normalized_image)))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "(H (dtype_checked <-> (! normalized_image)))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(G (dtype_checked <-> (! normalized_image)))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "(LAST V (dtype_checked <-> (! normalized_image)))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(true)</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(( dtype_checked <-> ! normalized_image ))</i></b> also holds at the same time point."
+          },
+          "diagnostics": []
+        },
+        {
+          "id": "SRS-25-03:bounds_check_selection",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "H((bounds_checked = not (normalized_image)))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "(H (bounds_checked <-> (! normalized_image)))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(G (bounds_checked <-> (! normalized_image)))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "(LAST V (bounds_checked <-> (! normalized_image)))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(true)</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(( bounds_checked <-> ! normalized_image ))</i></b> also holds at the same time point."
+          },
+          "diagnostics": []
+        }
+      ]
+    }
+  },
+  {
+    "component": "CombinedExtractorConfiguration",
+    "original": {
+      "representations": [
+        "pt-lustre",
+        "pt-smv",
+        "ft-inf",
+        "ft-fin"
+      ],
+      "time_basis": "discrete_steps",
+      "results": [
+        {
+          "id": "SRS-25-05:cnn_dimension",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "H((cnn_features = cnn_output_dim))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "(H (cnn_features = cnn_output_dim))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(G (cnn_features = cnn_output_dim))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "(LAST V (cnn_features = cnn_output_dim))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(true)</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(cnn_features = cnn_output_dim)</i></b> also holds at the same time point."
+          },
+          "diagnostics": []
+        },
+        {
+          "id": "SRS-25-05:dtype_check_selection",
+          "status": "invalid",
+          "formulas": [],
+          "explanation": null,
+          "diagnostics": [
+            {
+              "code": "syntax_error",
+              "message": "extraneous input '!' expecting {'(', '-', ID, NUMBER}",
+              "location": {
+                "line": 1,
+                "column": 88
+              }
+            }
+          ]
+        },
+        {
+          "id": "SRS-25-05:bounds_check_selection",
+          "status": "invalid",
+          "formulas": [],
+          "explanation": null,
+          "diagnostics": [
+            {
+              "code": "syntax_error",
+              "message": "extraneous input '!' expecting {'(', '-', ID, NUMBER}",
+              "location": {
+                "line": 1,
+                "column": 89
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "corrected": {
+      "representations": [
+        "pt-lustre",
+        "pt-smv",
+        "ft-inf",
+        "ft-fin"
+      ],
+      "time_basis": "discrete_steps",
+      "results": [
+        {
+          "id": "SRS-25-05:cnn_dimension",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "H((cnn_features = cnn_output_dim))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "(H (cnn_features = cnn_output_dim))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(G (cnn_features = cnn_output_dim))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "(LAST V (cnn_features = cnn_output_dim))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(true)</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(cnn_features = cnn_output_dim)</i></b> also holds at the same time point."
+          },
+          "diagnostics": []
+        },
+        {
+          "id": "SRS-25-05:dtype_check_selection",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "H((dtype_checked = not (normalized_image)))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "(H (dtype_checked <-> (! normalized_image)))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(G (dtype_checked <-> (! normalized_image)))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "(LAST V (dtype_checked <-> (! normalized_image)))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(true)</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(( dtype_checked <-> ! normalized_image ))</i></b> also holds at the same time point."
+          },
+          "diagnostics": []
+        },
+        {
+          "id": "SRS-25-05:bounds_check_selection",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "H((bounds_checked = not (normalized_image)))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "(H (bounds_checked <-> (! normalized_image)))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(G (bounds_checked <-> (! normalized_image)))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "(LAST V (bounds_checked <-> (! normalized_image)))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(true)</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(( bounds_checked <-> ! normalized_image ))</i></b> also holds at the same time point."
+          },
+          "diagnostics": []
+        }
+      ]
+    }
+  },
+  {
+    "component": "HerStorage",
+    "original": {
+      "representations": [
+        "pt-lustre",
+        "pt-smv",
+        "ft-inf",
+        "ft-fin"
+      ],
+      "time_basis": "discrete_steps",
+      "results": [
+        {
+          "id": "SRS-28-03:copy_requested_info",
+          "status": "invalid",
+          "formulas": [],
+          "explanation": null,
+          "diagnostics": [
+            {
+              "code": "syntax_error",
+              "message": "mismatched input 'whenever' expecting SHALL",
+              "location": {
+                "line": 1,
+                "column": 12
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "corrected": {
+      "representations": [
+        "pt-lustre",
+        "pt-smv",
+        "ft-inf",
+        "ft-fin"
+      ],
+      "time_basis": "discrete_steps",
+      "results": [
+        {
+          "id": "SRS-28-03:copy_requested_info",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "H(((addition_completed and copy_info) => info_stored))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "(H ((addition_completed & copy_info) -> info_stored))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(G ((addition_completed & copy_info) -> info_stored))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "(LAST V ((addition_completed & copy_info) -> info_stored))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(addition_completed & copy_info)</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(info_stored)</i></b> also holds at the same time point."
+          },
+          "diagnostics": []
+        }
+      ]
+    }
+  },
+  {
+    "component": "HerGoals",
+    "original": {
+      "representations": [
+        "pt-lustre",
+        "pt-smv",
+        "ft-inf",
+        "ft-fin"
+      ],
+      "time_basis": "discrete_steps",
+      "results": [
+        {
+          "id": "SRS-28-07:future_goal",
+          "status": "invalid",
+          "formulas": [],
+          "explanation": null,
+          "diagnostics": [
+            {
+              "code": "syntax_error",
+              "message": "mismatched input 'whenever' expecting SHALL",
+              "location": {
+                "line": 1,
+                "column": 10
+              }
+            }
+          ]
+        },
+        {
+          "id": "SRS-28-07:final_goal",
+          "status": "invalid",
+          "formulas": [],
+          "explanation": null,
+          "diagnostics": [
+            {
+              "code": "syntax_error",
+              "message": "mismatched input 'whenever' expecting SHALL",
+              "location": {
+                "line": 1,
+                "column": 10
+              }
+            }
+          ]
+        },
+        {
+          "id": "SRS-28-07:episode_goal",
+          "status": "invalid",
+          "formulas": [],
+          "explanation": null,
+          "diagnostics": [
+            {
+              "code": "syntax_error",
+              "message": "mismatched input 'whenever' expecting SHALL",
+              "location": {
+                "line": 1,
+                "column": 10
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "corrected": {
+      "representations": [
+        "pt-lustre",
+        "pt-smv",
+        "ft-inf",
+        "ft-fin"
+      ],
+      "time_basis": "discrete_steps",
+      "results": [
+        {
+          "id": "SRS-28-07:future_goal",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "H(((strategy_code = 0) => (same_episode and (selected_step > current_step))))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "(H ((strategy_code = 0) -> (same_episode & (selected_step > current_step))))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(G ((strategy_code = 0) -> (same_episode & (selected_step > current_step))))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "(LAST V ((strategy_code = 0) -> (same_episode & (selected_step > current_step))))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(strategy_code = 0)</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(same_episode & selected_step > current_step)</i></b> also holds at the same time point."
+          },
+          "diagnostics": []
+        },
+        {
+          "id": "SRS-28-07:final_goal",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "H(((strategy_code = 1) => (same_episode and (selected_step = last_step))))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "(H ((strategy_code = 1) -> (same_episode & (selected_step = last_step))))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(G ((strategy_code = 1) -> (same_episode & (selected_step = last_step))))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "(LAST V ((strategy_code = 1) -> (same_episode & (selected_step = last_step))))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(strategy_code = 1)</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(same_episode & selected_step = last_step)</i></b> also holds at the same time point."
+          },
+          "diagnostics": []
+        },
+        {
+          "id": "SRS-28-07:episode_goal",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "H(((strategy_code = 2) => same_episode))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "(H ((strategy_code = 2) -> same_episode))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(G ((strategy_code = 2) -> same_episode))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "(LAST V ((strategy_code = 2) -> same_episode))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(strategy_code = 2)</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(same_episode)</i></b> also holds at the same time point."
+          },
+          "diagnostics": []
+        }
+      ]
+    }
+  }
+]

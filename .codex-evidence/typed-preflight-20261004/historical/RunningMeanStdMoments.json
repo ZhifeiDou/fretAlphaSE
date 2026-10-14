@@ -1,0 +1,442 @@
+{
+  "component": "RunningMeanStdMoments",
+  "original_job_id": "d7ba46c2-9ad2-4c54-8804-fe3f55aa833f",
+  "original_input": {
+    "request_id": "0a884432-da86-5c1c-bb7d-bdbdb6382255",
+    "component": "RunningMeanStdMoments",
+    "requirements": [
+      {
+        "id": "SRS-23-04:combined_count",
+        "fretish": "whenever moments_return RunningMeanStdMoments shall immediately satisfy new_count = old_count + batch_count.",
+        "kind": "guarantee",
+        "source_refs": [
+          "SRS-23-04@sha256:461785d89da47d7ac14dc8e184de0f44dd8a0850542e71c4649841aac60699f3#statement",
+          "SRS-23-04@sha256:461785d89da47d7ac14dc8e184de0f44dd8a0850542e71c4649841aac60699f3#source_refs[1].quote"
+        ]
+      },
+      {
+        "id": "SRS-23-04:combined_moments",
+        "fretish": "whenever moments_return & (old_count + batch_count != 0) RunningMeanStdMoments shall immediately satisfy new_mean = old_mean + (batch_mean - old_mean) * batch_count / (old_count + batch_count) & new_variance = (old_count * old_variance + batch_count * batch_variance + (batch_mean - old_mean) * (batch_mean - old_mean) * old_count * batch_count / (old_count + batch_count)) / (old_count + batch_count).",
+        "kind": "guarantee",
+        "source_refs": [
+          "SRS-23-04@sha256:461785d89da47d7ac14dc8e184de0f44dd8a0850542e71c4649841aac60699f3#statement",
+          "SRS-23-04@sha256:461785d89da47d7ac14dc8e184de0f44dd8a0850542e71c4649841aac60699f3#source_refs[1].quote"
+        ]
+      }
+    ],
+    "variables": [
+      {
+        "name": "moments_return",
+        "type": "bool",
+        "role": "input",
+        "meaning": "Observation of completed update_from_moments call."
+      },
+      {
+        "name": "old_count",
+        "type": "real",
+        "role": "input",
+        "meaning": "Pre-call accumulated sample count."
+      },
+      {
+        "name": "batch_count",
+        "type": "real",
+        "role": "input",
+        "meaning": "Supplied batch sample count."
+      },
+      {
+        "name": "new_count",
+        "type": "real",
+        "role": "output",
+        "meaning": "Post-call accumulated sample count."
+      },
+      {
+        "name": "old_mean",
+        "type": "real",
+        "role": "input",
+        "meaning": "One pre-call mean component."
+      },
+      {
+        "name": "batch_mean",
+        "type": "real",
+        "role": "input",
+        "meaning": "Corresponding supplied batch-mean component."
+      },
+      {
+        "name": "new_mean",
+        "type": "real",
+        "role": "output",
+        "meaning": "Corresponding post-call mean component."
+      },
+      {
+        "name": "old_variance",
+        "type": "real",
+        "role": "input",
+        "meaning": "One pre-call variance component."
+      },
+      {
+        "name": "batch_variance",
+        "type": "real",
+        "role": "input",
+        "meaning": "Corresponding supplied batch-variance component."
+      },
+      {
+        "name": "new_variance",
+        "type": "real",
+        "role": "output",
+        "meaning": "Corresponding post-call variance component."
+      }
+    ],
+    "time_model": {
+      "kind": "discrete_steps",
+      "description": "Logical observations of completed update_from_moments calls with pre/post-call count snapshots; no physical timing is imposed."
+    },
+    "options": {
+      "timeout_ms": 60000,
+      "diagnose": true
+    }
+  },
+  "original_replay": {
+    "schema_version": 1,
+    "input_digest": "sha256:e6dbd41809b6964013ff79e9551dd87f40ffe309c3a9710aef8c36e0123fadef",
+    "result": "invalid",
+    "contract_result": null,
+    "environment_result": null,
+    "requested_ids": [
+      "SRS-23-04:combined_count",
+      "SRS-23-04:combined_moments"
+    ],
+    "analyzed_ids": [],
+    "diagnostics": [
+      {
+        "id": "SRS-23-04:combined_moments",
+        "code": "type_error",
+        "message": "Comparison old_count+batch_count!=0 requires matching operand types; received (real, int)."
+      }
+    ],
+    "formalization": {
+      "representations": [
+        "pt-lustre",
+        "pt-smv",
+        "ft-inf",
+        "ft-fin"
+      ],
+      "time_basis": "discrete_steps",
+      "results": [
+        {
+          "id": "SRS-23-04:combined_count",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "H((moments_return => (new_count = (old_count + batch_count))))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "(H (moments_return -> (new_count = (old_count + batch_count))))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(G (moments_return -> (new_count = (old_count + batch_count))))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "(LAST V (moments_return -> (new_count = (old_count + batch_count))))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(moments_return)</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(new_count = old_count + batch_count)</i></b> also holds at the same time point."
+          },
+          "diagnostics": []
+        },
+        {
+          "id": "SRS-23-04:combined_moments",
+          "status": "invalid",
+          "formulas": [],
+          "explanation": null,
+          "diagnostics": [
+            {
+              "code": "type_error",
+              "message": "Comparison old_count+batch_count!=0 requires matching operand types; received (real, int).",
+              "location": {
+                "line": 1,
+                "column": 28
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "toolchain": {
+      "fret": "sha256:be0a44be39cbfc40d736ca28a45f23d5610209e975ea5afa59f78fa7e72a7f18",
+      "adapter": "0.2.0",
+      "kind2": "kind2 v2.2.0",
+      "z3": "Z3 version 4.14.1 - 64 bit"
+    },
+    "time_model": {
+      "kind": "discrete_steps",
+      "description": "Logical observations of completed update_from_moments calls with pre/post-call count snapshots; no physical timing is imposed."
+    },
+    "assumption_ids": [],
+    "guarantee_ids": [
+      "SRS-23-04:combined_count",
+      "SRS-23-04:combined_moments"
+    ],
+    "variable_mapping": {
+      "fret_v_0": "moments_return",
+      "fret_v_1": "old_count",
+      "fret_v_2": "batch_count",
+      "fret_v_3": "new_count",
+      "fret_v_4": "old_mean",
+      "fret_v_5": "batch_mean",
+      "fret_v_6": "new_mean",
+      "fret_v_7": "old_variance",
+      "fret_v_8": "batch_variance",
+      "fret_v_9": "new_variance"
+    },
+    "checks": [],
+    "diagnosis": {
+      "status": "not_run",
+      "conflicts": [],
+      "message": null
+    }
+  },
+  "corrected_input": {
+    "request_id": "0a884432-da86-5c1c-bb7d-bdbdb6382255",
+    "component": "RunningMeanStdMoments",
+    "requirements": [
+      {
+        "id": "SRS-23-04:combined_count",
+        "fretish": "whenever moments_return RunningMeanStdMoments shall immediately satisfy new_count = old_count + batch_count.",
+        "kind": "guarantee",
+        "source_refs": [
+          "SRS-23-04@sha256:461785d89da47d7ac14dc8e184de0f44dd8a0850542e71c4649841aac60699f3#statement",
+          "SRS-23-04@sha256:461785d89da47d7ac14dc8e184de0f44dd8a0850542e71c4649841aac60699f3#source_refs[1].quote"
+        ]
+      },
+      {
+        "id": "SRS-23-04:combined_moments",
+        "fretish": "whenever moments_return & (old_count + batch_count != 0.0) RunningMeanStdMoments shall immediately satisfy new_mean = old_mean + (batch_mean - old_mean) * batch_count / (old_count + batch_count) & new_variance = (old_count * old_variance + batch_count * batch_variance + (batch_mean - old_mean) * (batch_mean - old_mean) * old_count * batch_count / (old_count + batch_count)) / (old_count + batch_count).",
+        "kind": "guarantee",
+        "source_refs": [
+          "SRS-23-04@sha256:461785d89da47d7ac14dc8e184de0f44dd8a0850542e71c4649841aac60699f3#statement",
+          "SRS-23-04@sha256:461785d89da47d7ac14dc8e184de0f44dd8a0850542e71c4649841aac60699f3#source_refs[1].quote"
+        ]
+      }
+    ],
+    "variables": [
+      {
+        "name": "moments_return",
+        "type": "bool",
+        "role": "input",
+        "meaning": "Observation of completed update_from_moments call."
+      },
+      {
+        "name": "old_count",
+        "type": "real",
+        "role": "input",
+        "meaning": "Pre-call accumulated sample count."
+      },
+      {
+        "name": "batch_count",
+        "type": "real",
+        "role": "input",
+        "meaning": "Supplied batch sample count."
+      },
+      {
+        "name": "new_count",
+        "type": "real",
+        "role": "output",
+        "meaning": "Post-call accumulated sample count."
+      },
+      {
+        "name": "old_mean",
+        "type": "real",
+        "role": "input",
+        "meaning": "One pre-call mean component."
+      },
+      {
+        "name": "batch_mean",
+        "type": "real",
+        "role": "input",
+        "meaning": "Corresponding supplied batch-mean component."
+      },
+      {
+        "name": "new_mean",
+        "type": "real",
+        "role": "output",
+        "meaning": "Corresponding post-call mean component."
+      },
+      {
+        "name": "old_variance",
+        "type": "real",
+        "role": "input",
+        "meaning": "One pre-call variance component."
+      },
+      {
+        "name": "batch_variance",
+        "type": "real",
+        "role": "input",
+        "meaning": "Corresponding supplied batch-variance component."
+      },
+      {
+        "name": "new_variance",
+        "type": "real",
+        "role": "output",
+        "meaning": "Corresponding post-call variance component."
+      }
+    ],
+    "time_model": {
+      "kind": "discrete_steps",
+      "description": "Logical observations of completed update_from_moments calls with pre/post-call count snapshots; no physical timing is imposed."
+    },
+    "options": {
+      "timeout_ms": 60000,
+      "diagnose": true
+    }
+  },
+  "corrected_report": {
+    "schema_version": 1,
+    "input_digest": "sha256:f74da701d24c30647ac6fd24586f7295e1696302bedd49cde2ad5ec30abcd186",
+    "result": "realizable",
+    "contract_result": "realizable",
+    "environment_result": "realizable",
+    "requested_ids": [
+      "SRS-23-04:combined_count",
+      "SRS-23-04:combined_moments"
+    ],
+    "analyzed_ids": [
+      "SRS-23-04:combined_count",
+      "SRS-23-04:combined_moments"
+    ],
+    "diagnostics": [],
+    "formalization": {
+      "representations": [
+        "pt-lustre",
+        "pt-smv",
+        "ft-inf",
+        "ft-fin"
+      ],
+      "time_basis": "discrete_steps",
+      "results": [
+        {
+          "id": "SRS-23-04:combined_count",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "H((moments_return => (new_count = (old_count + batch_count))))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "(H (moments_return -> (new_count = (old_count + batch_count))))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(G (moments_return -> (new_count = (old_count + batch_count))))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "(LAST V (moments_return -> (new_count = (old_count + batch_count))))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(moments_return)</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(new_count = old_count + batch_count)</i></b> also holds at the same time point."
+          },
+          "diagnostics": []
+        },
+        {
+          "id": "SRS-23-04:combined_moments",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "H(((moments_return and ((old_count + batch_count) <> 0.0)) => ((new_mean = (old_mean + (((batch_mean - old_mean) * batch_count) / (old_count + batch_count)))) and (new_variance = ((((old_count * old_variance) + (batch_count * batch_variance)) + (((((batch_mean - old_mean) * (batch_mean - old_mean)) * old_count) * batch_count) / (old_count + batch_count))) / (old_count + batch_count))))))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "(H ((moments_return & ((old_count + batch_count) != 0.0)) -> ((new_mean = (old_mean + (((batch_mean - old_mean) * batch_count) / (old_count + batch_count)))) & (new_variance = ((((old_count * old_variance) + (batch_count * batch_variance)) + (((((batch_mean - old_mean) * (batch_mean - old_mean)) * old_count) * batch_count) / (old_count + batch_count))) / (old_count + batch_count))))))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(G ((moments_return & ((old_count + batch_count) != 0.0)) -> ((new_mean = (old_mean + (((batch_mean - old_mean) * batch_count) / (old_count + batch_count)))) & (new_variance = ((((old_count * old_variance) + (batch_count * batch_variance)) + (((((batch_mean - old_mean) * (batch_mean - old_mean)) * old_count) * batch_count) / (old_count + batch_count))) / (old_count + batch_count))))))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "(LAST V ((moments_return & ((old_count + batch_count) != 0.0)) -> ((new_mean = (old_mean + (((batch_mean - old_mean) * batch_count) / (old_count + batch_count)))) & (new_variance = ((((old_count * old_variance) + (batch_count * batch_variance)) + (((((batch_mean - old_mean) * (batch_mean - old_mean)) * old_count) * batch_count) / (old_count + batch_count))) / (old_count + batch_count))))))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(moments_return & ( old_count + batch_count != 0.0 ))</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(new_mean = old_mean + ( batch_mean - old_mean ) * batch_count / ( old_count + batch_count ) & new_variance = ( old_count * old_variance + batch_count * batch_variance + ( batch_mean - old_mean ) * ( batch_mean - old_mean ) * old_count * batch_count / ( old_count + batch_count ) ) / ( old_count + batch_count ))</i></b> also holds at the same time point."
+          },
+          "diagnostics": []
+        }
+      ]
+    },
+    "toolchain": {
+      "fret": "sha256:be0a44be39cbfc40d736ca28a45f23d5610209e975ea5afa59f78fa7e72a7f18",
+      "adapter": "0.2.0",
+      "kind2": "kind2 v2.2.0",
+      "z3": "Z3 version 4.14.1 - 64 bit"
+    },
+    "time_model": {
+      "kind": "discrete_steps",
+      "description": "Logical observations of completed update_from_moments calls with pre/post-call count snapshots; no physical timing is imposed."
+    },
+    "assumption_ids": [],
+    "guarantee_ids": [
+      "SRS-23-04:combined_count",
+      "SRS-23-04:combined_moments"
+    ],
+    "variable_mapping": {
+      "fret_v_0": "moments_return",
+      "fret_v_1": "old_count",
+      "fret_v_2": "batch_count",
+      "fret_v_3": "new_count",
+      "fret_v_4": "old_mean",
+      "fret_v_5": "batch_mean",
+      "fret_v_6": "new_mean",
+      "fret_v_7": "old_variance",
+      "fret_v_8": "batch_variance",
+      "fret_v_9": "new_variance"
+    },
+    "checks": [
+      {
+        "name": "FretContract.lus",
+        "requirement_ids": [
+          "SRS-23-04:combined_count",
+          "SRS-23-04:combined_moments"
+        ],
+        "result": "REALIZABLE",
+        "environment_result": "REALIZABLE",
+        "lustre": "--Historically\nnode H(X:bool) returns (Y:bool);\nlet\n    Y = X -> (X and (pre Y));\ntel\n\n--Y since inclusive X\nnode SI(X,Y: bool) returns (Z:bool);\nlet\nZ = Y and (X or (false -> pre Z));\ntel\n\n--Y since X\nnode S(X,Y: bool) returns (Z:bool);\nlet\nZ = X or (Y and (false -> pre Z));\ntel\n\n--Y triggered X\nnode T(X,Y: bool) returns(Z:bool);\nlet\nZ = (X and (Y or (true -> pre Z)));\ntel\n\n--Once\nnode O(X:bool) returns (Y:bool);\nlet\n Y = X or (false -> pre Y);\ntel\n\n--Timed Once: less than or equal to N\nnode OTlore( N: int; X: bool) returns (Y: bool);\n    var C:int;\nlet\n    C = if X then 0\n        else (-1 -> pre C + (if pre C <0 then 0 else 1));\n\n    Y = 0 <= C and C <= N;\ntel\n\n--Timed Once: general case\nnode OT( L: int;  R: int; X: bool) returns (Y: bool);\nvar  D:bool;\nlet\n  D=delay(X, R);\n  Y=OTlore(L-R, D);\ntel\n\n-- Timed Historically: general case\nnode HT( L: int;  R: int; X: bool) returns (Y: bool);\nlet\n  Y = not OT(L, R, not X);\ntel\n\n-- Timed Since: general case\nnode ST( L: int;  R: int; X: bool; Y: bool)  returns (Z: bool);\nlet\n  Z = S(X, Y) and OT(L, R, X);\ntel\n\n-- Timed Since Inclusive: general case\nnode SIT( L: int;  R: int; X: bool; Y: bool) returns (Z: bool);\nlet\n  Z = SI(X, Y) and OT(L, R, X);\ntel\n\n-- Timed Triggered: general case\nnode TT( L: int;  R: int; X: bool; Y: bool)  returns (Z: bool);\nlet\n  Z = T(X, Y) or HT(L, R, X);\ntel\n\n-- Pre for integers, with an initial value at FTP\nnode preInt(InitialValue, X: int) returns (Y:int);\nlet\n  Y = InitialValue -> pre X;\ntel\n\n-- Pre for reals, with an initial value at FTP\nnode preReal(InitialValue, X: real) returns (Y:real);\nlet\n  Y = InitialValue -> pre X;\ntel\n\n-- Pre for booleans, with an initial value at FTP\nnode preBool(InitialValue, X: bool) returns (Y:bool);\nlet\n  Y = InitialValue -> pre X;\ntel\n\n-- The equivalent of LTL's Y in Lustre.\nnode YtoPre(X: bool) returns (Y:bool);\nlet\n  Y = false -> pre X;\ntel\n\n-- The equivalent of LTL's Z in Lustre.\nnode ZtoPre(X: bool) returns (Y:bool);\nlet\n  Y = true -> pre X;\ntel\n\n-- Absolute value for reals\nnode absReal(x:real) returns(y: real);\nlet\n  y = if (x >= 0.0) then x else -x;\ntel\n\n-- Absolute value for integers\nnode absInt(x:int) returns(y: int);\nlet\n  y = if (x >= 0) then x else -x;\ntel\n\n-- Maximum value between two reals\nnode maxReal (a : real; b : real)\nreturns (z : real);\nlet\n  z = (if (((a) >= (b))) then (a) else (b));\ntel\n\n-- Maximum value between two integers\nnode maxInt (a : int; b : int)\nreturns (z : int);\nlet\n  z = (if (((a) >= (b))) then (a) else (b));\ntel\n\n-- Minimum value between two integers\nnode minInt (a : int; b : int)\nreturns (z : int);\nlet\n  z = (if (((a) <= (b))) then (a) else (b));\ntel\n\n-- Minimum value between two reals\nnode minReal (a : real; b : real)\nreturns (z : real);\nlet\n  z = (if (((a) <= (b))) then (a) else (b));\ntel\n\nnode delay(X:bool;  R:int) returns(Y:bool);\nlet\n\n  Y = X;\ntel\n\n\nnode imported FretContract( fret_v_0:bool ; fret_v_1:real ; fret_v_2:real ; fret_v_4:real ; fret_v_5:real ; fret_v_7:real ; fret_v_8:real ) returns ( fret_v_3:real ;  fret_v_6:real ;  fret_v_9:real  );\n(*@contract\n\n\n\n\nvar __FTP : bool = true -> false;\n\n\n\n(* fret_r_0  *)\n\n\nguarantee \"fret_r_0\" H((fret_v_0 => (fret_v_3 = (fret_v_1 + fret_v_2))));\n\n(* fret_r_1  *)\n\n\nguarantee \"fret_r_1\" H(((fret_v_0 and ((fret_v_1 + fret_v_2) <> 0.0)) => ((fret_v_6 = (fret_v_4 + (((fret_v_5 - fret_v_4) * fret_v_2) / (fret_v_1 + fret_v_2)))) and (fret_v_9 = ((((fret_v_1 * fret_v_7) + (fret_v_2 * fret_v_8)) + (((((fret_v_5 - fret_v_4) * (fret_v_5 - fret_v_4)) * fret_v_1) * fret_v_2) / (fret_v_1 + fret_v_2))) / (fret_v_1 + fret_v_2))))));\n\n\r\n*)\n",
+        "lustre_digest": "sha256:371b34bffabb2af916aa1037908eb19a4792902a1e005e37a403b54e5fc3e513",
+        "command": [
+          "kind2",
+          "--lus_main",
+          "FretContract",
+          "-json",
+          "--enable",
+          "CONTRACTCK",
+          "--timeout",
+          "60",
+          "/tmp/fret-historical-replay-HmwsqX/FretContract.lus"
+        ],
+        "stdout": "[\n{\n  \"objectType\" : \"log\",\n  \"level\" : \"info\",\n  \"source\" : \"parse\",\n  \"value\" : \"kind2 v2.2.0\"\n}\n,\n{\n  \"objectType\" : \"kind2Options\",\n  \"enabled\" :\n  [\n    \"contractck\"\n  ],\n  \"timeout\" : 60.000000,\n  \"bmcMax\" : 0,\n  \"compositional\" : false,\n  \"modular\" : false\n}\n,\n{\n  \"objectType\" : \"analysisStart\",\n  \"top\" : \"FretContract\",\n  \"context\" : \"contract\"\n}\n,\n{\n  \"objectType\" : \"realizabilityCheck\",\n  \"runtime\" : {\"unit\" : \"sec\", \"timeout\" : false, \"value\" : 0.126},\n  \"result\" : \"realizable\"\n}\n,\n{\"objectType\" : \"analysisStop\"}\n,\n{\n  \"objectType\" : \"analysisStart\",\n  \"top\" : \"FretContract\",\n  \"context\" : \"environment\"\n}\n,\n{\n  \"objectType\" : \"realizabilityCheck\",\n  \"runtime\" : {\"unit\" : \"sec\", \"timeout\" : false, \"value\" : 0.000},\n  \"result\" : \"realizable\"\n}\n,\n{\"objectType\" : \"analysisStop\"}\n]\n",
+        "stderr": "",
+        "exit_code": 0,
+        "counterexample": {
+          "contract": null,
+          "environment": null
+        }
+      }
+    ],
+    "diagnosis": {
+      "status": "not_needed",
+      "conflicts": [],
+      "message": null
+    }
+  }
+}

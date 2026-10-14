@@ -1,0 +1,17 @@
+[
+  {
+    "path": "fret-electron/support/xform.js",
+    "before_sha256": "sha256:f9ac5fb2fe354e4f7cd43c5bff8ec58c33820912cd97dc0c4ab9e262819535c9",
+    "after_sha256": "sha256:bdfc2f02f0d59888525e4b13b718c29d69392845c30bcccf9b1137627053e8db"
+  },
+  {
+    "path": "mcp/tests/formalize.test.js",
+    "before_sha256": "sha256:fa56e093319d268033b2570c219d0ec255ac5419b1bd984183baa9e326173747",
+    "after_sha256": "sha256:339210c312aa794f3ebdd982ad1fcaa3422405d0ea3c8ddd108658f75e40013f"
+  },
+  {
+    "path": "mcp/tests/historical-models.test.js",
+    "before_sha256": "sha256:cef50d838ce10a3815705844fa7c7d42145eb54d0bb80a16f7513830e589c0bd",
+    "after_sha256": "sha256:d1598ba50cf60b38cea154ac240d7f0e5d77a736f2cfc236e1a04a121a4ef37f"
+  }
+]

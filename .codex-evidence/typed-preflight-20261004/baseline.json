@@ -1,0 +1,74 @@
+﻿[
+    {
+        "path":  "mcp/tests\\mcp.test.js",
+        "sha256":  "22dad30da2ef836dcdca2779ee0e98a5c960c7da4ad0d10ae044b81ef5eb8c13"
+    },
+    {
+        "path":  "mcp/tests\\lifecycle.test.js",
+        "sha256":  "e968b1525648a81de209be540d939da22fed742b8635bc603ba82d8a7209f20b"
+    },
+    {
+        "path":  "mcp/tests\\formalize.test.js",
+        "sha256":  "6f0722ce3b80a21f0fb9394bedf148ed317d88e15cdb1c3da94c0e98f3bb968b"
+    },
+    {
+        "path":  "mcp/tests\\analysis.test.js",
+        "sha256":  "691fcdaec514059ec691c17c1f6ae9403b483ba5847d4de3a31adcdd2b4389b8"
+    },
+    {
+        "path":  "mcp/tests\\analysis-lifecycle.test.js",
+        "sha256":  "86bf1fda8e54a84318371ef85c01c6b3816451193e8214a19893ae348d1287a0"
+    },
+    {
+        "path":  "mcp/tests\\analysis-core.test.js",
+        "sha256":  "bf6f326761465d629248ef507c33ea7c3b5db35e81dc3cf5075b6fa6f0a7e839"
+    },
+    {
+        "path":  "mcp/src\\analysis-worker.js",
+        "sha256":  "5e370a450d05846ea9c90508a91731a079f2e676ba1c0e52757ed51a157174a3"
+    },
+    {
+        "path":  "mcp/src\\worker.js",
+        "sha256":  "fb463d8564dbb434fa4cbb89dcf2ed8c0be95e6bf39e41e75379a9b9ad7129df"
+    },
+    {
+        "path":  "mcp/src\\server.js",
+        "sha256":  "bab419883d45efd25d9fef5abfbedc7a1e9ed09f993f3f2cfac1886c787214fd"
+    },
+    {
+        "path":  "mcp/src\\schemas.js",
+        "sha256":  "51f53c15fb4771bd65e15c0c0f6d8dcb01a33b6701a320c81b2a8ef2a89b55cd"
+    },
+    {
+        "path":  "mcp/src\\formalize.js",
+        "sha256":  "25b996fea340c34ed0dbe0f779130f1c104e133197adc501336b1f5c1d790b17"
+    },
+    {
+        "path":  "mcp/src\\executor.js",
+        "sha256":  "c36170039246fc53304f51d81ea927bf4f538ec75a80384593bc8053a606e412"
+    },
+    {
+        "path":  "mcp/src\\auth.js",
+        "sha256":  "69ad62c4a6e2db84c1b8bef8bcbc9280ce45b8372793e180c25eca86e83306c4"
+    },
+    {
+        "path":  "mcp/src\\analysis_jobs.js",
+        "sha256":  "70ff501f630c61f94cae99fd7c7c84fbec3d1e714741680be8a6cd1c3b219958"
+    },
+    {
+        "path":  "mcp/src\\analysis.js",
+        "sha256":  "ad3b344fe1dba2005add52d41cb0c7e151b5da6d4b5cafe1b97b29381e5482bd"
+    },
+    {
+        "path":  "mcp/README.md",
+        "sha256":  "303c62ba53d5e0d4c626806e4a5335d1fc258b0d1ad7e21138c6d7b4230c1e80"
+    },
+    {
+        "path":  "fret-electron/app/parser/FretSemantics.js",
+        "sha256":  "bd3e375e3e89893340b3749438849dc08da227764d7df03e9dff53efc85a4ccd"
+    },
+    {
+        "path":  "fret-electron/app/parser/SemanticsAnalyzer.js",
+        "sha256":  "154c9572fed1e8f5902d947ad49785a21cd28e4db47ece0564537a7dc107f8bd"
+    }
+]

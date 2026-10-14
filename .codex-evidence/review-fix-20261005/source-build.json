@@ -1,0 +1,832 @@
+{
+  "recorded_at": "2026-10-05T03:23:13.276Z",
+  "source_manifest_sha256": "sha256:43dd76907caf2a81d624f9260dfd4843fa4e343e073607863c5d65d1cee20cf3",
+  "source_files": [
+    {
+      "path": "fret-electron/analysis/Dependency.js",
+      "sha256": "sha256:e01073499b113571fdbb8cf27fa40249b8997cdffb68be2915b158844bb3109f"
+    },
+    {
+      "path": "fret-electron/analysis/DependencyMap.js",
+      "sha256": "sha256:43e19d56bab94454f1e45e7619f1ad0d5d41995341be21431606cdf7d451af46"
+    },
+    {
+      "path": "fret-electron/analysis/DependencySet.js",
+      "sha256": "sha256:72819604358351f24dfd4011d4328864d86f8866ae6e489742308a64c7182e01"
+    },
+    {
+      "path": "fret-electron/analysis/DependencyVisitor.js",
+      "sha256": "sha256:5fce1d3738c5b51f2f4165cf56c58dafbe27ca7f5ce0848a94168b9cc19df136"
+    },
+    {
+      "path": "fret-electron/analysis/DiagnosisEngine.js",
+      "sha256": "sha256:ff2c6ca21d846b81a6f8f9d2d45107a3bacf7e8c6ea41c55e47e590b5d7f0420"
+    },
+    {
+      "path": "fret-electron/analysis/DiagnosisWorker.js",
+      "sha256": "sha256:399fc3d50f1d91b8504e52627872c744a2581f46eb5bd1902354b95362ee0b57"
+    },
+    {
+      "path": "fret-electron/analysis/HSNode.js",
+      "sha256": "sha256:68bc7e21cfa74345e73a54f61ac18c662121008cd254dab315d450aa0be5989d"
+    },
+    {
+      "path": "fret-electron/analysis/connected_components.js",
+      "sha256": "sha256:36b153a668bf2056f160bd564698fcbe7a8ab983acf791060b99c8ce34b77f15"
+    },
+    {
+      "path": "fret-electron/analysis/contractBuilder.js",
+      "sha256": "sha256:6e85ff3b1600353dcbb0d2ad21f724966fe4fc4dfa5c81363d0020434f7a5aa1"
+    },
+    {
+      "path": "fret-electron/analysis/realizabilityCheck.js",
+      "sha256": "sha256:39de6bce37f1bfa90fd254906cbc60726a68c207e52cfdd43309c258a4d3428c"
+    },
+    {
+      "path": "fret-electron/analysis/testrun.js",
+      "sha256": "sha256:f2ca0b5d6c6216ed4dfd90f4af9b914f5524d7f89802a0fb040fb0f02bcfb3d5"
+    },
+    {
+      "path": "fret-electron/app/parser/AnnotatingErrorListener.js",
+      "sha256": "sha256:f1980f2416e2541abd36ddca30ebd42c5ecb90ca2dc59ec0d919c7de49975d9c"
+    },
+    {
+      "path": "fret-electron/app/parser/AntlrUtilities.js",
+      "sha256": "sha256:22953fd986831413062eb33704db4a197f81a485221dc89311946335327a42ba"
+    },
+    {
+      "path": "fret-electron/app/parser/CacheProbabilisticSemantics.js",
+      "sha256": "sha256:931fd9f95cd2f4946bfa3ab15b19b16035de069985756873cafb8b9dfe071c8c"
+    },
+    {
+      "path": "fret-electron/app/parser/CacheSemantics.js",
+      "sha256": "sha256:cf5ed8e3a1e357934646f90965979724daf5cd7bf286c7b7cb8a2a5dbbf169c1"
+    },
+    {
+      "path": "fret-electron/app/parser/CheckViolations.js",
+      "sha256": "sha256:1b60f200e7980e10be995986c8292bf87d40c0a0acd0d6995c5cb437d2f62c1f"
+    },
+    {
+      "path": "fret-electron/app/parser/Constants.js",
+      "sha256": "sha256:050e6ce50943b8d74272fc714f8ce4273bebcdbf7b6eb7b621820fda50f7ff97"
+    },
+    {
+      "path": "fret-electron/app/parser/FetchSemantics.js",
+      "sha256": "sha256:1356359ffe5924b2dabab1daed249b898e6816413a8dae4466460af08e9c2e73"
+    },
+    {
+      "path": "fret-electron/app/parser/FretSemantics.js",
+      "sha256": "sha256:bd3e375e3e89893340b3749438849dc08da227764d7df03e9dff53efc85a4ccd"
+    },
+    {
+      "path": "fret-electron/app/parser/Requirement.g4",
+      "sha256": "sha256:6d9446721c10686dcb36b5fc1cbb181dfd0c9ed7f8858edde78a58dbbde03657"
+    },
+    {
+      "path": "fret-electron/app/parser/RequirementLexer.js",
+      "sha256": "sha256:204a29f11484b02dbc7718b2aa5baf9418ca3716ceb65e093336305e8c60eb45"
+    },
+    {
+      "path": "fret-electron/app/parser/RequirementListener.js",
+      "sha256": "sha256:6b52b3bd785c446f7cb9b2b9bbb19e104f6740e73b813f5429f140b1debdfb3a"
+    },
+    {
+      "path": "fret-electron/app/parser/RequirementParser.js",
+      "sha256": "sha256:7778c4bfe08082d3452faedf2edcd1e15390577f0c847a54543dec3bc3538aab"
+    },
+    {
+      "path": "fret-electron/app/parser/SemanticsAnalyzer.js",
+      "sha256": "sha256:154c9572fed1e8f5902d947ad49785a21cd28e4db47ece0564537a7dc107f8bd"
+    },
+    {
+      "path": "fret-electron/app/parser/SemanticsGenerator.js",
+      "sha256": "sha256:a3e270b5174240ebfeaf4cb5415b0e5fe44f71023310d004e6f58f87331f0f7d"
+    },
+    {
+      "path": "fret-electron/app/parser/createSVG.js",
+      "sha256": "sha256:f7043823efa5c2627bfedde7d55e84d7c5b4f23ff5fcc8e9f60d0eb9850b520b"
+    },
+    {
+      "path": "fret-electron/app/parser/generateRequirement.js",
+      "sha256": "sha256:df1cf773f8c988365ca01d966cd925207c232cf70feeb9c3b0ab07d3df5ede7d"
+    },
+    {
+      "path": "fret-electron/app/parser/probabilisticSemantics.json",
+      "sha256": "sha256:2cbd6d42b78c4cbbc841f454bc5f63806a73d26d099a76d8fc37adbfc495c4ce"
+    },
+    {
+      "path": "fret-electron/app/parser/semantics.json",
+      "sha256": "sha256:878a61a13e5114025fab3767518fc086db52d79c2dd93139eff7665b1e966b57"
+    },
+    {
+      "path": "fret-electron/support/ASTAnalyzer.js",
+      "sha256": "sha256:5f50d7b8be55946559b8959c9f3edfa9169f3a2cfbfd8e02570450ebf8cd62bb"
+    },
+    {
+      "path": "fret-electron/support/ASTSemantics.js",
+      "sha256": "sha256:818570297ad7f53debf7a8b4c8cc0d3fc108f9bafc9e9659a053d98e8a0b3660"
+    },
+    {
+      "path": "fret-electron/support/CoCoSpecTemplates/Complete.ejs",
+      "sha256": "sha256:cd66f3823998b0947811278de0d2008b6e87f976ec4cb103149d0d5b82aa0086"
+    },
+    {
+      "path": "fret-electron/support/CoCoSpecTemplates/ContractSignature.ejs",
+      "sha256": "sha256:ee84f021400b3bd3de78c2a271fe8793df1da52a95935fb9299206e5bca03134"
+    },
+    {
+      "path": "fret-electron/support/CoCoSpecTemplates/InternalVariables.ejs",
+      "sha256": "sha256:ce47993e24f1f712d52d78e5af56933c5abe1d2a084d857014beb44056e0714e"
+    },
+    {
+      "path": "fret-electron/support/CoCoSpecTemplates/PropertyDefinitions.ejs",
+      "sha256": "sha256:c5e3e8f78bd317cdab0ddbaa1b894ac2ee089097e1050294e6ddf8e789361f8c"
+    },
+    {
+      "path": "fret-electron/support/CoCoSpecTemplates/ejsCache.js",
+      "sha256": "sha256:0f87b562e694b5156372797fd23f59c2696689e9c4df10cf824cce45fefc1108"
+    },
+    {
+      "path": "fret-electron/support/CoPilotTemplates/Complete.ejs",
+      "sha256": "sha256:b72576451c5c2a0fc049b4dbefc017c2c0252f8dcae719801c2a97cb905d96f3"
+    },
+    {
+      "path": "fret-electron/support/CoPilotTemplates/Component.ejs",
+      "sha256": "sha256:c6276b46f0bc1dc330572fb09eab27b762a525a30c5bb98e91c221bb18020427"
+    },
+    {
+      "path": "fret-electron/support/CoPilotTemplates/Functions.ejs",
+      "sha256": "sha256:eaebe89dd3f545b7cf239e5d852d7712a58e282f56af9afa3e17186f10534567"
+    },
+    {
+      "path": "fret-electron/support/CoPilotTemplates/InternalVariables.ejs",
+      "sha256": "sha256:0e0ace116a87ce2438b576dfe11d79a91527cdd8ad68c86fcd732dbbddb332ee"
+    },
+    {
+      "path": "fret-electron/support/CoPilotTemplates/OtherVariables.ejs",
+      "sha256": "sha256:23c7588cccd308cec62f5c12dda0bd80963ccf5ebf601cbe585723334149d13d"
+    },
+    {
+      "path": "fret-electron/support/CoPilotTemplates/RequirementDefinitions.ejs",
+      "sha256": "sha256:8e33ba2fe4700991da9ad4900fce8162f9d1163a2ba0de2c58f2870116bb6304"
+    },
+    {
+      "path": "fret-electron/support/CoPilotTemplates/ejsCacheCoPilot.js",
+      "sha256": "sha256:af042f6680409df2e16ebded765848bf523d0e017f7e0c8dcdb8d8da09a5fad3"
+    },
+    {
+      "path": "fret-electron/support/CommonTemplates/AdditionalOperatorsNotUsed.ejs",
+      "sha256": "sha256:ad40919a5e8f95ee7a212dd78dd7f93eb62b6f547c17bd33e079028842155bdb"
+    },
+    {
+      "path": "fret-electron/support/CommonTemplates/DelayOperators.ejs",
+      "sha256": "sha256:51ef430e2a01136cc18c0bd9717704391071c228238c4f085f253da31fbcd8e4"
+    },
+    {
+      "path": "fret-electron/support/CommonTemplates/LibraryOfOperators.ejs",
+      "sha256": "sha256:6950a15702823923f685c283c94b912bd70197ec8b4f14a94b43733d7bf076a5"
+    },
+    {
+      "path": "fret-electron/support/CommonTemplates/ModeDefinitions.ejs",
+      "sha256": "sha256:cd82abb6bf86c4383a58d35f49a0fae84b2042f7b054f8c4bd45888d6cc55f16"
+    },
+    {
+      "path": "fret-electron/support/CommonTemplates/ModeDefinitionsOptimized.ejs",
+      "sha256": "sha256:d02e044f2f23b5b952a874bdb04099af783f972b6d5911186a5df6e43a20b1e3"
+    },
+    {
+      "path": "fret-electron/support/CopilotParser/CopilotLexer.g4",
+      "sha256": "sha256:5769498ae0d262c83f7c0a239217004b4479cb31197e79e335c52776019eb440"
+    },
+    {
+      "path": "fret-electron/support/CopilotParser/CopilotLexer.interp",
+      "sha256": "sha256:a19c1cb5ebe6a036ceb30e97ad0fc6099a10cddfdf942a09beecfa57df1bce54"
+    },
+    {
+      "path": "fret-electron/support/CopilotParser/CopilotLexer.js",
+      "sha256": "sha256:cdc0e1db274f6eb17073e19b6dd32fe8e8c2cc88c531a3c9ea7d7185aead4610"
+    },
+    {
+      "path": "fret-electron/support/CopilotParser/CopilotLexer.tokens",
+      "sha256": "sha256:17e9fb6e5d484d27b3d697f43e574bec8ca42663a9830ba3ff62dfecccd0fb6d"
+    },
+    {
+      "path": "fret-electron/support/CopilotParser/CopilotParser.g4",
+      "sha256": "sha256:806e823299b12769bf82ab44223913f292a98c77a42d22ed5faa8dd016c6ccfd"
+    },
+    {
+      "path": "fret-electron/support/CopilotParser/CopilotParser.interp",
+      "sha256": "sha256:d76870d8905ed08f5ae5d199ce8b960e686d4fc411f192cddf0626b676f5f501"
+    },
+    {
+      "path": "fret-electron/support/CopilotParser/CopilotParser.js",
+      "sha256": "sha256:8f442efaa3b350c4ec4eab11176d3e497c70243a23f262246026f28cac3bf8ed"
+    },
+    {
+      "path": "fret-electron/support/CopilotParser/CopilotParser.tokens",
+      "sha256": "sha256:17e9fb6e5d484d27b3d697f43e574bec8ca42663a9830ba3ff62dfecccd0fb6d"
+    },
+    {
+      "path": "fret-electron/support/CopilotParser/CopilotParserListener.js",
+      "sha256": "sha256:58dc7d23e05f51e77d86f704d016cf31423f4cb12206a5384a512e6894ab9e8b"
+    },
+    {
+      "path": "fret-electron/support/LTLParser/LTL.g4",
+      "sha256": "sha256:6ab6fc8d07005da4c91d1096d26620bdffa822413e5d44c65e10a126ef17e2f7"
+    },
+    {
+      "path": "fret-electron/support/LTLParser/LTLASTAnalyzer.js",
+      "sha256": "sha256:1bac1d891f3afe4143c1f1b13b0f8926d85e34173618fcdd9cfcf578df543201"
+    },
+    {
+      "path": "fret-electron/support/LTLParser/LTLASTSemantics.js",
+      "sha256": "sha256:aca3c104932ed76977bdca76e17c5e02c5f279e1e84fd5616c42104761454adc"
+    },
+    {
+      "path": "fret-electron/support/LTLParser/LTLLexer.js",
+      "sha256": "sha256:adfdd6e201c25eac91b17bc21eb5503d51addf368dc2fb4e217a5511ffe20882"
+    },
+    {
+      "path": "fret-electron/support/LTLParser/LTLListener.js",
+      "sha256": "sha256:d7a978477f87f7a00d21ba7d042c6d7c30b729b293211a799a8fa396dc28f8a6"
+    },
+    {
+      "path": "fret-electron/support/LTLParser/LTLParser.js",
+      "sha256": "sha256:ec57f12856538fed29a05f61e9d7148792e1d0c81fdce77def9d4aa66ce527b9"
+    },
+    {
+      "path": "fret-electron/support/LTLParser/LTLVisitor.js",
+      "sha256": "sha256:f9925411b9300c9627eec2ade26b0ac3a2a1e22643ba7aa0d6cbc2ac45a93134"
+    },
+    {
+      "path": "fret-electron/support/LTLSIM_NuSMVParser/LTLAEX.g4",
+      "sha256": "sha256:435495c1d697a14ef73e3ecda5cb3286e25918ad788328aa85c80d25741bd458"
+    },
+    {
+      "path": "fret-electron/support/LTLSIM_NuSMVParser/LTLAEX.tokens",
+      "sha256": "sha256:3eea209ddeb05d1dd290676ae4355763166dddb02ad6382c2e1362f77fc4faa2"
+    },
+    {
+      "path": "fret-electron/support/LTLSIM_NuSMVParser/LTLAEXLexer.js",
+      "sha256": "sha256:fa8f219b3916a6b840309ea6aa6d83663f3863b4f4e8a319c0405c6e7515c0a9"
+    },
+    {
+      "path": "fret-electron/support/LTLSIM_NuSMVParser/LTLAEXLexer.tokens",
+      "sha256": "sha256:3eea209ddeb05d1dd290676ae4355763166dddb02ad6382c2e1362f77fc4faa2"
+    },
+    {
+      "path": "fret-electron/support/LTLSIM_NuSMVParser/LTLAEXListener.js",
+      "sha256": "sha256:b98be0bc580d83f54bf8dccff67f0fa7be7e34380a0fa59cb18bafb67f30dfa2"
+    },
+    {
+      "path": "fret-electron/support/LTLSIM_NuSMVParser/LTLAEXParser.js",
+      "sha256": "sha256:2c0570b150b67966f8233c53bc0e8ee6484ea06abf45e5be4fe47b132e4c27a8"
+    },
+    {
+      "path": "fret-electron/support/LTLSIM_NuSMVParser/LTLAEXVisitor.js",
+      "sha256": "sha256:2a56e46ff770fb96045d1433760b92fe8bc024dcea9d6562de7a78c485e2b69f"
+    },
+    {
+      "path": "fret-electron/support/LTLSIM_NuSMVParser/LTLSIM_NuSMV.g4",
+      "sha256": "sha256:e7e83b645bb95037238b1d4998f89258b0eb91d154732b9cf2d6ce6a922bdea8"
+    },
+    {
+      "path": "fret-electron/support/LTLSIM_NuSMVParser/LTLSIM_NuSMVLexer.js",
+      "sha256": "sha256:a052bd74ea00257a82a847d7a1d88d0bab3504b39489064f7665a15c10c9fd27"
+    },
+    {
+      "path": "fret-electron/support/LTLSIM_NuSMVParser/LTLSIM_NuSMVListener.js",
+      "sha256": "sha256:b12dfa8ad52dbd2b0abaac189bcbe9b368ba06dd8a940b0cda0d7abc6066e2d7"
+    },
+    {
+      "path": "fret-electron/support/LTLSIM_NuSMVParser/LTLSIM_NuSMVParser.js",
+      "sha256": "sha256:bd110743dcffc8202e0f8066b909d9723644961f826452a16b9441d2afc72656"
+    },
+    {
+      "path": "fret-electron/support/LTLSIM_NuSMVParser/LTLSIM_NuSMVVisitor.js",
+      "sha256": "sha256:203c468cd483deafcb624712e1c4fb1db488cfd7944d02264a4e48e9775cccff"
+    },
+    {
+      "path": "fret-electron/support/LTLSIM_NuSMVParser/Makefile",
+      "sha256": "sha256:18fe4fa4c75d0f332a9ef8fb09f1393f868bf2154537931e3eb97046a0949a09"
+    },
+    {
+      "path": "fret-electron/support/LTLSIM_NuSMVParser/index.js",
+      "sha256": "sha256:26d95db8bc989b9660db6507f7d93262c7a716106d48f2e55645db46b5c3c704"
+    },
+    {
+      "path": "fret-electron/support/LTLSIM_NuSMVParser/package.json",
+      "sha256": "sha256:8d9f045a021a1cbcbed0105e4f29d52f9e4e8bda5d4f989e39dca3dd37c5d119"
+    },
+    {
+      "path": "fret-electron/support/LustreExpressionsParser/LustreExpressions.g4",
+      "sha256": "sha256:011db9a59e276f1bd2a457c3fd31ac8d359b7219bafa55e6d9a292764f314d5a"
+    },
+    {
+      "path": "fret-electron/support/LustreExpressionsParser/LustreExpressionsLexer.js",
+      "sha256": "sha256:a9d4d1f37b6942ce38c5080414424864791f1d092afbb497c4a61069b7e5ece0"
+    },
+    {
+      "path": "fret-electron/support/LustreExpressionsParser/LustreExpressionsListener.js",
+      "sha256": "sha256:4b02720486a17707c79eef624cb937a0daa4b5832a3ae3d95c1f2a374f1273b2"
+    },
+    {
+      "path": "fret-electron/support/LustreExpressionsParser/LustreExpressionsParser.js",
+      "sha256": "sha256:ecfd3d75552a0896ec055c2ed5c769a6dc741a8611acf801b4c03b7adddd7434"
+    },
+    {
+      "path": "fret-electron/support/LustreExpressionsParser/expr/ArrayAccessExpr.js",
+      "sha256": "sha256:cf514fe6581f0c7d27d854436dc9b7fc5066a14e5f054923ee05e9e566ff7caa"
+    },
+    {
+      "path": "fret-electron/support/LustreExpressionsParser/expr/ArrayExpr.js",
+      "sha256": "sha256:0601d6313d830f0cab009e6ded1f1fef34b1ae81878c36637011e6ed1993fc5a"
+    },
+    {
+      "path": "fret-electron/support/LustreExpressionsParser/expr/ArrayUpdateExpr.js",
+      "sha256": "sha256:7bcc6ccc5837e509b6a4c1b4af2931373bc94aa3151714da6da8058461c7b821"
+    },
+    {
+      "path": "fret-electron/support/LustreExpressionsParser/expr/BinaryExpr.js",
+      "sha256": "sha256:ce3f90a0ba88f88a95b903b42c00ea24c5898fe19c6f6980b5bfc2371aca9bed"
+    },
+    {
+      "path": "fret-electron/support/LustreExpressionsParser/expr/BinaryOp.js",
+      "sha256": "sha256:a1ace21a154354be766b2dfd1ab22baeb11b33171f1e1e8e1215cc49253b32eb"
+    },
+    {
+      "path": "fret-electron/support/LustreExpressionsParser/expr/BoolExpr.js",
+      "sha256": "sha256:31d65207a85b55e694273fc81f14a5fd5d1dc8a7892ce44060920d37ec10eb6c"
+    },
+    {
+      "path": "fret-electron/support/LustreExpressionsParser/expr/CastExpr.js",
+      "sha256": "sha256:dd3820f8c9f15d7acacb270930850853a0de42fb8845e85d03acff065e285419"
+    },
+    {
+      "path": "fret-electron/support/LustreExpressionsParser/expr/CondactExpr.js",
+      "sha256": "sha256:311bf161ecb676b0ef80492f7bfd9f77d1977c25ae8f89587e5c59c34c315c12"
+    },
+    {
+      "path": "fret-electron/support/LustreExpressionsParser/expr/IfThenElseExpr.js",
+      "sha256": "sha256:7c66f9baa586dd6cc75c72e01c1615093d3e9d4fff124d10717905f9f9f16995"
+    },
+    {
+      "path": "fret-electron/support/LustreExpressionsParser/expr/IntExpr.js",
+      "sha256": "sha256:f0d2f4c7aaa083194a29b03af43e62ba0d3ca76281abf26a8aa7312d2308c93e"
+    },
+    {
+      "path": "fret-electron/support/LustreExpressionsParser/expr/PropositionExpr.js",
+      "sha256": "sha256:0dc848bfd47ab371b2117643056d279cedf76c3fc241207176191b75697bfede"
+    },
+    {
+      "path": "fret-electron/support/LustreExpressionsParser/expr/RealExpr.js",
+      "sha256": "sha256:8d72b7b256bf2c720e9c9807147203a7d52938e4b38cdf50f53d48ebb107e7a6"
+    },
+    {
+      "path": "fret-electron/support/LustreExpressionsParser/expr/RecordAccessExpr.js",
+      "sha256": "sha256:adb383e6ca66e05523f7d11da18a892642ca9216c16fbb2cc6070b59d6eb3136"
+    },
+    {
+      "path": "fret-electron/support/LustreExpressionsParser/expr/RecordExpr.js",
+      "sha256": "sha256:b96f2c23c6663313abe1128add564b0be1aadc4fad80e8bda91dc75f3c4815d8"
+    },
+    {
+      "path": "fret-electron/support/LustreExpressionsParser/expr/RecordUpdateExpr.js",
+      "sha256": "sha256:9f7838f815442cc0a4990717fb4df7d42ffc2a7615344c57768348ea2ab2db71"
+    },
+    {
+      "path": "fret-electron/support/LustreExpressionsParser/expr/TupleExpr.js",
+      "sha256": "sha256:4f43b60207e79ee880fff9df278090f42856b6e10db7ad797714b845ba244a1b"
+    },
+    {
+      "path": "fret-electron/support/LustreExpressionsParser/expr/UnaryExpr.js",
+      "sha256": "sha256:dda6b1c9ee9c16783e765c483acb2f15a985d8886f34347343a01637fc29a6bd"
+    },
+    {
+      "path": "fret-electron/support/LustreExpressionsParser/visitors/LustreExprVisitor.js",
+      "sha256": "sha256:f5a9f398986999ca58cb682269c63cb95c0d6d50a6a2cf489d9f6dbfa70f6892"
+    },
+    {
+      "path": "fret-electron/support/LustreExpressionsParser/visitors/LustreExpressions.g4",
+      "sha256": "sha256:1b4054984a79597f57936960787998ffa32b2fc5d300cb3c8e5e0fbff50022ba"
+    },
+    {
+      "path": "fret-electron/support/LustreExpressionsParser/visitors/LustreExpressions.interp",
+      "sha256": "sha256:63b9c3164e8e1c66fe246d95e93d1717043b7c4b4bf3bf8397b71f886b8db844"
+    },
+    {
+      "path": "fret-electron/support/LustreExpressionsParser/visitors/LustreExpressions.tokens",
+      "sha256": "sha256:80d3af8cc63abcb1f20d93739913080347092f09968fc6922ad4b236762a9e6b"
+    },
+    {
+      "path": "fret-electron/support/LustreExpressionsParser/visitors/LustreExpressionsLexer.interp",
+      "sha256": "sha256:69436a9d5b8ad48a946ff801a28e26150dc2b8142994ebaad5b6957741053198"
+    },
+    {
+      "path": "fret-electron/support/LustreExpressionsParser/visitors/LustreExpressionsLexer.js",
+      "sha256": "sha256:e608e4a23800655630ed36b5cdccf6222aa6d9671906febf0801cf400a6e4dda"
+    },
+    {
+      "path": "fret-electron/support/LustreExpressionsParser/visitors/LustreExpressionsLexer.tokens",
+      "sha256": "sha256:80d3af8cc63abcb1f20d93739913080347092f09968fc6922ad4b236762a9e6b"
+    },
+    {
+      "path": "fret-electron/support/LustreExpressionsParser/visitors/LustreExpressionsListener.js",
+      "sha256": "sha256:03a870cbff3db5e9af8897691107c73c50c91a2ff26d9bc2c365986f26525f44"
+    },
+    {
+      "path": "fret-electron/support/LustreExpressionsParser/visitors/LustreExpressionsParser.js",
+      "sha256": "sha256:146178261ac06055bd3e39b40ebd7bb344cf8f6931de80a9551606c454cc7c22"
+    },
+    {
+      "path": "fret-electron/support/LustreExpressionsParser/visitors/LustreExpressionsVisitor.js",
+      "sha256": "sha256:0ee233ebf1253efc328396a12638e5760ce5008c9533a03b3fa385a3c410ba98"
+    },
+    {
+      "path": "fret-electron/support/NuSMVParser/NuSMV.g4",
+      "sha256": "sha256:c0f48f61ad1bbe7a73c5a0c7de4818e002ab4ff7ab4c74b7a590a65fcd70ce52"
+    },
+    {
+      "path": "fret-electron/support/NuSMVParser/NuSMVLexer.js",
+      "sha256": "sha256:d304b37a56042a393209c80c06110165fe202b69332ae32b7c3997b95d110330"
+    },
+    {
+      "path": "fret-electron/support/NuSMVParser/NuSMVListener.js",
+      "sha256": "sha256:fb482bbeb7819b04946b345a766ed4f9c6058ff6c62093d5e46bab54ea055165"
+    },
+    {
+      "path": "fret-electron/support/NuSMVParser/NuSMVParser.js",
+      "sha256": "sha256:ba63400876b8733ab5a677cd101483389e261eeff116125d3a58b4c6c7935ba8"
+    },
+    {
+      "path": "fret-electron/support/NuSMVParser/NuSMVVisitor.js",
+      "sha256": "sha256:d72f70d8400cd2ea9f5cffe5245d1c06b01c6130031db1dd5297f81eb42cee5e"
+    },
+    {
+      "path": "fret-electron/support/NuSMVParser/index.js",
+      "sha256": "sha256:741284c3005f9ceb2aa9c9600419ec10ab7ee981ee6e04725952483fdec156f3"
+    },
+    {
+      "path": "fret-electron/support/NuSMVParser/package.json",
+      "sha256": "sha256:175c34ee15f89c2c4759cc1274306da5f266bf81467d7821e6b4f826a6f9e91e"
+    },
+    {
+      "path": "fret-electron/support/PrismProp/PrismProp.g4",
+      "sha256": "sha256:28677be1fab5396c71f4700c1213bd2ebe90d6e2965a546684860a2f8cf07128"
+    },
+    {
+      "path": "fret-electron/support/PrismProp/PrismPropASTAnalyzer.js",
+      "sha256": "sha256:47ef0b91a02e616268f803115e411fe3131e46de0531f3e170fe55dfd46d7ac3"
+    },
+    {
+      "path": "fret-electron/support/PrismProp/PrismPropASTSemantics.js",
+      "sha256": "sha256:bf15c97dda907f5b54d31584353513826fdd382f0e462b964112898c4861e6bf"
+    },
+    {
+      "path": "fret-electron/support/PrismProp/PrismPropLexer.js",
+      "sha256": "sha256:b6d921cf626922047fbf24cb1e253b5bbdf53207b716879f24c1a28e56dfb275"
+    },
+    {
+      "path": "fret-electron/support/PrismProp/PrismPropListener.js",
+      "sha256": "sha256:f85df90b9d6770e8faf1e1fea0f1ed340bc511e535676d93fb498ac4898e147e"
+    },
+    {
+      "path": "fret-electron/support/PrismProp/PrismPropParser.js",
+      "sha256": "sha256:ae0417566db31b74010b4dd2d228b6d642b7465eb72c050b721d44cf4909ca58"
+    },
+    {
+      "path": "fret-electron/support/PrismProp/PrismPropVisitor.js",
+      "sha256": "sha256:efa004721d2dd03951537c089c08993ad36bade20a5f35d285c39b969d4d0d8d"
+    },
+    {
+      "path": "fret-electron/support/PrismProp/testPrismProp.js",
+      "sha256": "sha256:d4a58d903ff27883da4ffdfc8c1ba5f8b1368ce6794fdc7401ac4d1b994d417e"
+    },
+    {
+      "path": "fret-electron/support/R2U2ExpressionsParser/R2U2Expressions.g4",
+      "sha256": "sha256:97f6e390ed058d03e099d8ccb2275725f64fdb3934625842bb8c6eae0a32eadc"
+    },
+    {
+      "path": "fret-electron/support/R2U2ExpressionsParser/R2U2ExpressionsLexer.js",
+      "sha256": "sha256:2c625394502b585fad0770aa561aa9ec426e817647815c57b38ef953fb4df212"
+    },
+    {
+      "path": "fret-electron/support/R2U2ExpressionsParser/R2U2ExpressionsListener.js",
+      "sha256": "sha256:fd3f85f68929384bd4cf5b8af27d1ba004ba91f6d8b48bebe0380020841ed2ca"
+    },
+    {
+      "path": "fret-electron/support/R2U2ExpressionsParser/R2U2ExpressionsParser.js",
+      "sha256": "sha256:6c4824a5e5377a19443a312a4483cf20bd735a8980e6f45a97fe29e0f2e2fb13"
+    },
+    {
+      "path": "fret-electron/support/R2U2ExpressionsParser/R2U2ExpressionsVisitor.js",
+      "sha256": "sha256:eddd458e9d114837917a989c8b95351a50cc1bfd830ee43c3632a04ed34ef2af"
+    },
+    {
+      "path": "fret-electron/support/RealizabilityTemplates/ejsCache_realize.js",
+      "sha256": "sha256:8ec2bd2a0956d4ce05ebd92a11a6ef3068b433eb13f802cdb1b2fa595287fab6"
+    },
+    {
+      "path": "fret-electron/support/RealizabilityTemplates/jkind/Complete.ejs",
+      "sha256": "sha256:1dfedac2c4e6ceeba9f2f5aa53b082f0e16b7944fa8605f976bc51eaa8cbda67"
+    },
+    {
+      "path": "fret-electron/support/RealizabilityTemplates/jkind/ComponentSignature.ejs",
+      "sha256": "sha256:2ace05decaa29760e6d9141e6ca2e11569f4d9108422ce2291fe14863b4db1ab"
+    },
+    {
+      "path": "fret-electron/support/RealizabilityTemplates/jkind/InternalAssignments.ejs",
+      "sha256": "sha256:f21fd4773dca860dfc4a4eabb48ce7306f5d238533e7747091a586c466fcdf64"
+    },
+    {
+      "path": "fret-electron/support/RealizabilityTemplates/jkind/InternalVariables.ejs",
+      "sha256": "sha256:e08b7dbc2142ed1c6d7bcc80119c8f391e841b7713592211d4348abdb6dfa169"
+    },
+    {
+      "path": "fret-electron/support/RealizabilityTemplates/jkind/PropertyDefinitions.ejs",
+      "sha256": "sha256:0eafaf9e5f6da99eeac12b0a3efbc04517b386e41b15e6c872ff7ea939c60eac"
+    },
+    {
+      "path": "fret-electron/support/RealizabilityTemplates/kind2/Complete.ejs",
+      "sha256": "sha256:c5b2634c2adc1da249ed1436ce8610b7d0fd4f7f34ef0a338cadf1f4b8de1752"
+    },
+    {
+      "path": "fret-electron/support/RealizabilityTemplates/kind2/ComponentSignature.ejs",
+      "sha256": "sha256:28e8448ae1354e24a1d749f898b2c371649b6f214c6bd22f967ac391a26cf448"
+    },
+    {
+      "path": "fret-electron/support/RealizabilityTemplates/kind2/InternalVariables.ejs",
+      "sha256": "sha256:f108bfcdbccff320ae64892cae1fc7b6410d90e54070dff8f40926b2d00456b8"
+    },
+    {
+      "path": "fret-electron/support/RealizabilityTemplates/kind2/PropertyDefinitions.ejs",
+      "sha256": "sha256:3d18aa0e9cc584202d67d860bc6629662106ec6f052e7314721afc34d3b6d038"
+    },
+    {
+      "path": "fret-electron/support/SMVBasicExpressionsParser/Makefile",
+      "sha256": "sha256:34b7d388eefc376daeaddeecc6c524efce18af1bc092f3c68530d3a3a9926ca2"
+    },
+    {
+      "path": "fret-electron/support/SMVBasicExpressionsParser/SMVBasicExpressions.g4",
+      "sha256": "sha256:253ad85096d4cab400759a7ae4bfcbcee6bd188dce8e8af3f04a49de7adbeefa"
+    },
+    {
+      "path": "fret-electron/support/SMVBasicExpressionsParser/SMVBasicExpressions.interp",
+      "sha256": "sha256:4c958110d8196986a6f69bd6b91262c0e4d59d668ab5ec550bdd8f443ad7d197"
+    },
+    {
+      "path": "fret-electron/support/SMVBasicExpressionsParser/SMVBasicExpressions.tokens",
+      "sha256": "sha256:163af454b0cfbdf01536c3a86d40e62af463472a03613a90b0bce7addb890aa0"
+    },
+    {
+      "path": "fret-electron/support/SMVBasicExpressionsParser/SMVBasicExpressionsLexer.interp",
+      "sha256": "sha256:bb0994b2c7c52ef7e67c8520e96ba41eb458771b51581f167a644b536281911a"
+    },
+    {
+      "path": "fret-electron/support/SMVBasicExpressionsParser/SMVBasicExpressionsLexer.js",
+      "sha256": "sha256:b7fc2a2906c8b160568d74041fcc37a103e19ba1a4834f884882a22afd6676c6"
+    },
+    {
+      "path": "fret-electron/support/SMVBasicExpressionsParser/SMVBasicExpressionsLexer.tokens",
+      "sha256": "sha256:163af454b0cfbdf01536c3a86d40e62af463472a03613a90b0bce7addb890aa0"
+    },
+    {
+      "path": "fret-electron/support/SMVBasicExpressionsParser/SMVBasicExpressionsListener.js",
+      "sha256": "sha256:581767f3bef5e33b33cf186a1b7d6bf93ad3c36d9aa63efb3534c48c1165af47"
+    },
+    {
+      "path": "fret-electron/support/SMVBasicExpressionsParser/SMVBasicExpressionsParser.js",
+      "sha256": "sha256:de3a360cc6a4ddc017fdbf19116c829fb47e501fcaac1733ab091eed1554f6b4"
+    },
+    {
+      "path": "fret-electron/support/SMVBasicExpressionsParser/SMVBasicExpressionsVisitor.js",
+      "sha256": "sha256:cc788479bbaa1585cd99f60bd6671e726a6547e04400babbcb44be2aab4a6b8e"
+    },
+    {
+      "path": "fret-electron/support/SMVTemplates/Complete.ejs",
+      "sha256": "sha256:00f519edc484d6b45cd778bbf7aee3cdbacbcfe7edc3c8b5cb4c3b79f64bb596"
+    },
+    {
+      "path": "fret-electron/support/SMVTemplates/InternalVariables.ejs",
+      "sha256": "sha256:007e5fa42f74c64b84837117d621821aa192e7e4ab9a48e2d786d50d6d24bb2c"
+    },
+    {
+      "path": "fret-electron/support/SMVTemplates/ModelSignature.ejs",
+      "sha256": "sha256:bd849b49c4fb8281b2de02f9669bf92bfe3b6f7265210d3100e6fc5a8d3d0bda"
+    },
+    {
+      "path": "fret-electron/support/SMVTemplates/PropertyDefinitions.ejs",
+      "sha256": "sha256:2d2d71cbeffe39611ce1cfa0b8936c960585bcba0ebad3a16c0846da5ed5f320"
+    },
+    {
+      "path": "fret-electron/support/SMVTemplates/ejsCacheSMV.js",
+      "sha256": "sha256:a125eb54e3dd44743291eaa4bde9f850a3f29505fd7c97354111af41a0b291df"
+    },
+    {
+      "path": "fret-electron/support/TestGenTemplates/ejsCache_testgen.js",
+      "sha256": "sha256:140b4e416d24169098a5c905417e710400d873ba186e05fe99bad9ff3c37d314"
+    },
+    {
+      "path": "fret-electron/support/TestGenTemplates/kind2/Complete.ejs",
+      "sha256": "sha256:07a2591d75bd126d2ab1ec4e9f4ad75a1d33cc94c86980061d214caf8396bb58"
+    },
+    {
+      "path": "fret-electron/support/TestGenTemplates/kind2/ComponentSignature.ejs",
+      "sha256": "sha256:a538e5e5cab1f2cc595d9750e521b4f1ecf479f033ec99f8e405e0f69c5c09ac"
+    },
+    {
+      "path": "fret-electron/support/TestGenTemplates/kind2/InternalVariables.ejs",
+      "sha256": "sha256:fa1254110699af54e1a25602d7e95e5b682c1b0bc2ef68de00c604271149207b"
+    },
+    {
+      "path": "fret-electron/support/TestGenTemplates/kind2/PropertyDefinitions.ejs",
+      "sha256": "sha256:2e2dddfd04c5089d432cf071214ac58427f6290b62bcb9289f51f9fd0a3deac8"
+    },
+    {
+      "path": "fret-electron/support/cocospecSemantics.js",
+      "sha256": "sha256:62fbdbbf790bc0f820ec6cc12abb008ee12f9f0541b3ac1e6b4d27fe5c43ca58"
+    },
+    {
+      "path": "fret-electron/support/consistency.js",
+      "sha256": "sha256:165f7372c5ce8fd3d8f1e8e04ea0c5ddd04eb03e71703a2dcaa4bb1ad70ff15e"
+    },
+    {
+      "path": "fret-electron/support/copilotExprAnalyzer.js",
+      "sha256": "sha256:8f288611fce443ac28f5013eea9ef12f697cc9d34f445f6053e9f809102b5feb"
+    },
+    {
+      "path": "fret-electron/support/copilotExprSemantics.js",
+      "sha256": "sha256:191918c9eaad2f240afde6d0bb7ae6985aa7dfad534dabf30b429ce61f538034"
+    },
+    {
+      "path": "fret-electron/support/formalization-descriptions.js",
+      "sha256": "sha256:09e20556e8d5a3b673a8471587dc5229e892521b8044400adb31734249da1791"
+    },
+    {
+      "path": "fret-electron/support/formalization_descriptions_probabilistic.js",
+      "sha256": "sha256:8af97f221d2c43ac0f871cfe3b0d1d8a1d1f3b2a8d8580d2185ed2a53b4252b7"
+    },
+    {
+      "path": "fret-electron/support/formalizations.js",
+      "sha256": "sha256:74a3a1004e9d6c3fcd69e3aa770c49b3e0d43ebb35c04f9309cde046c481e557"
+    },
+    {
+      "path": "fret-electron/support/formalizations_future.js",
+      "sha256": "sha256:b94d7f73e7a456bdd6a06175e8f0d3fbc1688bf1b04b09a8f07df3d40a2294d0"
+    },
+    {
+      "path": "fret-electron/support/formalizations_past.js",
+      "sha256": "sha256:58ef64e945fe649aac18bba1dbb13c1d057140ed6602c0e33f8fa973f97384bc"
+    },
+    {
+      "path": "fret-electron/support/formalizations_probabilistic.js",
+      "sha256": "sha256:46ff5d1279e79bb44997b74516fc22f39b73cad3b263a1d6f9566b5da739e012"
+    },
+    {
+      "path": "fret-electron/support/fretDbSupport/checkDBFormat.js",
+      "sha256": "sha256:721fab54e5248cd4af26f8a5f8c5e4d57a17faa4418ca4738687221c30dfe918"
+    },
+    {
+      "path": "fret-electron/support/intervalLogic.js",
+      "sha256": "sha256:6970bca65df4ed5814cdff5a2e3d0fab9f83761f9a95dc03ff06eaaf46b23aa5"
+    },
+    {
+      "path": "fret-electron/support/lustreExprAnalyzer.js",
+      "sha256": "sha256:174e850629d09e4c91d2876bcba3f0c6efab218ba4e4db3089d688cc2f80c842"
+    },
+    {
+      "path": "fret-electron/support/lustreExprSemantics.js",
+      "sha256": "sha256:07c322a3717edbde3dcbb4be0c88261c448c8e17571511f673fd4cbafd97b5f0"
+    },
+    {
+      "path": "fret-electron/support/mdSemantics.js",
+      "sha256": "sha256:be523e5c8c940276e37183564a6b4cdbe26647c6df26fd230312b3a37b7dd2f9"
+    },
+    {
+      "path": "fret-electron/support/nuSMVAnalyzer.js",
+      "sha256": "sha256:82f9d2699babcc71188180a3fd14a0bffea8924d5390449dceb742a3e8ff1854"
+    },
+    {
+      "path": "fret-electron/support/r2u2Export.js",
+      "sha256": "sha256:1b407c22c26251c51cc7685399e82e1daee73680466ed473348f5c4ff546b562"
+    },
+    {
+      "path": "fret-electron/support/r2u2ExprAnalyzer.js",
+      "sha256": "sha256:e608511a3fa1d2517305e3f7c212e3ea898d0e8ae0ba5a81ec6bb340009cee22"
+    },
+    {
+      "path": "fret-electron/support/r2u2ExprSemantics.js",
+      "sha256": "sha256:9db09a0bafef7dc22eda2c0ca4f02755f35d582c63c073f02d60fb6464bac0a1"
+    },
+    {
+      "path": "fret-electron/support/saltSemantics.js",
+      "sha256": "sha256:46c3a619202b5ad1902b2c8aa723a085fe41545b1ec00d68ed074bab813ef3ea"
+    },
+    {
+      "path": "fret-electron/support/semanticDiagramsLib.js",
+      "sha256": "sha256:ad005040d6671b8930000626b7467686381ad10409e9b1eb75a480e39c8889dc"
+    },
+    {
+      "path": "fret-electron/support/smvBasicExprAnalyzer.js",
+      "sha256": "sha256:0f10bc7ca42a4efee86cdfa5033e6744f10b1ef8cd90d2fd6d9d23e211445e59"
+    },
+    {
+      "path": "fret-electron/support/smvBasicExprSemantics.js",
+      "sha256": "sha256:37a5a0a3f30bb3ad334de96632a7462d04c9e28c06553b11088fbdd432029cc6"
+    },
+    {
+      "path": "fret-electron/support/svgUtilities.js",
+      "sha256": "sha256:5c7b16115775af34c249a04a9f78dbf9a4ea164cde4f81e1b7a8795f12c9e063"
+    },
+    {
+      "path": "fret-electron/support/type_inference_abs_int.js",
+      "sha256": "sha256:82cded71ef5c7a38900d64de1f722b2908710f8cd9bb3c59e6205a22e020160a"
+    },
+    {
+      "path": "fret-electron/support/utilities.js",
+      "sha256": "sha256:f9af6ce91ffe47b71de046933f98ac26ca42006d50ae9978e6ffc4ed7aeee176"
+    },
+    {
+      "path": "fret-electron/support/utils.js",
+      "sha256": "sha256:adf024d765c15ce066cfc8757dba473028c37e4b413e8e7a032d733d16473283"
+    },
+    {
+      "path": "fret-electron/support/xform.js",
+      "sha256": "sha256:bdfc2f02f0d59888525e4b13b718c29d69392845c30bcccf9b1137627053e8db"
+    },
+    {
+      "path": "mcp/Dockerfile",
+      "sha256": "sha256:1ee2f5262c5b3342f004a69a7014d8ef124f6d74c50fa7509dd9df2ee0b19299"
+    },
+    {
+      "path": "mcp/package-lock.json",
+      "sha256": "sha256:359aa34229d99ce97381df0ffe8be9da0b6e3351537f94b2cb259c9c6e74b52e"
+    },
+    {
+      "path": "mcp/package.json",
+      "sha256": "sha256:a7d5c4d9734953a9cd93f41e55b678479954456b3871c1d072edcc17c89d986c"
+    },
+    {
+      "path": "mcp/src/analysis-worker.js",
+      "sha256": "sha256:5e370a450d05846ea9c90508a91731a079f2e676ba1c0e52757ed51a157174a3"
+    },
+    {
+      "path": "mcp/src/analysis.js",
+      "sha256": "sha256:b59e38bd6bcb4371cfdc99ca47eb0f827efc4cedafc4b4d52005e00e3d679887"
+    },
+    {
+      "path": "mcp/src/analysis_jobs.js",
+      "sha256": "sha256:70ff501f630c61f94cae99fd7c7c84fbec3d1e714741680be8a6cd1c3b219958"
+    },
+    {
+      "path": "mcp/src/auth.js",
+      "sha256": "sha256:69ad62c4a6e2db84c1b8bef8bcbc9280ce45b8372793e180c25eca86e83306c4"
+    },
+    {
+      "path": "mcp/src/executor.js",
+      "sha256": "sha256:c36170039246fc53304f51d81ea927bf4f538ec75a80384593bc8053a606e412"
+    },
+    {
+      "path": "mcp/src/formalize.js",
+      "sha256": "sha256:7d17c2d381ba71fabb4c20984d9a7aa70afbf4367cc689aad93ebbbcfd05f11a"
+    },
+    {
+      "path": "mcp/src/schemas.js",
+      "sha256": "sha256:bde794d161e7f3c3d8e5c3fa856b2d703b67e42b3986c54f6e361184a2a622fa"
+    },
+    {
+      "path": "mcp/src/server.js",
+      "sha256": "sha256:a599f15d547e95fad9624332aca74e100590df92fd7125cad2325f3c2043ee29"
+    },
+    {
+      "path": "mcp/src/worker.js",
+      "sha256": "sha256:fb463d8564dbb434fa4cbb89dcf2ed8c0be95e6bf39e41e75379a9b9ad7129df"
+    },
+    {
+      "path": "mcp/webpack.config.cjs",
+      "sha256": "sha256:5c714ae98212f4e5916be660bf65409bb536bd48aa2eddb91130df8a7a9e98f7"
+    }
+  ],
+  "local_bundles": [
+    {
+      "path": "mcp/dist/analysis-worker.cjs",
+      "sha256": "sha256:01485bce0718a253dd445b17680a7ca037cc1d7e492faa99aafa90076932ae14"
+    },
+    {
+      "path": "mcp/dist/analysis.cjs",
+      "sha256": "sha256:a9bb603c22febb2b3a222ae1f4fcfbdde37204451549a75ddf79c7cfe407e576"
+    },
+    {
+      "path": "mcp/dist/formalize.cjs",
+      "sha256": "sha256:faafe44cce83ad97924aed2c0fe585ee02e0edd03a999b25cca7f034997fcc28"
+    },
+    {
+      "path": "mcp/dist/server.cjs",
+      "sha256": "sha256:2a698ba1dceed47ec3fd8a0f3c1d814d244587b9b57964d0828c34359df2803d"
+    },
+    {
+      "path": "mcp/dist/worker.cjs",
+      "sha256": "sha256:a3ede497255f34657867d6f9b5d11139aa39ace1a0a3cdeb4df6829b99a1e155"
+    }
+  ]
+}

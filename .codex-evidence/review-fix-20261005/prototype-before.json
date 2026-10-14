@@ -1,0 +1,478 @@
+[
+  {
+    "name": "constructor",
+    "typed": false,
+    "output": {
+      "representations": [
+        "ft-inf",
+        "ft-fin",
+        "pt-smv",
+        "pt-lustre"
+      ],
+      "time_basis": "discrete_steps",
+      "results": [
+        {
+          "id": "R",
+          "status": "error",
+          "formulas": [],
+          "explanation": null,
+          "diagnostics": [
+            {
+              "code": "computation_error",
+              "message": "TypeError: triples is not iterable",
+              "location": null
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "name": "constructor",
+    "typed": true,
+    "output": {
+      "representations": [
+        "ft-inf",
+        "ft-fin",
+        "pt-smv",
+        "pt-lustre"
+      ],
+      "time_basis": "discrete_steps",
+      "results": [
+        {
+          "id": "R",
+          "status": "error",
+          "formulas": [],
+          "explanation": null,
+          "diagnostics": [
+            {
+              "code": "computation_error",
+              "message": "TypeError: triples is not iterable",
+              "location": null
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "name": "toString",
+    "typed": false,
+    "output": {
+      "representations": [
+        "ft-inf",
+        "ft-fin",
+        "pt-smv",
+        "pt-lustre"
+      ],
+      "time_basis": "discrete_steps",
+      "results": [
+        {
+          "id": "R",
+          "status": "error",
+          "formulas": [],
+          "explanation": null,
+          "diagnostics": [
+            {
+              "code": "computation_error",
+              "message": "TypeError: triples is not iterable",
+              "location": null
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "name": "toString",
+    "typed": true,
+    "output": {
+      "representations": [
+        "ft-inf",
+        "ft-fin",
+        "pt-smv",
+        "pt-lustre"
+      ],
+      "time_basis": "discrete_steps",
+      "results": [
+        {
+          "id": "R",
+          "status": "error",
+          "formulas": [],
+          "explanation": null,
+          "diagnostics": [
+            {
+              "code": "computation_error",
+              "message": "TypeError: triples is not iterable",
+              "location": null
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "name": "valueOf",
+    "typed": false,
+    "output": {
+      "representations": [
+        "ft-inf",
+        "ft-fin",
+        "pt-smv",
+        "pt-lustre"
+      ],
+      "time_basis": "discrete_steps",
+      "results": [
+        {
+          "id": "R",
+          "status": "error",
+          "formulas": [],
+          "explanation": null,
+          "diagnostics": [
+            {
+              "code": "computation_error",
+              "message": "TypeError: triples is not iterable",
+              "location": null
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "name": "valueOf",
+    "typed": true,
+    "output": {
+      "representations": [
+        "ft-inf",
+        "ft-fin",
+        "pt-smv",
+        "pt-lustre"
+      ],
+      "time_basis": "discrete_steps",
+      "results": [
+        {
+          "id": "R",
+          "status": "error",
+          "formulas": [],
+          "explanation": null,
+          "diagnostics": [
+            {
+              "code": "computation_error",
+              "message": "TypeError: triples is not iterable",
+              "location": null
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "name": "hasOwnProperty",
+    "typed": false,
+    "output": {
+      "representations": [
+        "ft-inf",
+        "ft-fin",
+        "pt-smv",
+        "pt-lustre"
+      ],
+      "time_basis": "discrete_steps",
+      "results": [
+        {
+          "id": "R",
+          "status": "error",
+          "formulas": [],
+          "explanation": null,
+          "diagnostics": [
+            {
+              "code": "computation_error",
+              "message": "TypeError: triples is not iterable",
+              "location": null
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "name": "hasOwnProperty",
+    "typed": true,
+    "output": {
+      "representations": [
+        "ft-inf",
+        "ft-fin",
+        "pt-smv",
+        "pt-lustre"
+      ],
+      "time_basis": "discrete_steps",
+      "results": [
+        {
+          "id": "R",
+          "status": "error",
+          "formulas": [],
+          "explanation": null,
+          "diagnostics": [
+            {
+              "code": "computation_error",
+              "message": "TypeError: triples is not iterable",
+              "location": null
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "name": "propertyIsEnumerable",
+    "typed": false,
+    "output": {
+      "representations": [
+        "ft-inf",
+        "ft-fin",
+        "pt-smv",
+        "pt-lustre"
+      ],
+      "time_basis": "discrete_steps",
+      "results": [
+        {
+          "id": "R",
+          "status": "error",
+          "formulas": [],
+          "explanation": null,
+          "diagnostics": [
+            {
+              "code": "computation_error",
+              "message": "TypeError: triples is not iterable",
+              "location": null
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "name": "propertyIsEnumerable",
+    "typed": true,
+    "output": {
+      "representations": [
+        "ft-inf",
+        "ft-fin",
+        "pt-smv",
+        "pt-lustre"
+      ],
+      "time_basis": "discrete_steps",
+      "results": [
+        {
+          "id": "R",
+          "status": "error",
+          "formulas": [],
+          "explanation": null,
+          "diagnostics": [
+            {
+              "code": "computation_error",
+              "message": "TypeError: triples is not iterable",
+              "location": null
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "name": "isPrototypeOf",
+    "typed": false,
+    "output": {
+      "representations": [
+        "ft-inf",
+        "ft-fin",
+        "pt-smv",
+        "pt-lustre"
+      ],
+      "time_basis": "discrete_steps",
+      "results": [
+        {
+          "id": "R",
+          "status": "error",
+          "formulas": [],
+          "explanation": null,
+          "diagnostics": [
+            {
+              "code": "computation_error",
+              "message": "TypeError: triples is not iterable",
+              "location": null
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "name": "isPrototypeOf",
+    "typed": true,
+    "output": {
+      "representations": [
+        "ft-inf",
+        "ft-fin",
+        "pt-smv",
+        "pt-lustre"
+      ],
+      "time_basis": "discrete_steps",
+      "results": [
+        {
+          "id": "R",
+          "status": "error",
+          "formulas": [],
+          "explanation": null,
+          "diagnostics": [
+            {
+              "code": "computation_error",
+              "message": "TypeError: triples is not iterable",
+              "location": null
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "name": "toLocaleString",
+    "typed": false,
+    "output": {
+      "representations": [
+        "ft-inf",
+        "ft-fin",
+        "pt-smv",
+        "pt-lustre"
+      ],
+      "time_basis": "discrete_steps",
+      "results": [
+        {
+          "id": "R",
+          "status": "error",
+          "formulas": [],
+          "explanation": null,
+          "diagnostics": [
+            {
+              "code": "computation_error",
+              "message": "TypeError: triples is not iterable",
+              "location": null
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "name": "toLocaleString",
+    "typed": true,
+    "output": {
+      "representations": [
+        "ft-inf",
+        "ft-fin",
+        "pt-smv",
+        "pt-lustre"
+      ],
+      "time_basis": "discrete_steps",
+      "results": [
+        {
+          "id": "R",
+          "status": "error",
+          "formulas": [],
+          "explanation": null,
+          "diagnostics": [
+            {
+              "code": "computation_error",
+              "message": "TypeError: triples is not iterable",
+              "location": null
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "name": "value",
+    "typed": false,
+    "output": {
+      "representations": [
+        "ft-inf",
+        "ft-fin",
+        "pt-smv",
+        "pt-lustre"
+      ],
+      "time_basis": "discrete_steps",
+      "results": [
+        {
+          "id": "R",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "ft-inf",
+              "formula": "(G (value = 0))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "(LAST V (value = 0))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "(H (value = 0))"
+            },
+            {
+              "representation": "pt-lustre",
+              "formula": "H((value = 0))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: first point in the interval.<br>REQUIRED BEHAVIOR: for every trigger, <b><i>(value = 0)</i></b> must hold at all time points between (and including) the trigger and the end of the interval."
+          },
+          "diagnostics": []
+        }
+      ]
+    }
+  },
+  {
+    "name": "value",
+    "typed": true,
+    "output": {
+      "representations": [
+        "ft-inf",
+        "ft-fin",
+        "pt-smv",
+        "pt-lustre"
+      ],
+      "time_basis": "discrete_steps",
+      "results": [
+        {
+          "id": "R",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "ft-inf",
+              "formula": "(G (value = 0))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "(LAST V (value = 0))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "(H (value = 0))"
+            },
+            {
+              "representation": "pt-lustre",
+              "formula": "H((value = 0))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: first point in the interval.<br>REQUIRED BEHAVIOR: for every trigger, <b><i>(value = 0)</i></b> must hold at all time points between (and including) the trigger and the end of the interval."
+          },
+          "diagnostics": []
+        }
+      ]
+    }
+  }
+]

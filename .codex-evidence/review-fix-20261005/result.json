@@ -1,0 +1,486 @@
+{
+  "recorded_at": "2026-10-05T03:25:36.016Z",
+  "request": "C:/Cawl/FRET_REVIEW_FIX_HANDOFF.txt",
+  "status": "Both requested fixes completed and verified. RMSprop remains inconclusive in this live replay.",
+  "head": "cf0f913cc15c41705e803593297e89cd6056b839",
+  "dirty_work_preserved": true,
+  "changes": [
+    {
+      "path": "fret-electron/support/xform.js",
+      "before_sha256": "sha256:f9ac5fb2fe354e4f7cd43c5bff8ec58c33820912cd97dc0c4ab9e262819535c9",
+      "after_sha256": "sha256:bdfc2f02f0d59888525e4b13b718c29d69392845c30bcccf9b1137627053e8db"
+    },
+    {
+      "path": "mcp/tests/formalize.test.js",
+      "before_sha256": "sha256:fa56e093319d268033b2570c219d0ec255ac5419b1bd984183baa9e326173747",
+      "after_sha256": "sha256:339210c312aa794f3ebdd982ad1fcaa3422405d0ea3c8ddd108658f75e40013f"
+    },
+    {
+      "path": "mcp/tests/historical-models.test.js",
+      "before_sha256": "sha256:cef50d838ce10a3815705844fa7c7d42145eb54d0bb80a16f7513830e589c0bd",
+      "after_sha256": "sha256:d1598ba50cf60b38cea154ac240d7f0e5d77a736f2cfc236e1a04a121a4ef37f"
+    }
+  ],
+  "source_manifest_sha256": "sha256:43dd76907caf2a81d624f9260dfd4843fa4e343e073607863c5d65d1cee20cf3",
+  "image": {
+    "tag": "alphase/fret-mcp:review-fix-20261005-r1",
+    "id": "sha256:2c0bf3dde951c840c465bc23f1477f94b6da9e84a7f92c45802ce13bd253d4b8",
+    "local_bundles_identical": true
+  },
+  "toolchain": {
+    "node": "v22.17.0",
+    "npm": "10.9.2",
+    "webpack": "5.111.1",
+    "fret": "sha256:4a026a056b52d6c6659d51f14cbfbc2f94fba3497b177c911b9411c2a481b2ae",
+    "adapter": "0.2.0",
+    "kind2": "kind2 v2.2.0",
+    "z3": "Z3 version 4.14.1 - 64 bit"
+  },
+  "validation": [
+    {
+      "name": "prototype regression before fix",
+      "command": "node --test --test-name-pattern='preserves legal symbols' tests/formalize.test.js",
+      "exit_code": 1,
+      "expected_failure": true,
+      "passed": 0,
+      "failed": 1,
+      "skipped": 0,
+      "log": "prototype-test-before.log"
+    },
+    {
+      "name": "compiler after fix",
+      "command": "node --test tests/formalize.test.js",
+      "exit_code": 0,
+      "passed": 26,
+      "failed": 0,
+      "skipped": 0,
+      "log": "formalize-after.log"
+    },
+    {
+      "name": "full Windows Node",
+      "command": "npm.cmd test",
+      "exit_code": 0,
+      "passed": 107,
+      "failed": 0,
+      "skipped": 38,
+      "log": "node-after.log"
+    },
+    {
+      "name": "new image build",
+      "command": "docker build --file mcp/Dockerfile --tag alphase/fret-mcp:review-fix-20261005-r1 .",
+      "exit_code": 0,
+      "log": "docker-build.log"
+    },
+    {
+      "name": "Linux native/MCP/historical",
+      "command": "node --test tests/analysis.test.js tests/analysis-lifecycle.test.js tests/mcp.test.js tests/historical-models.test.js",
+      "execution": "docker run --rm --init --network none with tests/src read-only mounts; exact command in FRET_REVIEW_FIX_RESULT.txt",
+      "exit_code": 0,
+      "passed": 108,
+      "failed": 0,
+      "skipped": 0,
+      "log": "linux-after.log"
+    },
+    {
+      "name": "AlphaSE client/Gate and real backend integration",
+      "command": ".\\mcps\\artifact\\.venv\\Scripts\\python.exe -m pytest mcps/artifact/tests/test_fret_mcp.py -q -p no:cacheprovider",
+      "cwd": "C:/Cawl",
+      "env": {
+        "ALPHASE_TEST_FRET_IMAGE": "alphase/fret-mcp:review-fix-20261005-r1",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "exit_code": 0,
+      "passed": 18,
+      "failed": 0,
+      "skipped": 0,
+      "log": "alphase-integration.log",
+      "identity_and_workflow": "Controlled existing fixtures, not live publication or LLM author/approver acceptance"
+    }
+  ],
+  "historical": {
+    "original_models_rejected_before_solving": 16,
+    "frozen_model_fixtures_unchanged": true,
+    "corrected_live_results": [
+      {
+        "component": "WrapperRetrieval",
+        "corrected_input_digest": "sha256:44a57e1cb3586bc5bb02c8e2b1babd2cde8f3e1d03945f5d1103fa6dfaf195b0",
+        "result": "realizable",
+        "contract_result": "realizable",
+        "environment_result": "realizable",
+        "diagnostics": [],
+        "toolchain": {
+          "fret": "sha256:4a026a056b52d6c6659d51f14cbfbc2f94fba3497b177c911b9411c2a481b2ae",
+          "adapter": "0.2.0",
+          "kind2": "kind2 v2.2.0",
+          "z3": "Z3 version 4.14.1 - 64 bit"
+        },
+        "checks": [
+          {
+            "result": "REALIZABLE",
+            "lustre_digest": "sha256:2c098d9ea7a67a6ec4c2d028bec876a5224e75fba5f1e40b09bc6910b33724f9",
+            "exit_code": 0
+          }
+        ]
+      },
+      {
+        "component": "StickyActionEnv",
+        "corrected_input_digest": "sha256:187c56e9344a61731492d23066a7aa65391ba3fa42a7f94ac480d4edd3684d29",
+        "result": "realizable",
+        "contract_result": "realizable",
+        "environment_result": "realizable",
+        "diagnostics": [],
+        "toolchain": {
+          "fret": "sha256:4a026a056b52d6c6659d51f14cbfbc2f94fba3497b177c911b9411c2a481b2ae",
+          "adapter": "0.2.0",
+          "kind2": "kind2 v2.2.0",
+          "z3": "Z3 version 4.14.1 - 64 bit"
+        },
+        "checks": [
+          {
+            "result": "REALIZABLE",
+            "lustre_digest": "sha256:08b7f6518d81e3356e330bc43054edd9d00e4b7e439e0a720e74cd643d64ab80",
+            "exit_code": 0
+          }
+        ]
+      },
+      {
+        "component": "TrainingProgress",
+        "corrected_input_digest": "sha256:aa82ec8c9748a69cff90b4107a1b468d090115d3e865a4dc489397f38a3f7a8c",
+        "result": "realizable",
+        "contract_result": "realizable",
+        "environment_result": "realizable",
+        "diagnostics": [],
+        "toolchain": {
+          "fret": "sha256:4a026a056b52d6c6659d51f14cbfbc2f94fba3497b177c911b9411c2a481b2ae",
+          "adapter": "0.2.0",
+          "kind2": "kind2 v2.2.0",
+          "z3": "Z3 version 4.14.1 - 64 bit"
+        },
+        "checks": [
+          {
+            "result": "REALIZABLE",
+            "lustre_digest": "sha256:78603a8258429bdfdb84a5ee883f5f8a3980f44326341c0c6bf5e53a1164cf70",
+            "exit_code": 0
+          }
+        ]
+      },
+      {
+        "component": "CallbackLifecycle",
+        "corrected_input_digest": "sha256:96162cf3fe77ac4f98413dd5abd3bb6fe9422815c2d9a2b0294ff24dac243942",
+        "result": "realizable",
+        "contract_result": "realizable",
+        "environment_result": "realizable",
+        "diagnostics": [],
+        "toolchain": {
+          "fret": "sha256:4a026a056b52d6c6659d51f14cbfbc2f94fba3497b177c911b9411c2a481b2ae",
+          "adapter": "0.2.0",
+          "kind2": "kind2 v2.2.0",
+          "z3": "Z3 version 4.14.1 - 64 bit"
+        },
+        "checks": [
+          {
+            "result": "REALIZABLE",
+            "lustre_digest": "sha256:aa75f720d021158c7334c73a0c77bf323feb253d338026b64d32ee41f818804a",
+            "exit_code": 0
+          }
+        ]
+      },
+      {
+        "component": "EventComposition",
+        "corrected_input_digest": "sha256:687f3f243e6b6ffa1a7b62cb2e8fe3953d8f832f56254a8a5f4619954236cf7b",
+        "result": "realizable",
+        "contract_result": "realizable",
+        "environment_result": "realizable",
+        "diagnostics": [],
+        "toolchain": {
+          "fret": "sha256:4a026a056b52d6c6659d51f14cbfbc2f94fba3497b177c911b9411c2a481b2ae",
+          "adapter": "0.2.0",
+          "kind2": "kind2 v2.2.0",
+          "z3": "Z3 version 4.14.1 - 64 bit"
+        },
+        "checks": [
+          {
+            "result": "REALIZABLE",
+            "lustre_digest": "sha256:bd1f5c73f49df2a7b0d4b8bad6a162ec0c6d9a371231a5cb14ff16c5a3bdc6d2",
+            "exit_code": 0
+          }
+        ]
+      },
+      {
+        "component": "ListComposition",
+        "corrected_input_digest": "sha256:917b79f9fdb561af4ef06f0af3da8cde704d43c817feda6bd22eb375d4805cc6",
+        "result": "realizable",
+        "contract_result": "realizable",
+        "environment_result": "realizable",
+        "diagnostics": [],
+        "toolchain": {
+          "fret": "sha256:4a026a056b52d6c6659d51f14cbfbc2f94fba3497b177c911b9411c2a481b2ae",
+          "adapter": "0.2.0",
+          "kind2": "kind2 v2.2.0",
+          "z3": "Z3 version 4.14.1 - 64 bit"
+        },
+        "checks": [
+          {
+            "result": "REALIZABLE",
+            "lustre_digest": "sha256:1f4d6da7029e5b8fe0e83a6bbfbd23c20b62f90f3dfe49e51d0c9c50383f7068",
+            "exit_code": 0
+          }
+        ]
+      },
+      {
+        "component": "VecMonitorReset",
+        "corrected_input_digest": "sha256:7eb3d14393797e8c3c6df299cbb7ac0396ec4540d37dc825d315cd0632c3314f",
+        "result": "realizable",
+        "contract_result": "realizable",
+        "environment_result": "realizable",
+        "diagnostics": [],
+        "toolchain": {
+          "fret": "sha256:4a026a056b52d6c6659d51f14cbfbc2f94fba3497b177c911b9411c2a481b2ae",
+          "adapter": "0.2.0",
+          "kind2": "kind2 v2.2.0",
+          "z3": "Z3 version 4.14.1 - 64 bit"
+        },
+        "checks": [
+          {
+            "result": "REALIZABLE",
+            "lustre_digest": "sha256:4db113974a81bd4f20b573126c872336be3c477f7d69d812d2514b5c7be0a169",
+            "exit_code": 0
+          }
+        ]
+      },
+      {
+        "component": "ResultsFilter",
+        "corrected_input_digest": "sha256:df574e63b72b9c738b4c57c889091e97a2b4b7f6c1ff2c19aee07508a680d4e1",
+        "result": "realizable",
+        "contract_result": "realizable",
+        "environment_result": "realizable",
+        "diagnostics": [],
+        "toolchain": {
+          "fret": "sha256:4a026a056b52d6c6659d51f14cbfbc2f94fba3497b177c911b9411c2a481b2ae",
+          "adapter": "0.2.0",
+          "kind2": "kind2 v2.2.0",
+          "z3": "Z3 version 4.14.1 - 64 bit"
+        },
+        "checks": [
+          {
+            "result": "REALIZABLE",
+            "lustre_digest": "sha256:54620d9aad66aa4aeaedd223c2e0e15f718c52145917d4f9921616cee0f2c071",
+            "exit_code": 0
+          }
+        ]
+      },
+      {
+        "component": "RunningMeanStdMoments",
+        "corrected_input_digest": "sha256:f74da701d24c30647ac6fd24586f7295e1696302bedd49cde2ad5ec30abcd186",
+        "result": "realizable",
+        "contract_result": "realizable",
+        "environment_result": "realizable",
+        "diagnostics": [],
+        "toolchain": {
+          "fret": "sha256:4a026a056b52d6c6659d51f14cbfbc2f94fba3497b177c911b9411c2a481b2ae",
+          "adapter": "0.2.0",
+          "kind2": "kind2 v2.2.0",
+          "z3": "Z3 version 4.14.1 - 64 bit"
+        },
+        "checks": [
+          {
+            "result": "REALIZABLE",
+            "lustre_digest": "sha256:371b34bffabb2af916aa1037908eb19a4792902a1e005e37a403b54e5fc3e513",
+            "exit_code": 0
+          }
+        ]
+      },
+      {
+        "component": "RMSpropTFLikeNumerics",
+        "corrected_input_digest": "sha256:84ed0bb30ee2ebc3889d482e83969b683c6706f220eee6c6f93051de511597e2",
+        "result": "unknown",
+        "contract_result": "unknown",
+        "environment_result": "unknown",
+        "diagnostics": [
+          {
+            "id": null,
+            "code": "unknown_environment",
+            "message": "The backend did not establish environment realizability."
+          }
+        ],
+        "toolchain": {
+          "fret": "sha256:4a026a056b52d6c6659d51f14cbfbc2f94fba3497b177c911b9411c2a481b2ae",
+          "adapter": "0.2.0",
+          "kind2": "kind2 v2.2.0",
+          "z3": "Z3 version 4.14.1 - 64 bit"
+        },
+        "checks": [
+          {
+            "result": "UNKNOWN",
+            "lustre_digest": "sha256:24a57a82a1b981bc7eeeacd588636e6c82d80fe00509cb349d7f6d00c7365ea6",
+            "exit_code": 30
+          }
+        ]
+      },
+      {
+        "component": "RunningMeanStdUpdate",
+        "corrected_input_digest": "sha256:4c0d3e7103efc08782ddbc8bf0df81d7bea2e3fcdada49dd24f21e54884aefef",
+        "result": "realizable",
+        "contract_result": "realizable",
+        "environment_result": "realizable",
+        "diagnostics": [],
+        "toolchain": {
+          "fret": "sha256:4a026a056b52d6c6659d51f14cbfbc2f94fba3497b177c911b9411c2a481b2ae",
+          "adapter": "0.2.0",
+          "kind2": "kind2 v2.2.0",
+          "z3": "Z3 version 4.14.1 - 64 bit"
+        },
+        "checks": [
+          {
+            "result": "REALIZABLE",
+            "lustre_digest": "sha256:371b34bffabb2af916aa1037908eb19a4792902a1e005e37a403b54e5fc3e513",
+            "exit_code": 0
+          }
+        ]
+      },
+      {
+        "component": "RunningMeanStdCombine",
+        "corrected_input_digest": "sha256:63e0395ad112a8429d30ea39a01460490a6615a78c5ddf987d0a3f2696125999",
+        "result": "realizable",
+        "contract_result": "realizable",
+        "environment_result": "realizable",
+        "diagnostics": [],
+        "toolchain": {
+          "fret": "sha256:4a026a056b52d6c6659d51f14cbfbc2f94fba3497b177c911b9411c2a481b2ae",
+          "adapter": "0.2.0",
+          "kind2": "kind2 v2.2.0",
+          "z3": "Z3 version 4.14.1 - 64 bit"
+        },
+        "checks": [
+          {
+            "result": "REALIZABLE",
+            "lustre_digest": "sha256:371b34bffabb2af916aa1037908eb19a4792902a1e005e37a403b54e5fc3e513",
+            "exit_code": 0
+          }
+        ]
+      },
+      {
+        "component": "NatureExtractor",
+        "corrected_input_digest": "sha256:c4551e3a6371bb5079acf3f91ffbf8449b64cb1d5d9e2fd05c67f032370cf92b",
+        "result": "realizable",
+        "contract_result": "realizable",
+        "environment_result": "realizable",
+        "diagnostics": [],
+        "toolchain": {
+          "fret": "sha256:4a026a056b52d6c6659d51f14cbfbc2f94fba3497b177c911b9411c2a481b2ae",
+          "adapter": "0.2.0",
+          "kind2": "kind2 v2.2.0",
+          "z3": "Z3 version 4.14.1 - 64 bit"
+        },
+        "checks": [
+          {
+            "result": "REALIZABLE",
+            "lustre_digest": "sha256:39d61a8c7934773c7c99fac625169440709c8f78faab3353f7b781147e0b25fe",
+            "exit_code": 0
+          }
+        ]
+      },
+      {
+        "component": "CombinedExtractorConfiguration",
+        "corrected_input_digest": "sha256:f83f9a3d4e5145935937ec51f52c90a57bad92677b905ba413de0726baeb26f7",
+        "result": "realizable",
+        "contract_result": "realizable",
+        "environment_result": "realizable",
+        "diagnostics": [],
+        "toolchain": {
+          "fret": "sha256:4a026a056b52d6c6659d51f14cbfbc2f94fba3497b177c911b9411c2a481b2ae",
+          "adapter": "0.2.0",
+          "kind2": "kind2 v2.2.0",
+          "z3": "Z3 version 4.14.1 - 64 bit"
+        },
+        "checks": [
+          {
+            "result": "REALIZABLE",
+            "lustre_digest": "sha256:3b07a80714236a107a6a2084de8df63c646e03f6b85d96bf8dfedb913c9a8b0f",
+            "exit_code": 0
+          }
+        ]
+      },
+      {
+        "component": "HerStorage",
+        "corrected_input_digest": "sha256:b36a79b89c02c6b6fe6e763dd280ce6821c267316e8413b72bf1445ff73ecb61",
+        "result": "realizable",
+        "contract_result": "realizable",
+        "environment_result": "realizable",
+        "diagnostics": [],
+        "toolchain": {
+          "fret": "sha256:4a026a056b52d6c6659d51f14cbfbc2f94fba3497b177c911b9411c2a481b2ae",
+          "adapter": "0.2.0",
+          "kind2": "kind2 v2.2.0",
+          "z3": "Z3 version 4.14.1 - 64 bit"
+        },
+        "checks": [
+          {
+            "result": "REALIZABLE",
+            "lustre_digest": "sha256:1e0e2564d150ac78e5f60753a2631944053d313d2e6a40bd9e3d7fa7eb080f7c",
+            "exit_code": 0
+          }
+        ]
+      },
+      {
+        "component": "HerGoals",
+        "corrected_input_digest": "sha256:da01594b5ffe2848c0daf4cafb0fa1873b333d1907b1aea898cc41c2779044f8",
+        "result": "realizable",
+        "contract_result": "realizable",
+        "environment_result": "realizable",
+        "diagnostics": [],
+        "toolchain": {
+          "fret": "sha256:4a026a056b52d6c6659d51f14cbfbc2f94fba3497b177c911b9411c2a481b2ae",
+          "adapter": "0.2.0",
+          "kind2": "kind2 v2.2.0",
+          "z3": "Z3 version 4.14.1 - 64 bit"
+        },
+        "checks": [
+          {
+            "result": "REALIZABLE",
+            "lustre_digest": "sha256:8ded9609ff50bd9848c440b627bcd9dded7c63857b0b69c1081e50a84c3be4f1",
+            "exit_code": 0
+          }
+        ]
+      }
+    ],
+    "original_rmsprop_timeout_ms": 60000,
+    "allowed_rmsprop_live_outcomes": "Only realizable or unknown supported by raw contract/environment evidence; new unrealizable requires review and fails."
+  },
+  "alphase": {
+    "head": "e5bdc7c179d4f291ebb9843106cdd544b17d1382",
+    "source_files": [
+      {
+        "path": "C:/Cawl/mcps/artifact/tests/test_fret_mcp.py",
+        "sha256": "sha256:8f577f590990c29573e132ccde65b1306270a3e3e016aa95c5ab6278a7cfbb33"
+      },
+      {
+        "path": "C:/Cawl/mcps/artifact/artifact_mcp/fret_client.py",
+        "sha256": "sha256:21650bb2ddb11b056d91d715d5e3d4beae7ba080774b833f6e98e5820a60bbfc"
+      },
+      {
+        "path": "C:/Cawl/mcps/artifact/artifact_mcp/gate/formal/fret.py",
+        "sha256": "sha256:3d9a055f6ac5356826b37d280dbb0217360027310a907ce6de1298d85cef4b3b"
+      },
+      {
+        "path": "C:/Cawl/.alphase/config.toml",
+        "sha256": "sha256:c2904bfc3b0d291c51dc4b30a8f450057abada7e1e75e34ac182fb7e8debab7d"
+      }
+    ],
+    "product_files_modified": false
+  },
+  "unexecuted": [
+    "Real LLM author tool-use acceptance",
+    "Independent Approver semantic judgement",
+    "New component-independent/component-fragmented production-report fixtures",
+    "Live five-reviewer latency",
+    "Deployment",
+    "Full SB3 smoke",
+    "Recheck of prior OpenCode EEXIST"
+  ],
+  "quality_review": "Production change is one null-prototype index initialization. No name bans, exception swallowing, formula or timeout changes. Independent review found no blocking issue or fragile workaround.",
+  "report": {
+    "path": "FRET_REVIEW_FIX_RESULT.txt",
+    "sha256": "sha256:fdfd7b86d9c910aeee5aec01f5415a3d228b52c5844ee15909609c834627bc36"
+  }
+}

@@ -1,0 +1,98 @@
+FRET 审查修复完成记录
+记录日期：2026-10-05 UTC
+执行依据：C:\Cawl\FRET_REVIEW_FIX_HANDOFF.txt
+工作区：C:\fretAlphaSE
+
+完成结果
+
+两个指定问题均已修复并验证。生产代码只有一行改动；本轮共修改三个既有文件，
+另保存本文及 .codex-evidence/review-fix-20261005/ 下的基线、日志和哈希。
+没有修改前轮 typed API、AlphaSE 产品代码、冻结模型、求解预算或历史报告。
+没有部署、重启现有服务、修改全局配置、启动完整 SB3 或提交 Git。
+
+文件与改动
+
+1. fret-electron/support/xform.js
+   indexTriples() 的 {} 改为 Object.create(null)，规则索引不再继承 Object 原型。
+   修复 constructor/toString 等合法变量被误认为规则数组的根因。
+   没有禁用名字、吞异常、按名字特殊处理或修改 probSimplifications 的既有结构。
+
+2. mcp/tests/formalize.test.js
+   新增 constructor、toString、valueOf、hasOwnProperty、propertyIsEnumerable、
+   isPrototypeOf、toLocaleString 的 typed/untyped 回归，精确核对四种表示中的公式。
+   同一名字的 real/整数常量不匹配仍须返回 type_error。
+   修改前全部七个名字的两种调用均复现 computation_error，value 对照成功；
+   新增测试在修复前失败（triples is not iterable），修复后26项编译测试全通过。
+
+3. mcp/tests/historical-models.test.js
+   删除 RMSprop 必須 unknown/exit30/单一超时文本的实时断言。
+   现在只接受原始后端证据支持的 realizable 或 unknown：逐项核对合同/环境上下文、
+   实际分析开始、原始结论/超时证据、check与report结论、退出状态及环境未知诊断。
+   realizable 必须合同与环境均明确可实现；环境未知阻止总体成功。
+   支持明确unknown、runtime.timeout、Wallclock timeout.、fatal Lib.TimeoutWall路径。
+   error/invalid/unsupported、缺失或矛盾证据、新unrealizable仍导致失败。
+   保留输入、选项、完整条目、公式、分析集合、Lustre摘要及命令/原始输出检查。
+   新增17个受控子测试验证允许与拒绝路径；受控证据只测试断言，不冒充求解证明。
+
+验证层次（数字有覆盖重叠，不跨层相加）
+
+- 修改前新增缺陷测试：0 passed、1 failed，确认可重现。
+- 修复后编译专项：26 passed、0 failed、0 skipped。
+- 最终 Windows npm.cmd test：107 passed、0 failed、38 Linux-only skipped。
+- 新镜像 Linux analysis/analysis-lifecycle/mcp/historical：
+  108 passed、0 failed、0 skipped；包含17个受控子测试。
+- AlphaSE test_fret_mcp.py 使用本轮新镜像：18 passed、0 failed、0 skipped。
+  真实执行HTTP MCP、FRET/Kind2/Z3与AlphaSE客户端/Gate代码；认证及部分工作流
+  使用既有隔离夹具，不是实际服务发布或LLM作者/审核者行为验收。
+- 新Linux运行中的16个历史修正版：15 realizable，RMSprop仍为unknown。
+  原16模型仍invalid且checks=[]；RMSprop全部9条公式与60000ms预算保持原样。
+  本次unknown不是证明成功；将来若同一完整模型有明确可实现证据，测试可正常通过。
+- 两份历史输入/修正版夹具SHA256与前轮记录一致；没有改写既有历史报告。
+- 独立只读代码审查未发现阻断缺陷或脆弱workaround；未扩大生产代码范围。
+
+版本、镜像与源码身份
+
+FRET HEAD：cf0f913cc15c41705e803593297e89cd6056b839（dirty，不能单独代表执行源码）。
+新tag：alphase/fret-mcp:review-fix-20261005-r1
+image ID：sha256:2c0bf3dde951c840c465bc23f1477f94b6da9e84a7f92c45802ce13bd253d4b8
+toolchain.fret：sha256:4a026a056b52d6c6659d51f14cbfbc2f94fba3497b177c911b9411c2a481b2ae
+相关201个源码/配置文件清单摘要：
+sha256:43dd76907caf2a81d624f9260dfd4843fa4e343e073607863c5d65d1cee20cf3
+Node v22.17.0，npm 10.9.2，webpack 5.111.1，adapter 0.2.0，Kind2 2.2.0，Z3 4.14.1。
+本地与镜像内全部5份bundle的SHA256一致。
+AlphaSE HEAD：e5bdc7c179d4f291ebb9843106cdd544b17d1382（已有dirty接入代码）。
+前轮 typed-preflight-20261004-r1 镜像未覆盖/部署；新修复验证使用上述新tag。
+
+实际主要命令（退出码均0，缺陷修复前测试退出1是预期复现）
+
+在 C:\fretAlphaSE\mcp：
+npm.cmd test
+
+在 C:\fretAlphaSE：
+docker build --file mcp/Dockerfile --tag alphase/fret-mcp:review-fix-20261005-r1 .
+docker run --rm --init --network none `
+  --mount "type=bind,source=$PWD/mcp/tests,target=/opt/fret-mcp/tests,readonly" `
+  --mount "type=bind,source=$PWD/mcp/src,target=/opt/fret-mcp/src,readonly" `
+  alphase/fret-mcp:review-fix-20261005-r1 node --test `
+  tests/analysis.test.js tests/analysis-lifecycle.test.js tests/mcp.test.js tests/historical-models.test.js
+
+在 C:\Cawl（变量只设置于执行该命令的进程环境）：
+$env:ALPHASE_TEST_FRET_IMAGE = 'alphase/fret-mcp:review-fix-20261005-r1'
+$env:PYTHONDONTWRITEBYTECODE = '1'
+& .\mcps\artifact\.venv\Scripts\python.exe -m pytest mcps/artifact/tests/test_fret_mcp.py -q -p no:cacheprovider
+
+记录索引
+
+.codex-evidence/review-fix-20261005/result.json：执行汇总、哈希及逐模型实际结果。
+baseline/、baseline.json、changes.json：本轮修改前副本及前后SHA256。
+prototype-before.json、prototype-test-before.log：根因复现。
+formalize-after.log、node-after.log、linux-after.log、alphase-integration.log：验证日志。
+docker-build.log、source-build.json、image-build.json：构建与实际源码/镜像身份。
+以上证据独立于前轮 .codex-evidence/typed-preflight-20261004/，未覆盖旧结果。
+
+仍未完成的边界
+
+本轮已消除交接所述Docker/Kind2集成验证缺口，但未执行真实LLM作者生成与调用、
+独立Approver语义判决、component-independent/component-fragmented生产报告绑定用例、
+实时五审核延迟、部署或完整SB3。交接提到的OpenCode EEXIST本轮未复测或绕过。
+RMSprop模型仍未获得证明；来源忠实性和实现正确性也不由本轮测试证明。

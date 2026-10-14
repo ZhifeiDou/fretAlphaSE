@@ -1,0 +1,65 @@
+﻿{
+    "commit":  "bafa74326dc298c7a61cf7406502d1b1d120bce1",
+    "branch":  "master",
+    "remote":  "https://github.com/ZhifeiDou/fretAlphaSE.git",
+    "remote_commit":  "bafa74326dc298c7a61cf7406502d1b1d120bce1",
+    "validated_tree":  "590bc12fb6e43729ff039bac1fb1e3ae2e163e42",
+    "files":  [
+                  "fret-electron/analysis/DiagnosisEngine.js",
+                  "fret-electron/analysis/contractBuilder.js",
+                  "fret-electron/analysis/realizabilityCheck.js",
+                  "fret-electron/app/parser/FretSemantics.js",
+                  "fret-electron/app/parser/SemanticsAnalyzer.js",
+                  "fret-electron/model/modelDbSupport/variableMappingSupports.js",
+                  "fret-electron/model/realizabilitySupport/realizabilityUtils.js",
+                  "fret-electron/support/RealizabilityTemplates/jkind/PropertyDefinitions.ejs",
+                  "fret-electron/support/RealizabilityTemplates/kind2/PropertyDefinitions.ejs",
+                  "fret-electron/support/xform.js",
+                  "mcp/.gitignore",
+                  "mcp/Dockerfile",
+                  "mcp/Dockerfile.dockerignore",
+                  "mcp/README.md",
+                  "mcp/package-lock.json",
+                  "mcp/package.json",
+                  "mcp/src/analysis-worker.js",
+                  "mcp/src/analysis.js",
+                  "mcp/src/analysis_jobs.js",
+                  "mcp/src/auth.js",
+                  "mcp/src/executor.js",
+                  "mcp/src/formalize.js",
+                  "mcp/src/schemas.js",
+                  "mcp/src/server.js",
+                  "mcp/src/worker.js",
+                  "mcp/tests/analysis-core.test.js",
+                  "mcp/tests/analysis-lifecycle.test.js",
+                  "mcp/tests/analysis.test.js",
+                  "mcp/tests/fixtures/historical-corrected-models.json",
+                  "mcp/tests/fixtures/historical-failed-models.json",
+                  "mcp/tests/formalize.test.js",
+                  "mcp/tests/historical-models.test.js",
+                  "mcp/tests/lifecycle.test.js",
+                  "mcp/tests/mcp.test.js",
+                  "mcp/webpack.config.cjs"
+              ],
+    "node":  {
+                 "skipped":  38,
+                 "failed":  0,
+                 "passed":  112
+             },
+    "linux":  {
+                  "skipped":  0,
+                  "failed":  0,
+                  "passed":  108
+              },
+    "alphase":  {
+                    "skipped":  0,
+                    "failed":  0,
+                    "passed":  21
+                },
+    "image":  {
+                  "source":  "Git staged tree archive",
+                  "id":  "sha256:c8eadd5a9adbbc413b06aa8e89b985b42c2ce7c734cd5f637751007d7427970f",
+                  "tag":  "alphase/fret-mcp:commit-20261013-r1"
+              },
+    "jkind":  "Controlled trace regressions passed; real JKind unavailable."
+}

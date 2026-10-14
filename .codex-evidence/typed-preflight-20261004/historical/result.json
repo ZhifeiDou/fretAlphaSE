@@ -1,0 +1,168 @@
+{
+  "recorded_at": "2026-10-05T02:54:11.906628+00:00",
+  "scope": "Historical 16-model regression only, separate from generic tests and AlphaSE deployment/agent behavior acceptance.",
+  "historical_models": 16,
+  "historical_requirements": 38,
+  "explicitly_corrected_clauses": 28,
+  "original_replay": {
+    "invalid": 16,
+    "contract_checks": 0,
+    "note": "Backend version probes may run; no contract/diagnosis solver check was issued."
+  },
+  "corrected_replay": {
+    "formalized_clauses": 38,
+    "realizable": 15,
+    "unknown": 1,
+    "unresolved": [
+      "RMSpropTFLikeNumerics: complete nine-clause nonlinear model reaches the unchanged 60-second Kind 2 timeout, exit 30, Wallclock timeout; no proof obtained."
+    ]
+  },
+  "image": {
+    "tag": "alphase/fret-mcp:typed-preflight-20261004-r1",
+    "id": "sha256:6dcf4d5be231e177af224f38915333aa429db429c82b064e1d363de4bf4c7a49"
+  },
+  "source_build_identity_record": "../source-build.json",
+  "report_toolchain": {
+    "fret": "sha256:be0a44be39cbfc40d736ca28a45f23d5610209e975ea5afa59f78fa7e72a7f18",
+    "adapter": "0.2.0",
+    "kind2": "kind2 v2.2.0",
+    "z3": "Z3 version 4.14.1 - 64 bit"
+  },
+  "commands": [
+    {
+      "cwd": "C:\\fretAlphaSE\\mcp",
+      "command": "node --test tests/historical-models.test.js",
+      "exit_code": 0,
+      "passed": 33,
+      "failed": 0,
+      "skipped": 16,
+      "log": "windows-tests.log"
+    },
+    {
+      "cwd": "C:\\fretAlphaSE",
+      "command": "docker run --rm --init --network none --mount 'type=bind,source=C:\\fretAlphaSE\\mcp\\tests,target=/opt/fret-mcp/tests,readonly' --mount 'type=bind,source=C:\\fretAlphaSE\\mcp\\src,target=/opt/fret-mcp/src,readonly' --mount 'type=bind,source=C:\\fretAlphaSE\\.codex-evidence\\typed-preflight-20261004\\historical,target=/evidence' alphase/fret-mcp:typed-preflight-20261004-r1 node /evidence/replay.cjs",
+      "exit_code": 0,
+      "note": "Evidence collection: 16 complete original/corrected analysis report pairs, not a separate passing-test count.",
+      "log": "linux-replay.log"
+    },
+    {
+      "cwd": "C:\\fretAlphaSE",
+      "command": "docker run --rm --init --network none --mount 'type=bind,source=C:\\fretAlphaSE\\mcp\\tests,target=/opt/fret-mcp/tests,readonly' --mount 'type=bind,source=C:\\fretAlphaSE\\mcp\\src,target=/opt/fret-mcp/src,readonly' alphase/fret-mcp:typed-preflight-20261004-r1 node --test tests/historical-models.test.js",
+      "exit_code": 0,
+      "passed": 49,
+      "failed": 0,
+      "skipped": 0,
+      "log": "linux-tests.log"
+    }
+  ],
+  "files": [
+    {
+      "path": "mcp\\tests\\historical-models.test.js",
+      "sha256": "sha256:cef50d838ce10a3815705844fa7c7d42145eb54d0bb80a16f7513830e589c0bd"
+    },
+    {
+      "path": "mcp\\tests\\fixtures\\historical-failed-models.json",
+      "sha256": "sha256:d507093014f47f9f71012454bc41f07dd634cc9bc2970993cfc81966ffd39872"
+    },
+    {
+      "path": "mcp\\tests\\fixtures\\historical-corrected-models.json",
+      "sha256": "sha256:fc3620f8ae7d4ae1ca099b5eb1e41ca610dce5f8b5154ee93eafea27edefbedf"
+    },
+    {
+      "path": ".codex-evidence\\typed-preflight-20261004\\historical\\WrapperRetrieval.json",
+      "sha256": "sha256:147bf1a4a8764bbc5b28ccd425a35d8720a056c7d22f1f62008a9fb6384b2359"
+    },
+    {
+      "path": ".codex-evidence\\typed-preflight-20261004\\historical\\StickyActionEnv.json",
+      "sha256": "sha256:60c72708807de4626faab5705593c09e3b9f43d50eb245739c7778742c4950cf"
+    },
+    {
+      "path": ".codex-evidence\\typed-preflight-20261004\\historical\\TrainingProgress.json",
+      "sha256": "sha256:a12a8b0daccf0a8db9c35e95d9930c97b800eca4df62660c13402f94b95e6986"
+    },
+    {
+      "path": ".codex-evidence\\typed-preflight-20261004\\historical\\CallbackLifecycle.json",
+      "sha256": "sha256:38d0d8490e92c25993b9253d99637e6685d7aaf3e21ecb6a9e5cefcdce4ced7d"
+    },
+    {
+      "path": ".codex-evidence\\typed-preflight-20261004\\historical\\EventComposition.json",
+      "sha256": "sha256:95892cbc89ce2f58a928d2c03170a171e2d1778627cd965f61f3c3ab073df63e"
+    },
+    {
+      "path": ".codex-evidence\\typed-preflight-20261004\\historical\\ListComposition.json",
+      "sha256": "sha256:51c40eb92b4268ec72708d5bf37310ae7eb3809341433825a8216f094ba5f7df"
+    },
+    {
+      "path": ".codex-evidence\\typed-preflight-20261004\\historical\\VecMonitorReset.json",
+      "sha256": "sha256:8d22e2211fe36d1cfa612069a13f830a2bae9c79de4bf5455eced618c513c05b"
+    },
+    {
+      "path": ".codex-evidence\\typed-preflight-20261004\\historical\\ResultsFilter.json",
+      "sha256": "sha256:5166d8a6d277eb73c7b438685504eb19c6162ef21b13263d52600697c70d276b"
+    },
+    {
+      "path": ".codex-evidence\\typed-preflight-20261004\\historical\\RunningMeanStdMoments.json",
+      "sha256": "sha256:1c106bf377b9283fc75abbde6413acef58cd9a7379bc10671508dbd87289d092"
+    },
+    {
+      "path": ".codex-evidence\\typed-preflight-20261004\\historical\\RMSpropTFLikeNumerics.json",
+      "sha256": "sha256:05d5d09c8ef2c8b4e99b23bbafb015c20265169bcc544e665063249395826a24"
+    },
+    {
+      "path": ".codex-evidence\\typed-preflight-20261004\\historical\\RunningMeanStdUpdate.json",
+      "sha256": "sha256:c9ba8e65b8b1b0fb1c30a672d265da6117fc162a2b2aa16a536ce93c514b9ba8"
+    },
+    {
+      "path": ".codex-evidence\\typed-preflight-20261004\\historical\\RunningMeanStdCombine.json",
+      "sha256": "sha256:f10b3bd0ed02c641069dcd869fd6c38fac08bac947b90be6bdbd5ee889e2cadb"
+    },
+    {
+      "path": ".codex-evidence\\typed-preflight-20261004\\historical\\NatureExtractor.json",
+      "sha256": "sha256:2963e200b32c712c6dbe1a6a4f71edd8601a1ebc1a1b9b7db9ae2a7834fba723"
+    },
+    {
+      "path": ".codex-evidence\\typed-preflight-20261004\\historical\\CombinedExtractorConfiguration.json",
+      "sha256": "sha256:9ea9c33f8588a59ba07321f82d54d70e498787abf849e018f3ab109a95564804"
+    },
+    {
+      "path": ".codex-evidence\\typed-preflight-20261004\\historical\\HerStorage.json",
+      "sha256": "sha256:fda9f97e5ff0e57cda0b6a2efbe53ef900f3a661a7739e2dff1ede66543bd4f2"
+    },
+    {
+      "path": ".codex-evidence\\typed-preflight-20261004\\historical\\HerGoals.json",
+      "sha256": "sha256:4589fbc8725af8838f77910167db76f6c771c77bdaea1bf084b470dc8ad1480d"
+    },
+    {
+      "path": ".codex-evidence\\typed-preflight-20261004\\historical\\extract.py",
+      "sha256": "sha256:0f572028f0b4eef1d5ee1ba5da019988f47bcefa0d90462c1d4995e759c7204a"
+    },
+    {
+      "path": ".codex-evidence\\typed-preflight-20261004\\historical\\corrections.py",
+      "sha256": "sha256:2ad62e9dd97e2b3a004380766fe3385e6585db3795ef71f05d7dfb0b857a0c0c"
+    },
+    {
+      "path": ".codex-evidence\\typed-preflight-20261004\\historical\\replay.cjs",
+      "sha256": "sha256:325c5a6682fac2822e94b4a14af3b849a0a3a222a1cae6b0c1281bdde2f53378"
+    },
+    {
+      "path": ".codex-evidence\\typed-preflight-20261004\\historical\\public-preflight.json",
+      "sha256": "sha256:4899695a26e024acebd25df65b9a92b8b01776d1861972bb2c26deb4924a4dca"
+    },
+    {
+      "path": ".codex-evidence\\typed-preflight-20261004\\historical\\linux-replay-summary.json",
+      "sha256": "sha256:eb08a7b38d4b29fb71a62e9125fa7d68c2128a0d3630c6a313219c64477c6cfa"
+    },
+    {
+      "path": ".codex-evidence\\typed-preflight-20261004\\historical\\linux-replay.log",
+      "sha256": "sha256:dedcf3fb14e20c4b4a573e04f602f5fc9b937ce4e3a299e0ad7b66feb3e9477d"
+    },
+    {
+      "path": ".codex-evidence\\typed-preflight-20261004\\historical\\linux-tests.log",
+      "sha256": "sha256:8287a0ab840af80edb92119118007c7c856f7b8ee377af51149e22d78d9ac04a"
+    },
+    {
+      "path": ".codex-evidence\\typed-preflight-20261004\\historical\\windows-tests.log",
+      "sha256": "sha256:4019b77b2c0b5ef3fdb42cbe6b2dd6e3ce86e33e44faa1ff2b9129e49cd0c7e1"
+    }
+  ]
+}

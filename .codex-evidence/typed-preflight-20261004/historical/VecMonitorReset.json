@@ -1,0 +1,250 @@
+{
+  "component": "VecMonitorReset",
+  "original_job_id": "af912ce3-80d9-4c8c-95f9-d2a69e5edd5f",
+  "original_input": {
+    "component": "VecMonitorReset",
+    "requirements": [
+      {
+        "id": "SRS-18-11:clear_counters",
+        "fretish": "VecMonitorReset shall always satisfy ((episode_return = 0) & (episode_length = 0)).",
+        "kind": "guarantee",
+        "source_refs": [
+          "SRS-18-11@sha256:213f10edf87da70271d501fef96df39c3d0eea14d200c958a81d4580d890c6af#statement"
+        ]
+      }
+    ],
+    "variables": [
+      {
+        "name": "episode_return",
+        "type": "real",
+        "role": "output",
+        "meaning": "Episode return counter after each reset for an arbitrary monitored environment."
+      },
+      {
+        "name": "episode_length",
+        "type": "int",
+        "role": "output",
+        "meaning": "Episode length counter after each reset for an arbitrary monitored environment."
+      }
+    ],
+    "time_model": {
+      "kind": "discrete_steps",
+      "description": "Each step observes a completed VecMonitor.reset call for an arbitrary environment; no physical sampling period or reset frequency is prescribed."
+    },
+    "options": {
+      "timeout_ms": 60000,
+      "diagnose": true
+    },
+    "request_id": "27232503-fe19-5872-a6e6-8d6d4b40b590"
+  },
+  "original_replay": {
+    "schema_version": 1,
+    "input_digest": "sha256:e7244c0de971c5c997202f1327630ce009562d278fbd9268b6ad9e42ee1eea35",
+    "result": "invalid",
+    "contract_result": null,
+    "environment_result": null,
+    "requested_ids": [
+      "SRS-18-11:clear_counters"
+    ],
+    "analyzed_ids": [],
+    "diagnostics": [
+      {
+        "id": "SRS-18-11:clear_counters",
+        "code": "type_error",
+        "message": "Comparison episode_return=0 requires matching operand types; received (real, int)."
+      }
+    ],
+    "formalization": {
+      "representations": [
+        "pt-lustre",
+        "pt-smv",
+        "ft-inf",
+        "ft-fin"
+      ],
+      "time_basis": "discrete_steps",
+      "results": [
+        {
+          "id": "SRS-18-11:clear_counters",
+          "status": "invalid",
+          "formulas": [],
+          "explanation": null,
+          "diagnostics": [
+            {
+              "code": "type_error",
+              "message": "Comparison episode_return=0 requires matching operand types; received (real, int).",
+              "location": {
+                "line": 1,
+                "column": 40
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "toolchain": {
+      "fret": "sha256:be0a44be39cbfc40d736ca28a45f23d5610209e975ea5afa59f78fa7e72a7f18",
+      "adapter": "0.2.0",
+      "kind2": "kind2 v2.2.0",
+      "z3": "Z3 version 4.14.1 - 64 bit"
+    },
+    "time_model": {
+      "kind": "discrete_steps",
+      "description": "Each step observes a completed VecMonitor.reset call for an arbitrary environment; no physical sampling period or reset frequency is prescribed."
+    },
+    "assumption_ids": [],
+    "guarantee_ids": [
+      "SRS-18-11:clear_counters"
+    ],
+    "variable_mapping": {
+      "fret_v_0": "episode_return",
+      "fret_v_1": "episode_length"
+    },
+    "checks": [],
+    "diagnosis": {
+      "status": "not_run",
+      "conflicts": [],
+      "message": null
+    }
+  },
+  "corrected_input": {
+    "component": "VecMonitorReset",
+    "requirements": [
+      {
+        "id": "SRS-18-11:clear_counters",
+        "fretish": "VecMonitorReset shall always satisfy ((episode_return = 0.0) & (episode_length = 0)).",
+        "kind": "guarantee",
+        "source_refs": [
+          "SRS-18-11@sha256:213f10edf87da70271d501fef96df39c3d0eea14d200c958a81d4580d890c6af#statement"
+        ]
+      }
+    ],
+    "variables": [
+      {
+        "name": "episode_return",
+        "type": "real",
+        "role": "output",
+        "meaning": "Episode return counter after each reset for an arbitrary monitored environment."
+      },
+      {
+        "name": "episode_length",
+        "type": "int",
+        "role": "output",
+        "meaning": "Episode length counter after each reset for an arbitrary monitored environment."
+      }
+    ],
+    "time_model": {
+      "kind": "discrete_steps",
+      "description": "Each step observes a completed VecMonitor.reset call for an arbitrary environment; no physical sampling period or reset frequency is prescribed."
+    },
+    "options": {
+      "timeout_ms": 60000,
+      "diagnose": true
+    },
+    "request_id": "27232503-fe19-5872-a6e6-8d6d4b40b590"
+  },
+  "corrected_report": {
+    "schema_version": 1,
+    "input_digest": "sha256:7eb3d14393797e8c3c6df299cbb7ac0396ec4540d37dc825d315cd0632c3314f",
+    "result": "realizable",
+    "contract_result": "realizable",
+    "environment_result": "realizable",
+    "requested_ids": [
+      "SRS-18-11:clear_counters"
+    ],
+    "analyzed_ids": [
+      "SRS-18-11:clear_counters"
+    ],
+    "diagnostics": [],
+    "formalization": {
+      "representations": [
+        "pt-lustre",
+        "pt-smv",
+        "ft-inf",
+        "ft-fin"
+      ],
+      "time_basis": "discrete_steps",
+      "results": [
+        {
+          "id": "SRS-18-11:clear_counters",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "(H((episode_return = 0.0)) and H((episode_length = 0)))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "((H (episode_return = 0.0)) & (H (episode_length = 0)))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(G ((episode_return = 0.0) & (episode_length = 0)))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "(LAST V ((episode_return = 0.0) & (episode_length = 0)))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: first point in the interval.<br>REQUIRED BEHAVIOR: for every trigger, <b><i>(( ( episode_return = 0.0 ) & ( episode_length = 0 ) ))</i></b> must hold at all time points between (and including) the trigger and the end of the interval."
+          },
+          "diagnostics": []
+        }
+      ]
+    },
+    "toolchain": {
+      "fret": "sha256:be0a44be39cbfc40d736ca28a45f23d5610209e975ea5afa59f78fa7e72a7f18",
+      "adapter": "0.2.0",
+      "kind2": "kind2 v2.2.0",
+      "z3": "Z3 version 4.14.1 - 64 bit"
+    },
+    "time_model": {
+      "kind": "discrete_steps",
+      "description": "Each step observes a completed VecMonitor.reset call for an arbitrary environment; no physical sampling period or reset frequency is prescribed."
+    },
+    "assumption_ids": [],
+    "guarantee_ids": [
+      "SRS-18-11:clear_counters"
+    ],
+    "variable_mapping": {
+      "fret_v_0": "episode_return",
+      "fret_v_1": "episode_length"
+    },
+    "checks": [
+      {
+        "name": "FretContract.lus",
+        "requirement_ids": [
+          "SRS-18-11:clear_counters"
+        ],
+        "result": "REALIZABLE",
+        "environment_result": "REALIZABLE",
+        "lustre": "--Historically\nnode H(X:bool) returns (Y:bool);\nlet\n    Y = X -> (X and (pre Y));\ntel\n\n--Y since inclusive X\nnode SI(X,Y: bool) returns (Z:bool);\nlet\nZ = Y and (X or (false -> pre Z));\ntel\n\n--Y since X\nnode S(X,Y: bool) returns (Z:bool);\nlet\nZ = X or (Y and (false -> pre Z));\ntel\n\n--Y triggered X\nnode T(X,Y: bool) returns(Z:bool);\nlet\nZ = (X and (Y or (true -> pre Z)));\ntel\n\n--Once\nnode O(X:bool) returns (Y:bool);\nlet\n Y = X or (false -> pre Y);\ntel\n\n--Timed Once: less than or equal to N\nnode OTlore( N: int; X: bool) returns (Y: bool);\n    var C:int;\nlet\n    C = if X then 0\n        else (-1 -> pre C + (if pre C <0 then 0 else 1));\n\n    Y = 0 <= C and C <= N;\ntel\n\n--Timed Once: general case\nnode OT( L: int;  R: int; X: bool) returns (Y: bool);\nvar  D:bool;\nlet\n  D=delay(X, R);\n  Y=OTlore(L-R, D);\ntel\n\n-- Timed Historically: general case\nnode HT( L: int;  R: int; X: bool) returns (Y: bool);\nlet\n  Y = not OT(L, R, not X);\ntel\n\n-- Timed Since: general case\nnode ST( L: int;  R: int; X: bool; Y: bool)  returns (Z: bool);\nlet\n  Z = S(X, Y) and OT(L, R, X);\ntel\n\n-- Timed Since Inclusive: general case\nnode SIT( L: int;  R: int; X: bool; Y: bool) returns (Z: bool);\nlet\n  Z = SI(X, Y) and OT(L, R, X);\ntel\n\n-- Timed Triggered: general case\nnode TT( L: int;  R: int; X: bool; Y: bool)  returns (Z: bool);\nlet\n  Z = T(X, Y) or HT(L, R, X);\ntel\n\n-- Pre for integers, with an initial value at FTP\nnode preInt(InitialValue, X: int) returns (Y:int);\nlet\n  Y = InitialValue -> pre X;\ntel\n\n-- Pre for reals, with an initial value at FTP\nnode preReal(InitialValue, X: real) returns (Y:real);\nlet\n  Y = InitialValue -> pre X;\ntel\n\n-- Pre for booleans, with an initial value at FTP\nnode preBool(InitialValue, X: bool) returns (Y:bool);\nlet\n  Y = InitialValue -> pre X;\ntel\n\n-- The equivalent of LTL's Y in Lustre.\nnode YtoPre(X: bool) returns (Y:bool);\nlet\n  Y = false -> pre X;\ntel\n\n-- The equivalent of LTL's Z in Lustre.\nnode ZtoPre(X: bool) returns (Y:bool);\nlet\n  Y = true -> pre X;\ntel\n\n-- Absolute value for reals\nnode absReal(x:real) returns(y: real);\nlet\n  y = if (x >= 0.0) then x else -x;\ntel\n\n-- Absolute value for integers\nnode absInt(x:int) returns(y: int);\nlet\n  y = if (x >= 0) then x else -x;\ntel\n\n-- Maximum value between two reals\nnode maxReal (a : real; b : real)\nreturns (z : real);\nlet\n  z = (if (((a) >= (b))) then (a) else (b));\ntel\n\n-- Maximum value between two integers\nnode maxInt (a : int; b : int)\nreturns (z : int);\nlet\n  z = (if (((a) >= (b))) then (a) else (b));\ntel\n\n-- Minimum value between two integers\nnode minInt (a : int; b : int)\nreturns (z : int);\nlet\n  z = (if (((a) <= (b))) then (a) else (b));\ntel\n\n-- Minimum value between two reals\nnode minReal (a : real; b : real)\nreturns (z : real);\nlet\n  z = (if (((a) <= (b))) then (a) else (b));\ntel\n\nnode delay(X:bool;  R:int) returns(Y:bool);\nlet\n\n  Y = X;\ntel\n\n\nnode imported FretContract() returns ( fret_v_0:real ;  fret_v_1:int  );\n(*@contract\n\n\n\n\nvar __FTP : bool = true -> false;\n\n\n\n(* fret_r_0  *)\n\n\nguarantee \"fret_r_0\" (H((fret_v_0 = 0.0)) and H((fret_v_1 = 0)));\n\n\r\n*)\n",
+        "lustre_digest": "sha256:4db113974a81bd4f20b573126c872336be3c477f7d69d812d2514b5c7be0a169",
+        "command": [
+          "kind2",
+          "--lus_main",
+          "FretContract",
+          "-json",
+          "--enable",
+          "CONTRACTCK",
+          "--timeout",
+          "60",
+          "/tmp/fret-historical-replay-IS9sOb/FretContract.lus"
+        ],
+        "stdout": "[\n{\n  \"objectType\" : \"log\",\n  \"level\" : \"info\",\n  \"source\" : \"parse\",\n  \"value\" : \"kind2 v2.2.0\"\n}\n,\n{\n  \"objectType\" : \"kind2Options\",\n  \"enabled\" :\n  [\n    \"contractck\"\n  ],\n  \"timeout\" : 60.000000,\n  \"bmcMax\" : 0,\n  \"compositional\" : false,\n  \"modular\" : false\n}\n,\n{\n  \"objectType\" : \"analysisStart\",\n  \"top\" : \"FretContract\",\n  \"context\" : \"contract\"\n}\n,\n{\n  \"objectType\" : \"realizabilityCheck\",\n  \"runtime\" : {\"unit\" : \"sec\", \"timeout\" : false, \"value\" : 0.088},\n  \"result\" : \"realizable\"\n}\n,\n{\"objectType\" : \"analysisStop\"}\n,\n{\n  \"objectType\" : \"analysisStart\",\n  \"top\" : \"FretContract\",\n  \"context\" : \"environment\"\n}\n,\n{\n  \"objectType\" : \"realizabilityCheck\",\n  \"runtime\" : {\"unit\" : \"sec\", \"timeout\" : false, \"value\" : 0.000},\n  \"result\" : \"realizable\"\n}\n,\n{\"objectType\" : \"analysisStop\"}\n]\n",
+        "stderr": "",
+        "exit_code": 0,
+        "counterexample": {
+          "contract": null,
+          "environment": null
+        }
+      }
+    ],
+    "diagnosis": {
+      "status": "not_needed",
+      "conflicts": [],
+      "message": null
+    }
+  }
+}

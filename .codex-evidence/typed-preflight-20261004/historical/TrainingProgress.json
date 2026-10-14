@@ -1,0 +1,279 @@
+{
+  "component": "TrainingProgress",
+  "original_job_id": "21233fcb-bf3e-48b0-8e51-a1c4dcc63315",
+  "original_input": {
+    "request_id": "656298bd-1b8d-5f06-966a-06f6035c045e",
+    "component": "TrainingProgress",
+    "requirements": [
+      {
+        "id": "SRS-10-08:remaining_fraction",
+        "fretish": "whenever total > 0 TrainingProgress shall immediately satisfy remaining = 1 - current / total.",
+        "kind": "guarantee",
+        "source_refs": [
+          "SRS-10-08@sha256:e80be4e5a502a81aa7d4fc5e80563e61be4442b2da0c746e0692039cee101a86#statement",
+          "SRS-10-08@sha256:e80be4e5a502a81aa7d4fc5e80563e61be4442b2da0c746e0692039cee101a86#source_refs[1].quote"
+        ]
+      }
+    ],
+    "variables": [
+      {
+        "name": "current",
+        "type": "real",
+        "role": "input",
+        "meaning": "Current timestep argument of one progress update."
+      },
+      {
+        "name": "total",
+        "type": "real",
+        "role": "input",
+        "meaning": "Total timestep argument of one progress update."
+      },
+      {
+        "name": "remaining",
+        "type": "real",
+        "role": "output",
+        "meaning": "Progress remaining computed by that update."
+      }
+    ],
+    "time_model": {
+      "kind": "discrete_steps",
+      "description": "Each logical step is one completed call to the progress update; no physical-time sampling or deadline is introduced."
+    },
+    "options": {
+      "timeout_ms": 60000,
+      "diagnose": true
+    }
+  },
+  "original_replay": {
+    "schema_version": 1,
+    "input_digest": "sha256:9671798b65a707581bed7b06d42caa8fe23d8d743be6f23b57581cb717fda1d0",
+    "result": "invalid",
+    "contract_result": null,
+    "environment_result": null,
+    "requested_ids": [
+      "SRS-10-08:remaining_fraction"
+    ],
+    "analyzed_ids": [],
+    "diagnostics": [
+      {
+        "id": "SRS-10-08:remaining_fraction",
+        "code": "type_error",
+        "message": "Comparison total>0 requires matching numeric types; received (real, int)."
+      },
+      {
+        "id": "SRS-10-08:remaining_fraction",
+        "code": "type_error",
+        "message": "Expression 1-current/total requires matching numeric operands; received (int, real)."
+      }
+    ],
+    "formalization": {
+      "representations": [
+        "pt-lustre",
+        "pt-smv",
+        "ft-inf",
+        "ft-fin"
+      ],
+      "time_basis": "discrete_steps",
+      "results": [
+        {
+          "id": "SRS-10-08:remaining_fraction",
+          "status": "invalid",
+          "formulas": [],
+          "explanation": null,
+          "diagnostics": [
+            {
+              "code": "type_error",
+              "message": "Comparison total>0 requires matching numeric types; received (real, int).",
+              "location": {
+                "line": 1,
+                "column": 10
+              }
+            },
+            {
+              "code": "type_error",
+              "message": "Expression 1-current/total requires matching numeric operands; received (int, real).",
+              "location": {
+                "line": 1,
+                "column": 75
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "toolchain": {
+      "fret": "sha256:be0a44be39cbfc40d736ca28a45f23d5610209e975ea5afa59f78fa7e72a7f18",
+      "adapter": "0.2.0",
+      "kind2": "kind2 v2.2.0",
+      "z3": "Z3 version 4.14.1 - 64 bit"
+    },
+    "time_model": {
+      "kind": "discrete_steps",
+      "description": "Each logical step is one completed call to the progress update; no physical-time sampling or deadline is introduced."
+    },
+    "assumption_ids": [],
+    "guarantee_ids": [
+      "SRS-10-08:remaining_fraction"
+    ],
+    "variable_mapping": {
+      "fret_v_0": "current",
+      "fret_v_1": "total",
+      "fret_v_2": "remaining"
+    },
+    "checks": [],
+    "diagnosis": {
+      "status": "not_run",
+      "conflicts": [],
+      "message": null
+    }
+  },
+  "corrected_input": {
+    "request_id": "656298bd-1b8d-5f06-966a-06f6035c045e",
+    "component": "TrainingProgress",
+    "requirements": [
+      {
+        "id": "SRS-10-08:remaining_fraction",
+        "fretish": "whenever total > 0.0 TrainingProgress shall immediately satisfy remaining = 1.0 - current / total.",
+        "kind": "guarantee",
+        "source_refs": [
+          "SRS-10-08@sha256:e80be4e5a502a81aa7d4fc5e80563e61be4442b2da0c746e0692039cee101a86#statement",
+          "SRS-10-08@sha256:e80be4e5a502a81aa7d4fc5e80563e61be4442b2da0c746e0692039cee101a86#source_refs[1].quote"
+        ]
+      }
+    ],
+    "variables": [
+      {
+        "name": "current",
+        "type": "real",
+        "role": "input",
+        "meaning": "Current timestep argument of one progress update."
+      },
+      {
+        "name": "total",
+        "type": "real",
+        "role": "input",
+        "meaning": "Total timestep argument of one progress update."
+      },
+      {
+        "name": "remaining",
+        "type": "real",
+        "role": "output",
+        "meaning": "Progress remaining computed by that update."
+      }
+    ],
+    "time_model": {
+      "kind": "discrete_steps",
+      "description": "Each logical step is one completed call to the progress update; no physical-time sampling or deadline is introduced."
+    },
+    "options": {
+      "timeout_ms": 60000,
+      "diagnose": true
+    }
+  },
+  "corrected_report": {
+    "schema_version": 1,
+    "input_digest": "sha256:aa82ec8c9748a69cff90b4107a1b468d090115d3e865a4dc489397f38a3f7a8c",
+    "result": "realizable",
+    "contract_result": "realizable",
+    "environment_result": "realizable",
+    "requested_ids": [
+      "SRS-10-08:remaining_fraction"
+    ],
+    "analyzed_ids": [
+      "SRS-10-08:remaining_fraction"
+    ],
+    "diagnostics": [],
+    "formalization": {
+      "representations": [
+        "pt-lustre",
+        "pt-smv",
+        "ft-inf",
+        "ft-fin"
+      ],
+      "time_basis": "discrete_steps",
+      "results": [
+        {
+          "id": "SRS-10-08:remaining_fraction",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "H(((total > 0.0) => (remaining = (1.0 - (current / total)))))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "(H ((total > 0.0) -> (remaining = (1.0 - (current / total)))))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(G ((total > 0.0) -> (remaining = (1.0 - (current / total)))))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "(LAST V ((total > 0.0) -> (remaining = (1.0 - (current / total)))))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(total > 0.0)</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, if trigger holds then <b><i>(remaining = 1.0 - current / total)</i></b> also holds at the same time point."
+          },
+          "diagnostics": []
+        }
+      ]
+    },
+    "toolchain": {
+      "fret": "sha256:be0a44be39cbfc40d736ca28a45f23d5610209e975ea5afa59f78fa7e72a7f18",
+      "adapter": "0.2.0",
+      "kind2": "kind2 v2.2.0",
+      "z3": "Z3 version 4.14.1 - 64 bit"
+    },
+    "time_model": {
+      "kind": "discrete_steps",
+      "description": "Each logical step is one completed call to the progress update; no physical-time sampling or deadline is introduced."
+    },
+    "assumption_ids": [],
+    "guarantee_ids": [
+      "SRS-10-08:remaining_fraction"
+    ],
+    "variable_mapping": {
+      "fret_v_0": "current",
+      "fret_v_1": "total",
+      "fret_v_2": "remaining"
+    },
+    "checks": [
+      {
+        "name": "FretContract.lus",
+        "requirement_ids": [
+          "SRS-10-08:remaining_fraction"
+        ],
+        "result": "REALIZABLE",
+        "environment_result": "REALIZABLE",
+        "lustre": "--Historically\nnode H(X:bool) returns (Y:bool);\nlet\n    Y = X -> (X and (pre Y));\ntel\n\n--Y since inclusive X\nnode SI(X,Y: bool) returns (Z:bool);\nlet\nZ = Y and (X or (false -> pre Z));\ntel\n\n--Y since X\nnode S(X,Y: bool) returns (Z:bool);\nlet\nZ = X or (Y and (false -> pre Z));\ntel\n\n--Y triggered X\nnode T(X,Y: bool) returns(Z:bool);\nlet\nZ = (X and (Y or (true -> pre Z)));\ntel\n\n--Once\nnode O(X:bool) returns (Y:bool);\nlet\n Y = X or (false -> pre Y);\ntel\n\n--Timed Once: less than or equal to N\nnode OTlore( N: int; X: bool) returns (Y: bool);\n    var C:int;\nlet\n    C = if X then 0\n        else (-1 -> pre C + (if pre C <0 then 0 else 1));\n\n    Y = 0 <= C and C <= N;\ntel\n\n--Timed Once: general case\nnode OT( L: int;  R: int; X: bool) returns (Y: bool);\nvar  D:bool;\nlet\n  D=delay(X, R);\n  Y=OTlore(L-R, D);\ntel\n\n-- Timed Historically: general case\nnode HT( L: int;  R: int; X: bool) returns (Y: bool);\nlet\n  Y = not OT(L, R, not X);\ntel\n\n-- Timed Since: general case\nnode ST( L: int;  R: int; X: bool; Y: bool)  returns (Z: bool);\nlet\n  Z = S(X, Y) and OT(L, R, X);\ntel\n\n-- Timed Since Inclusive: general case\nnode SIT( L: int;  R: int; X: bool; Y: bool) returns (Z: bool);\nlet\n  Z = SI(X, Y) and OT(L, R, X);\ntel\n\n-- Timed Triggered: general case\nnode TT( L: int;  R: int; X: bool; Y: bool)  returns (Z: bool);\nlet\n  Z = T(X, Y) or HT(L, R, X);\ntel\n\n-- Pre for integers, with an initial value at FTP\nnode preInt(InitialValue, X: int) returns (Y:int);\nlet\n  Y = InitialValue -> pre X;\ntel\n\n-- Pre for reals, with an initial value at FTP\nnode preReal(InitialValue, X: real) returns (Y:real);\nlet\n  Y = InitialValue -> pre X;\ntel\n\n-- Pre for booleans, with an initial value at FTP\nnode preBool(InitialValue, X: bool) returns (Y:bool);\nlet\n  Y = InitialValue -> pre X;\ntel\n\n-- The equivalent of LTL's Y in Lustre.\nnode YtoPre(X: bool) returns (Y:bool);\nlet\n  Y = false -> pre X;\ntel\n\n-- The equivalent of LTL's Z in Lustre.\nnode ZtoPre(X: bool) returns (Y:bool);\nlet\n  Y = true -> pre X;\ntel\n\n-- Absolute value for reals\nnode absReal(x:real) returns(y: real);\nlet\n  y = if (x >= 0.0) then x else -x;\ntel\n\n-- Absolute value for integers\nnode absInt(x:int) returns(y: int);\nlet\n  y = if (x >= 0) then x else -x;\ntel\n\n-- Maximum value between two reals\nnode maxReal (a : real; b : real)\nreturns (z : real);\nlet\n  z = (if (((a) >= (b))) then (a) else (b));\ntel\n\n-- Maximum value between two integers\nnode maxInt (a : int; b : int)\nreturns (z : int);\nlet\n  z = (if (((a) >= (b))) then (a) else (b));\ntel\n\n-- Minimum value between two integers\nnode minInt (a : int; b : int)\nreturns (z : int);\nlet\n  z = (if (((a) <= (b))) then (a) else (b));\ntel\n\n-- Minimum value between two reals\nnode minReal (a : real; b : real)\nreturns (z : real);\nlet\n  z = (if (((a) <= (b))) then (a) else (b));\ntel\n\nnode delay(X:bool;  R:int) returns(Y:bool);\nlet\n\n  Y = X;\ntel\n\n\nnode imported FretContract( fret_v_0:real ; fret_v_1:real ) returns ( fret_v_2:real  );\n(*@contract\n\n\n\n\nvar __FTP : bool = true -> false;\n\n\n\n(* fret_r_0  *)\n\n\nguarantee \"fret_r_0\" H(((fret_v_1 > 0.0) => (fret_v_2 = (1.0 - (fret_v_0 / fret_v_1)))));\n\n\r\n*)\n",
+        "lustre_digest": "sha256:78603a8258429bdfdb84a5ee883f5f8a3980f44326341c0c6bf5e53a1164cf70",
+        "command": [
+          "kind2",
+          "--lus_main",
+          "FretContract",
+          "-json",
+          "--enable",
+          "CONTRACTCK",
+          "--timeout",
+          "60",
+          "/tmp/fret-historical-replay-YiiBOe/FretContract.lus"
+        ],
+        "stdout": "[\n{\n  \"objectType\" : \"log\",\n  \"level\" : \"info\",\n  \"source\" : \"parse\",\n  \"value\" : \"kind2 v2.2.0\"\n}\n,\n{\n  \"objectType\" : \"kind2Options\",\n  \"enabled\" :\n  [\n    \"contractck\"\n  ],\n  \"timeout\" : 60.000000,\n  \"bmcMax\" : 0,\n  \"compositional\" : false,\n  \"modular\" : false\n}\n,\n{\n  \"objectType\" : \"analysisStart\",\n  \"top\" : \"FretContract\",\n  \"context\" : \"contract\"\n}\n,\n{\n  \"objectType\" : \"realizabilityCheck\",\n  \"runtime\" : {\"unit\" : \"sec\", \"timeout\" : false, \"value\" : 0.127},\n  \"result\" : \"realizable\"\n}\n,\n{\"objectType\" : \"analysisStop\"}\n,\n{\n  \"objectType\" : \"analysisStart\",\n  \"top\" : \"FretContract\",\n  \"context\" : \"environment\"\n}\n,\n{\n  \"objectType\" : \"realizabilityCheck\",\n  \"runtime\" : {\"unit\" : \"sec\", \"timeout\" : false, \"value\" : 0.000},\n  \"result\" : \"realizable\"\n}\n,\n{\"objectType\" : \"analysisStop\"}\n]\n",
+        "stderr": "",
+        "exit_code": 0,
+        "counterexample": {
+          "contract": null,
+          "environment": null
+        }
+      }
+    ],
+    "diagnosis": {
+      "status": "not_needed",
+      "conflicts": [],
+      "message": null
+    }
+  }
+}

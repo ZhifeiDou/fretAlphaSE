@@ -1,0 +1,424 @@
+{
+  "component": "StickyActionEnv",
+  "original_job_id": "c9bdff3e-7452-493e-9a00-8dfc77b8fe4c",
+  "original_input": {
+    "request_id": "d2ced656-ff6b-5aec-847c-39793f6af59f",
+    "component": "StickyActionEnv",
+    "requirements": [
+      {
+        "id": "SRS-9-01:allowed_actions",
+        "fretish": "StickyActionEnv shall satisfy executed_action = previous_action | executed_action = intended_action.",
+        "kind": "guarantee",
+        "source_refs": [
+          "SRS-9-01@sha256:0afd51f42a2c448817317c895ac055e0c6ef2a2fe86d4b058a1deabe6c2c8bc9#statement"
+        ]
+      },
+      {
+        "id": "SRS-9-01:zero_repeat_probability",
+        "fretish": "StickyActionEnv whenever repeat_probability = 0 shall satisfy executed_action = intended_action.",
+        "kind": "guarantee",
+        "source_refs": [
+          "SRS-9-01@sha256:0afd51f42a2c448817317c895ac055e0c6ef2a2fe86d4b058a1deabe6c2c8bc9#statement"
+        ]
+      },
+      {
+        "id": "SRS-9-01:certain_repeat_probability",
+        "fretish": "StickyActionEnv whenever repeat_probability = 1 shall satisfy executed_action = previous_action.",
+        "kind": "guarantee",
+        "source_refs": [
+          "SRS-9-01@sha256:0afd51f42a2c448817317c895ac055e0c6ef2a2fe86d4b058a1deabe6c2c8bc9#statement"
+        ]
+      }
+    ],
+    "variables": [
+      {
+        "name": "repeat_probability",
+        "type": "real",
+        "role": "input",
+        "meaning": "Configured sticky-action selection probability."
+      },
+      {
+        "name": "previous_action",
+        "type": "int",
+        "role": "input",
+        "meaning": "Previous action available for repetition at this observed step; history extraction is outside this projection."
+      },
+      {
+        "name": "intended_action",
+        "type": "int",
+        "role": "input",
+        "meaning": "Intended new action supplied to step."
+      },
+      {
+        "name": "executed_action",
+        "type": "int",
+        "role": "output",
+        "meaning": "Action executed at the observed step."
+      }
+    ],
+    "time_model": {
+      "kind": "discrete_steps",
+      "description": "One logical observation per completed step call, pairing configured probability and intended/previous actions with the executed action; no physical timing or probabilistic trace measure is asserted."
+    },
+    "options": {
+      "timeout_ms": 60000,
+      "diagnose": true
+    }
+  },
+  "original_replay": {
+    "schema_version": 1,
+    "input_digest": "sha256:49275ada800bdb59d66e166a56ca70510aba3fe7b300cc9e2286a84a3a0da22f",
+    "result": "invalid",
+    "contract_result": null,
+    "environment_result": null,
+    "requested_ids": [
+      "SRS-9-01:allowed_actions",
+      "SRS-9-01:zero_repeat_probability",
+      "SRS-9-01:certain_repeat_probability"
+    ],
+    "analyzed_ids": [],
+    "diagnostics": [
+      {
+        "id": "SRS-9-01:zero_repeat_probability",
+        "code": "syntax_error",
+        "message": "mismatched input 'whenever' expecting SHALL"
+      },
+      {
+        "id": "SRS-9-01:certain_repeat_probability",
+        "code": "syntax_error",
+        "message": "mismatched input 'whenever' expecting SHALL"
+      }
+    ],
+    "formalization": {
+      "representations": [
+        "pt-lustre",
+        "pt-smv",
+        "ft-inf",
+        "ft-fin"
+      ],
+      "time_basis": "discrete_steps",
+      "results": [
+        {
+          "id": "SRS-9-01:allowed_actions",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "O(((executed_action = previous_action) or (executed_action = intended_action)))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "(O ((executed_action = previous_action) | (executed_action = intended_action)))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(F ((executed_action = previous_action) | (executed_action = intended_action)))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "((! LAST) U ((executed_action = previous_action) | (executed_action = intended_action)))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: first point in the interval.<br>REQUIRED BEHAVIOR: for every trigger, <b><i>(executed_action = previous_action | executed_action = intended_action)</i></b> must hold at some time point between (and including) the trigger and the end of the interval."
+          },
+          "diagnostics": []
+        },
+        {
+          "id": "SRS-9-01:zero_repeat_probability",
+          "status": "invalid",
+          "formulas": [],
+          "explanation": null,
+          "diagnostics": [
+            {
+              "code": "syntax_error",
+              "message": "mismatched input 'whenever' expecting SHALL",
+              "location": {
+                "line": 1,
+                "column": 17
+              }
+            }
+          ]
+        },
+        {
+          "id": "SRS-9-01:certain_repeat_probability",
+          "status": "invalid",
+          "formulas": [],
+          "explanation": null,
+          "diagnostics": [
+            {
+              "code": "syntax_error",
+              "message": "mismatched input 'whenever' expecting SHALL",
+              "location": {
+                "line": 1,
+                "column": 17
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "toolchain": {
+      "fret": "sha256:be0a44be39cbfc40d736ca28a45f23d5610209e975ea5afa59f78fa7e72a7f18",
+      "adapter": "0.2.0",
+      "kind2": "kind2 v2.2.0",
+      "z3": "Z3 version 4.14.1 - 64 bit"
+    },
+    "time_model": {
+      "kind": "discrete_steps",
+      "description": "One logical observation per completed step call, pairing configured probability and intended/previous actions with the executed action; no physical timing or probabilistic trace measure is asserted."
+    },
+    "assumption_ids": [],
+    "guarantee_ids": [
+      "SRS-9-01:allowed_actions",
+      "SRS-9-01:zero_repeat_probability",
+      "SRS-9-01:certain_repeat_probability"
+    ],
+    "variable_mapping": {
+      "fret_v_0": "repeat_probability",
+      "fret_v_1": "previous_action",
+      "fret_v_2": "intended_action",
+      "fret_v_3": "executed_action"
+    },
+    "checks": [],
+    "diagnosis": {
+      "status": "not_run",
+      "conflicts": [],
+      "message": null
+    }
+  },
+  "corrected_input": {
+    "request_id": "d2ced656-ff6b-5aec-847c-39793f6af59f",
+    "component": "StickyActionEnv",
+    "requirements": [
+      {
+        "id": "SRS-9-01:allowed_actions",
+        "fretish": "StickyActionEnv shall satisfy executed_action = previous_action | executed_action = intended_action.",
+        "kind": "guarantee",
+        "source_refs": [
+          "SRS-9-01@sha256:0afd51f42a2c448817317c895ac055e0c6ef2a2fe86d4b058a1deabe6c2c8bc9#statement"
+        ]
+      },
+      {
+        "id": "SRS-9-01:zero_repeat_probability",
+        "fretish": "whenever repeat_probability = 0.0 StickyActionEnv shall satisfy executed_action = intended_action.",
+        "kind": "guarantee",
+        "source_refs": [
+          "SRS-9-01@sha256:0afd51f42a2c448817317c895ac055e0c6ef2a2fe86d4b058a1deabe6c2c8bc9#statement"
+        ]
+      },
+      {
+        "id": "SRS-9-01:certain_repeat_probability",
+        "fretish": "whenever repeat_probability = 1.0 StickyActionEnv shall satisfy executed_action = previous_action.",
+        "kind": "guarantee",
+        "source_refs": [
+          "SRS-9-01@sha256:0afd51f42a2c448817317c895ac055e0c6ef2a2fe86d4b058a1deabe6c2c8bc9#statement"
+        ]
+      }
+    ],
+    "variables": [
+      {
+        "name": "repeat_probability",
+        "type": "real",
+        "role": "input",
+        "meaning": "Configured sticky-action selection probability."
+      },
+      {
+        "name": "previous_action",
+        "type": "int",
+        "role": "input",
+        "meaning": "Previous action available for repetition at this observed step; history extraction is outside this projection."
+      },
+      {
+        "name": "intended_action",
+        "type": "int",
+        "role": "input",
+        "meaning": "Intended new action supplied to step."
+      },
+      {
+        "name": "executed_action",
+        "type": "int",
+        "role": "output",
+        "meaning": "Action executed at the observed step."
+      }
+    ],
+    "time_model": {
+      "kind": "discrete_steps",
+      "description": "One logical observation per completed step call, pairing configured probability and intended/previous actions with the executed action; no physical timing or probabilistic trace measure is asserted."
+    },
+    "options": {
+      "timeout_ms": 60000,
+      "diagnose": true
+    }
+  },
+  "corrected_report": {
+    "schema_version": 1,
+    "input_digest": "sha256:187c56e9344a61731492d23066a7aa65391ba3fa42a7f94ac480d4edd3684d29",
+    "result": "realizable",
+    "contract_result": "realizable",
+    "environment_result": "realizable",
+    "requested_ids": [
+      "SRS-9-01:allowed_actions",
+      "SRS-9-01:zero_repeat_probability",
+      "SRS-9-01:certain_repeat_probability"
+    ],
+    "analyzed_ids": [
+      "SRS-9-01:allowed_actions",
+      "SRS-9-01:zero_repeat_probability",
+      "SRS-9-01:certain_repeat_probability"
+    ],
+    "diagnostics": [],
+    "formalization": {
+      "representations": [
+        "pt-lustre",
+        "pt-smv",
+        "ft-inf",
+        "ft-fin"
+      ],
+      "time_basis": "discrete_steps",
+      "results": [
+        {
+          "id": "SRS-9-01:allowed_actions",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "O(((executed_action = previous_action) or (executed_action = intended_action)))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "(O ((executed_action = previous_action) | (executed_action = intended_action)))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(F ((executed_action = previous_action) | (executed_action = intended_action)))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "((! LAST) U ((executed_action = previous_action) | (executed_action = intended_action)))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: first point in the interval.<br>REQUIRED BEHAVIOR: for every trigger, <b><i>(executed_action = previous_action | executed_action = intended_action)</i></b> must hold at some time point between (and including) the trigger and the end of the interval."
+          },
+          "diagnostics": []
+        },
+        {
+          "id": "SRS-9-01:zero_repeat_probability",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "(H(not ((repeat_probability = 0.0))) or not (SI((repeat_probability = 0.0),not ((executed_action = intended_action)))))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "((H (! (repeat_probability = 0.0))) | (! ((! (executed_action = intended_action)) S ((! (executed_action = intended_action)) & (repeat_probability = 0.0)))))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(G ((repeat_probability = 0.0) -> (F (executed_action = intended_action))))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "(LAST V ((repeat_probability = 0.0) -> ((! LAST) U (executed_action = intended_action))))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(repeat_probability = 0.0)</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, <b><i>(executed_action = intended_action)</i></b> must hold at some time point between (and including) the trigger and the end of the interval."
+          },
+          "diagnostics": []
+        },
+        {
+          "id": "SRS-9-01:certain_repeat_probability",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "(H(not ((repeat_probability = 1.0))) or not (SI((repeat_probability = 1.0),not ((executed_action = previous_action)))))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "((H (! (repeat_probability = 1.0))) | (! ((! (executed_action = previous_action)) S ((! (executed_action = previous_action)) & (repeat_probability = 1.0)))))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(G ((repeat_probability = 1.0) -> (F (executed_action = previous_action))))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "(LAST V ((repeat_probability = 1.0) -> ((! LAST) U (executed_action = previous_action))))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: every point in the interval where <b><i>(repeat_probability = 1.0)</i></b> is true.<br>REQUIRED BEHAVIOR: for every trigger, <b><i>(executed_action = previous_action)</i></b> must hold at some time point between (and including) the trigger and the end of the interval."
+          },
+          "diagnostics": []
+        }
+      ]
+    },
+    "toolchain": {
+      "fret": "sha256:be0a44be39cbfc40d736ca28a45f23d5610209e975ea5afa59f78fa7e72a7f18",
+      "adapter": "0.2.0",
+      "kind2": "kind2 v2.2.0",
+      "z3": "Z3 version 4.14.1 - 64 bit"
+    },
+    "time_model": {
+      "kind": "discrete_steps",
+      "description": "One logical observation per completed step call, pairing configured probability and intended/previous actions with the executed action; no physical timing or probabilistic trace measure is asserted."
+    },
+    "assumption_ids": [],
+    "guarantee_ids": [
+      "SRS-9-01:allowed_actions",
+      "SRS-9-01:zero_repeat_probability",
+      "SRS-9-01:certain_repeat_probability"
+    ],
+    "variable_mapping": {
+      "fret_v_0": "repeat_probability",
+      "fret_v_1": "previous_action",
+      "fret_v_2": "intended_action",
+      "fret_v_3": "executed_action"
+    },
+    "checks": [
+      {
+        "name": "FretContract.lus",
+        "requirement_ids": [
+          "SRS-9-01:allowed_actions",
+          "SRS-9-01:zero_repeat_probability",
+          "SRS-9-01:certain_repeat_probability"
+        ],
+        "result": "REALIZABLE",
+        "environment_result": "REALIZABLE",
+        "lustre": "--Historically\nnode H(X:bool) returns (Y:bool);\nlet\n    Y = X -> (X and (pre Y));\ntel\n\n--Y since inclusive X\nnode SI(X,Y: bool) returns (Z:bool);\nlet\nZ = Y and (X or (false -> pre Z));\ntel\n\n--Y since X\nnode S(X,Y: bool) returns (Z:bool);\nlet\nZ = X or (Y and (false -> pre Z));\ntel\n\n--Y triggered X\nnode T(X,Y: bool) returns(Z:bool);\nlet\nZ = (X and (Y or (true -> pre Z)));\ntel\n\n--Once\nnode O(X:bool) returns (Y:bool);\nlet\n Y = X or (false -> pre Y);\ntel\n\n--Timed Once: less than or equal to N\nnode OTlore( N: int; X: bool) returns (Y: bool);\n    var C:int;\nlet\n    C = if X then 0\n        else (-1 -> pre C + (if pre C <0 then 0 else 1));\n\n    Y = 0 <= C and C <= N;\ntel\n\n--Timed Once: general case\nnode OT( L: int;  R: int; X: bool) returns (Y: bool);\nvar  D:bool;\nlet\n  D=delay(X, R);\n  Y=OTlore(L-R, D);\ntel\n\n-- Timed Historically: general case\nnode HT( L: int;  R: int; X: bool) returns (Y: bool);\nlet\n  Y = not OT(L, R, not X);\ntel\n\n-- Timed Since: general case\nnode ST( L: int;  R: int; X: bool; Y: bool)  returns (Z: bool);\nlet\n  Z = S(X, Y) and OT(L, R, X);\ntel\n\n-- Timed Since Inclusive: general case\nnode SIT( L: int;  R: int; X: bool; Y: bool) returns (Z: bool);\nlet\n  Z = SI(X, Y) and OT(L, R, X);\ntel\n\n-- Timed Triggered: general case\nnode TT( L: int;  R: int; X: bool; Y: bool)  returns (Z: bool);\nlet\n  Z = T(X, Y) or HT(L, R, X);\ntel\n\n-- Pre for integers, with an initial value at FTP\nnode preInt(InitialValue, X: int) returns (Y:int);\nlet\n  Y = InitialValue -> pre X;\ntel\n\n-- Pre for reals, with an initial value at FTP\nnode preReal(InitialValue, X: real) returns (Y:real);\nlet\n  Y = InitialValue -> pre X;\ntel\n\n-- Pre for booleans, with an initial value at FTP\nnode preBool(InitialValue, X: bool) returns (Y:bool);\nlet\n  Y = InitialValue -> pre X;\ntel\n\n-- The equivalent of LTL's Y in Lustre.\nnode YtoPre(X: bool) returns (Y:bool);\nlet\n  Y = false -> pre X;\ntel\n\n-- The equivalent of LTL's Z in Lustre.\nnode ZtoPre(X: bool) returns (Y:bool);\nlet\n  Y = true -> pre X;\ntel\n\n-- Absolute value for reals\nnode absReal(x:real) returns(y: real);\nlet\n  y = if (x >= 0.0) then x else -x;\ntel\n\n-- Absolute value for integers\nnode absInt(x:int) returns(y: int);\nlet\n  y = if (x >= 0) then x else -x;\ntel\n\n-- Maximum value between two reals\nnode maxReal (a : real; b : real)\nreturns (z : real);\nlet\n  z = (if (((a) >= (b))) then (a) else (b));\ntel\n\n-- Maximum value between two integers\nnode maxInt (a : int; b : int)\nreturns (z : int);\nlet\n  z = (if (((a) >= (b))) then (a) else (b));\ntel\n\n-- Minimum value between two integers\nnode minInt (a : int; b : int)\nreturns (z : int);\nlet\n  z = (if (((a) <= (b))) then (a) else (b));\ntel\n\n-- Minimum value between two reals\nnode minReal (a : real; b : real)\nreturns (z : real);\nlet\n  z = (if (((a) <= (b))) then (a) else (b));\ntel\n\nnode delay(X:bool;  R:int) returns(Y:bool);\nlet\n\n  Y = X;\ntel\n\n\nnode imported FretContract( fret_v_0:real ; fret_v_1:int ; fret_v_2:int ) returns ( fret_v_3:int  );\n(*@contract\n\n\n\n\nvar __FTP : bool = true -> false;\n\n\n\n(* fret_r_0  *)\n\n\nguarantee \"fret_r_0\" O(((fret_v_3 = fret_v_1) or (fret_v_3 = fret_v_2)));\n\n(* fret_r_1  *)\n\n\nguarantee \"fret_r_1\" (H(not ((fret_v_0 = 0.0))) or not (SI((fret_v_0 = 0.0),not ((fret_v_3 = fret_v_2)))));\n\n(* fret_r_2  *)\n\n\nguarantee \"fret_r_2\" (H(not ((fret_v_0 = 1.0))) or not (SI((fret_v_0 = 1.0),not ((fret_v_3 = fret_v_1)))));\n\n\r\n*)\n",
+        "lustre_digest": "sha256:08b7f6518d81e3356e330bc43054edd9d00e4b7e439e0a720e74cd643d64ab80",
+        "command": [
+          "kind2",
+          "--lus_main",
+          "FretContract",
+          "-json",
+          "--enable",
+          "CONTRACTCK",
+          "--timeout",
+          "60",
+          "/tmp/fret-historical-replay-3NwCJ0/FretContract.lus"
+        ],
+        "stdout": "[\n{\n  \"objectType\" : \"log\",\n  \"level\" : \"info\",\n  \"source\" : \"parse\",\n  \"value\" : \"kind2 v2.2.0\"\n}\n,\n{\n  \"objectType\" : \"kind2Options\",\n  \"enabled\" :\n  [\n    \"contractck\"\n  ],\n  \"timeout\" : 60.000000,\n  \"bmcMax\" : 0,\n  \"compositional\" : false,\n  \"modular\" : false\n}\n,\n{\n  \"objectType\" : \"analysisStart\",\n  \"top\" : \"FretContract\",\n  \"context\" : \"contract\"\n}\n,\n{\n  \"objectType\" : \"realizabilityCheck\",\n  \"runtime\" : {\"unit\" : \"sec\", \"timeout\" : false, \"value\" : 0.134},\n  \"result\" : \"realizable\"\n}\n,\n{\"objectType\" : \"analysisStop\"}\n,\n{\n  \"objectType\" : \"analysisStart\",\n  \"top\" : \"FretContract\",\n  \"context\" : \"environment\"\n}\n,\n{\n  \"objectType\" : \"realizabilityCheck\",\n  \"runtime\" : {\"unit\" : \"sec\", \"timeout\" : false, \"value\" : 0.000},\n  \"result\" : \"realizable\"\n}\n,\n{\"objectType\" : \"analysisStop\"}\n]\n",
+        "stderr": "",
+        "exit_code": 0,
+        "counterexample": {
+          "contract": null,
+          "environment": null
+        }
+      }
+    ],
+    "diagnosis": {
+      "status": "not_needed",
+      "conflicts": [],
+      "message": null
+    }
+  }
+}

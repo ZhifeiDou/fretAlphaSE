@@ -1,0 +1,14 @@
+﻿ M fret-electron/analysis/DiagnosisEngine.js
+ M fret-electron/analysis/realizabilityCheck.js
+ M fret-electron/app/parser/FretSemantics.js
+ M fret-electron/app/parser/SemanticsAnalyzer.js
+ M fret-electron/model/modelDbSupport/variableMappingSupports.js
+ M fret-electron/model/realizabilitySupport/realizabilityUtils.js
+ M fret-electron/support/RealizabilityTemplates/jkind/PropertyDefinitions.ejs
+ M fret-electron/support/RealizabilityTemplates/kind2/PropertyDefinitions.ejs
+?? .codex-evidence/
+?? AGENTS.md
+?? FRET_TYPED_PREFLIGHT_HANDOFF.txt
+?? fret-electron/analysis/contractBuilder.js
+?? mcp/
+?? plan.md

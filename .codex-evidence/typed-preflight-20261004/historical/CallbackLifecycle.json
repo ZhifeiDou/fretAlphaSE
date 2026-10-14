@@ -1,0 +1,250 @@
+{
+  "component": "CallbackLifecycle",
+  "original_job_id": "37d00a8e-5f4c-4ceb-bed9-a7db18f29d35",
+  "original_input": {
+    "request_id": "6f9c1423-781e-55e4-a62a-e0317c9112ef",
+    "component": "CallbackLifecycle",
+    "requirements": [
+      {
+        "id": "SRS-13-03:lifecycle_dispatch",
+        "fretish": "CallbackLifecycle shall always satisfy (lifecycle_event implies hook_called).",
+        "kind": "guarantee",
+        "source_refs": [
+          "SRS-13-03@sha256:1bc7026d43763c36bb1349ad7ba17e69af7e7983ddff19ad215ee0a62d628852#statement"
+        ]
+      }
+    ],
+    "variables": [
+      {
+        "name": "lifecycle_event",
+        "type": "bool",
+        "role": "input",
+        "meaning": "A training or rollout start/end event occurs in this dispatch observation."
+      },
+      {
+        "name": "hook_called",
+        "type": "bool",
+        "role": "output",
+        "meaning": "The corresponding public lifecycle callback is invoked at this dispatch."
+      }
+    ],
+    "time_model": {
+      "kind": "discrete_steps",
+      "description": "Each step is a training lifecycle dispatch observation, not a physical-time interval."
+    },
+    "options": {
+      "timeout_ms": 60000,
+      "diagnose": true
+    }
+  },
+  "original_replay": {
+    "schema_version": 1,
+    "input_digest": "sha256:d7d9472eec19ccfe6d80a09851e4bbc41d87b2783ba2341ca4be6c9a558db028",
+    "result": "invalid",
+    "contract_result": null,
+    "environment_result": null,
+    "requested_ids": [
+      "SRS-13-03:lifecycle_dispatch"
+    ],
+    "analyzed_ids": [],
+    "diagnostics": [
+      {
+        "id": "SRS-13-03:lifecycle_dispatch",
+        "code": "syntax_error",
+        "message": "no viable alternative at input '(lifecycle_event implies'"
+      }
+    ],
+    "formalization": {
+      "representations": [
+        "pt-lustre",
+        "pt-smv",
+        "ft-inf",
+        "ft-fin"
+      ],
+      "time_basis": "discrete_steps",
+      "results": [
+        {
+          "id": "SRS-13-03:lifecycle_dispatch",
+          "status": "invalid",
+          "formulas": [],
+          "explanation": null,
+          "diagnostics": [
+            {
+              "code": "syntax_error",
+              "message": "no viable alternative at input '(lifecycle_event implies'",
+              "location": {
+                "line": 1,
+                "column": 57
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "toolchain": {
+      "fret": "sha256:be0a44be39cbfc40d736ca28a45f23d5610209e975ea5afa59f78fa7e72a7f18",
+      "adapter": "0.2.0",
+      "kind2": "kind2 v2.2.0",
+      "z3": "Z3 version 4.14.1 - 64 bit"
+    },
+    "time_model": {
+      "kind": "discrete_steps",
+      "description": "Each step is a training lifecycle dispatch observation, not a physical-time interval."
+    },
+    "assumption_ids": [],
+    "guarantee_ids": [
+      "SRS-13-03:lifecycle_dispatch"
+    ],
+    "variable_mapping": {
+      "fret_v_0": "lifecycle_event",
+      "fret_v_1": "hook_called"
+    },
+    "checks": [],
+    "diagnosis": {
+      "status": "not_run",
+      "conflicts": [],
+      "message": null
+    }
+  },
+  "corrected_input": {
+    "request_id": "6f9c1423-781e-55e4-a62a-e0317c9112ef",
+    "component": "CallbackLifecycle",
+    "requirements": [
+      {
+        "id": "SRS-13-03:lifecycle_dispatch",
+        "fretish": "CallbackLifecycle shall always satisfy (lifecycle_event => hook_called).",
+        "kind": "guarantee",
+        "source_refs": [
+          "SRS-13-03@sha256:1bc7026d43763c36bb1349ad7ba17e69af7e7983ddff19ad215ee0a62d628852#statement"
+        ]
+      }
+    ],
+    "variables": [
+      {
+        "name": "lifecycle_event",
+        "type": "bool",
+        "role": "input",
+        "meaning": "A training or rollout start/end event occurs in this dispatch observation."
+      },
+      {
+        "name": "hook_called",
+        "type": "bool",
+        "role": "output",
+        "meaning": "The corresponding public lifecycle callback is invoked at this dispatch."
+      }
+    ],
+    "time_model": {
+      "kind": "discrete_steps",
+      "description": "Each step is a training lifecycle dispatch observation, not a physical-time interval."
+    },
+    "options": {
+      "timeout_ms": 60000,
+      "diagnose": true
+    }
+  },
+  "corrected_report": {
+    "schema_version": 1,
+    "input_digest": "sha256:96162cf3fe77ac4f98413dd5abd3bb6fe9422815c2d9a2b0294ff24dac243942",
+    "result": "realizable",
+    "contract_result": "realizable",
+    "environment_result": "realizable",
+    "requested_ids": [
+      "SRS-13-03:lifecycle_dispatch"
+    ],
+    "analyzed_ids": [
+      "SRS-13-03:lifecycle_dispatch"
+    ],
+    "diagnostics": [],
+    "formalization": {
+      "representations": [
+        "pt-lustre",
+        "pt-smv",
+        "ft-inf",
+        "ft-fin"
+      ],
+      "time_basis": "discrete_steps",
+      "results": [
+        {
+          "id": "SRS-13-03:lifecycle_dispatch",
+          "status": "formalized",
+          "formulas": [
+            {
+              "representation": "pt-lustre",
+              "formula": "H((lifecycle_event => hook_called))"
+            },
+            {
+              "representation": "pt-smv",
+              "formula": "(H (lifecycle_event -> hook_called))"
+            },
+            {
+              "representation": "ft-inf",
+              "formula": "(G (lifecycle_event -> hook_called))"
+            },
+            {
+              "representation": "ft-fin",
+              "formula": "(LAST V (lifecycle_event -> hook_called))"
+            }
+          ],
+          "explanation": {
+            "format": "html",
+            "text": "SCOPE: in the interval defined by the entire execution.<br>TRIGGER: first point in the interval.<br>REQUIRED BEHAVIOR: for every trigger, <b><i>(( lifecycle_event => hook_called ))</i></b> must hold at all time points between (and including) the trigger and the end of the interval."
+          },
+          "diagnostics": []
+        }
+      ]
+    },
+    "toolchain": {
+      "fret": "sha256:be0a44be39cbfc40d736ca28a45f23d5610209e975ea5afa59f78fa7e72a7f18",
+      "adapter": "0.2.0",
+      "kind2": "kind2 v2.2.0",
+      "z3": "Z3 version 4.14.1 - 64 bit"
+    },
+    "time_model": {
+      "kind": "discrete_steps",
+      "description": "Each step is a training lifecycle dispatch observation, not a physical-time interval."
+    },
+    "assumption_ids": [],
+    "guarantee_ids": [
+      "SRS-13-03:lifecycle_dispatch"
+    ],
+    "variable_mapping": {
+      "fret_v_0": "lifecycle_event",
+      "fret_v_1": "hook_called"
+    },
+    "checks": [
+      {
+        "name": "FretContract.lus",
+        "requirement_ids": [
+          "SRS-13-03:lifecycle_dispatch"
+        ],
+        "result": "REALIZABLE",
+        "environment_result": "REALIZABLE",
+        "lustre": "--Historically\nnode H(X:bool) returns (Y:bool);\nlet\n    Y = X -> (X and (pre Y));\ntel\n\n--Y since inclusive X\nnode SI(X,Y: bool) returns (Z:bool);\nlet\nZ = Y and (X or (false -> pre Z));\ntel\n\n--Y since X\nnode S(X,Y: bool) returns (Z:bool);\nlet\nZ = X or (Y and (false -> pre Z));\ntel\n\n--Y triggered X\nnode T(X,Y: bool) returns(Z:bool);\nlet\nZ = (X and (Y or (true -> pre Z)));\ntel\n\n--Once\nnode O(X:bool) returns (Y:bool);\nlet\n Y = X or (false -> pre Y);\ntel\n\n--Timed Once: less than or equal to N\nnode OTlore( N: int; X: bool) returns (Y: bool);\n    var C:int;\nlet\n    C = if X then 0\n        else (-1 -> pre C + (if pre C <0 then 0 else 1));\n\n    Y = 0 <= C and C <= N;\ntel\n\n--Timed Once: general case\nnode OT( L: int;  R: int; X: bool) returns (Y: bool);\nvar  D:bool;\nlet\n  D=delay(X, R);\n  Y=OTlore(L-R, D);\ntel\n\n-- Timed Historically: general case\nnode HT( L: int;  R: int; X: bool) returns (Y: bool);\nlet\n  Y = not OT(L, R, not X);\ntel\n\n-- Timed Since: general case\nnode ST( L: int;  R: int; X: bool; Y: bool)  returns (Z: bool);\nlet\n  Z = S(X, Y) and OT(L, R, X);\ntel\n\n-- Timed Since Inclusive: general case\nnode SIT( L: int;  R: int; X: bool; Y: bool) returns (Z: bool);\nlet\n  Z = SI(X, Y) and OT(L, R, X);\ntel\n\n-- Timed Triggered: general case\nnode TT( L: int;  R: int; X: bool; Y: bool)  returns (Z: bool);\nlet\n  Z = T(X, Y) or HT(L, R, X);\ntel\n\n-- Pre for integers, with an initial value at FTP\nnode preInt(InitialValue, X: int) returns (Y:int);\nlet\n  Y = InitialValue -> pre X;\ntel\n\n-- Pre for reals, with an initial value at FTP\nnode preReal(InitialValue, X: real) returns (Y:real);\nlet\n  Y = InitialValue -> pre X;\ntel\n\n-- Pre for booleans, with an initial value at FTP\nnode preBool(InitialValue, X: bool) returns (Y:bool);\nlet\n  Y = InitialValue -> pre X;\ntel\n\n-- The equivalent of LTL's Y in Lustre.\nnode YtoPre(X: bool) returns (Y:bool);\nlet\n  Y = false -> pre X;\ntel\n\n-- The equivalent of LTL's Z in Lustre.\nnode ZtoPre(X: bool) returns (Y:bool);\nlet\n  Y = true -> pre X;\ntel\n\n-- Absolute value for reals\nnode absReal(x:real) returns(y: real);\nlet\n  y = if (x >= 0.0) then x else -x;\ntel\n\n-- Absolute value for integers\nnode absInt(x:int) returns(y: int);\nlet\n  y = if (x >= 0) then x else -x;\ntel\n\n-- Maximum value between two reals\nnode maxReal (a : real; b : real)\nreturns (z : real);\nlet\n  z = (if (((a) >= (b))) then (a) else (b));\ntel\n\n-- Maximum value between two integers\nnode maxInt (a : int; b : int)\nreturns (z : int);\nlet\n  z = (if (((a) >= (b))) then (a) else (b));\ntel\n\n-- Minimum value between two integers\nnode minInt (a : int; b : int)\nreturns (z : int);\nlet\n  z = (if (((a) <= (b))) then (a) else (b));\ntel\n\n-- Minimum value between two reals\nnode minReal (a : real; b : real)\nreturns (z : real);\nlet\n  z = (if (((a) <= (b))) then (a) else (b));\ntel\n\nnode delay(X:bool;  R:int) returns(Y:bool);\nlet\n\n  Y = X;\ntel\n\n\nnode imported FretContract( fret_v_0:bool ) returns ( fret_v_1:bool  );\n(*@contract\n\n\n\n\nvar __FTP : bool = true -> false;\n\n\n\n(* fret_r_0  *)\n\n\nguarantee \"fret_r_0\" H((fret_v_0 => fret_v_1));\n\n\r\n*)\n",
+        "lustre_digest": "sha256:aa75f720d021158c7334c73a0c77bf323feb253d338026b64d32ee41f818804a",
+        "command": [
+          "kind2",
+          "--lus_main",
+          "FretContract",
+          "-json",
+          "--enable",
+          "CONTRACTCK",
+          "--timeout",
+          "60",
+          "/tmp/fret-historical-replay-RlXkdj/FretContract.lus"
+        ],
+        "stdout": "[\n{\n  \"objectType\" : \"log\",\n  \"level\" : \"info\",\n  \"source\" : \"parse\",\n  \"value\" : \"kind2 v2.2.0\"\n}\n,\n{\n  \"objectType\" : \"kind2Options\",\n  \"enabled\" :\n  [\n    \"contractck\"\n  ],\n  \"timeout\" : 60.000000,\n  \"bmcMax\" : 0,\n  \"compositional\" : false,\n  \"modular\" : false\n}\n,\n{\n  \"objectType\" : \"analysisStart\",\n  \"top\" : \"FretContract\",\n  \"context\" : \"contract\"\n}\n,\n{\n  \"objectType\" : \"realizabilityCheck\",\n  \"runtime\" : {\"unit\" : \"sec\", \"timeout\" : false, \"value\" : 0.111},\n  \"result\" : \"realizable\"\n}\n,\n{\"objectType\" : \"analysisStop\"}\n,\n{\n  \"objectType\" : \"analysisStart\",\n  \"top\" : \"FretContract\",\n  \"context\" : \"environment\"\n}\n,\n{\n  \"objectType\" : \"realizabilityCheck\",\n  \"runtime\" : {\"unit\" : \"sec\", \"timeout\" : false, \"value\" : 0.000},\n  \"result\" : \"realizable\"\n}\n,\n{\"objectType\" : \"analysisStop\"}\n]\n",
+        "stderr": "",
+        "exit_code": 0,
+        "counterexample": {
+          "contract": null,
+          "environment": null
+        }
+      }
+    ],
+    "diagnosis": {
+      "status": "not_needed",
+      "conflicts": [],
+      "message": null
+    }
+  }
+}
