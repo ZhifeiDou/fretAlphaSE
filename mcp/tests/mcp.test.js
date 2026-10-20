@@ -18,12 +18,16 @@ const input = (id = 'R1', symbol = 'enabled') => ({
 });
 
 async function fixture(t, options = {}, busyWorker = false) {
+  const { catalogOperator = 'operator', ...serverOptions } = options;
+  options = serverOptions;
   const directory = mkdtempSync(path.join(tmpdir(), 'fret-mcp-test-'));
   const analysis = options.analysisDirectory === true;
   if (analysis) options.analysisDirectory = path.join(directory, 'analyses');
   const analysisTools = ['start_realizability_check', 'get_analysis', 'cancel_analysis'];
   const rolesConfigPath = path.join(directory, 'roles.toml');
   writeFileSync(rolesConfigPath, `
+    [environment]
+    FORGEJO_ADMIN_USERNAME = ${JSON.stringify(catalogOperator)}
     [agents.roles.requirement_specifier]
     enabled = true
     [agents.roles.requirement_specifier.mcp]
@@ -42,7 +46,12 @@ async function fixture(t, options = {}, busyWorker = false) {
     ['other', { id: 2, login: 'requirement_specifier_9' }],
     ['viewer', { id: 3, login: 'approver_8' }],
     ['disabled', { id: 4, login: 'disabled_8' }],
-    ['bad-login', { id: 5, login: 'requirement_specifier_08' }]
+    ['bad-login', { id: 5, login: 'requirement_specifier_08' }],
+    ['operator', { id: 6, login: 'operator', is_admin: true }],
+    ['non-admin', { id: 6, login: 'operator', is_admin: false }],
+    ['missing-admin', { id: 6, login: 'operator' }],
+    ['other-admin', { id: 7, login: 'other_admin', is_admin: true }],
+    ['admin-agent', { id: 1, login: 'requirement_specifier_8', is_admin: true }]
   ]);
   let unavailable = false;
   const forgejo = http.createServer((req, res) => {
@@ -314,6 +323,60 @@ test('requires Forgejo identity, checks roles, and hides forbidden tools', async
   const response = await env.post(body);
   assert.equal(response.status, 503);
   assert.equal((await response.json()).error, 'authentication_unavailable');
+});
+
+test('configured admin discovers the complete catalog without tool or resource authority', async t => {
+  const env = await fixture(t);
+  for (const token of ['non-admin', 'missing-admin', 'other-admin']) {
+    await assert.rejects(env.connect(token), /forbidden/);
+  }
+  const { client: agent } = await env.connect('admin-agent');
+  assert.deepEqual((await agent.listTools()).tools.map(tool => tool.name), [toolName]);
+  const { client, transport } = await env.connect('operator');
+  assert.deepEqual(client.getServerVersion(), { name: 'fret-alphase', version: '0.2.1' });
+  const { tools } = await client.listTools();
+  assert.deepEqual(tools.map(tool => tool.name), [
+    toolName, 'start_realizability_check', 'get_analysis', 'cancel_analysis'
+  ]);
+  assert.ok(tools.every(tool => tool.title && tool.description && tool.inputSchema && tool.outputSchema));
+  assert.ok(tools.every(tool => tool.annotations && tool.annotations.openWorldHint === false));
+  for (const name of tools.map(tool => tool.name)) {
+    await assert.rejects(client.callTool({ name, arguments: name === toolName ? input() : { job_id: randomUUID() } }), /Catalog discovery/);
+  }
+  await assert.rejects(client.readResource({ uri: 'fret://analyses/private' }), /Catalog discovery/);
+  const denied = await env.post({ jsonrpc: '2.0', id: 91, method: 'tools/list' }, 'author', transport.sessionId);
+  assert.equal(denied.status, 403);
+  await denied.json();
+  env.identities.set('operator', { id: 99, login: 'operator', is_admin: true });
+  const changedSubject = await env.post({ jsonrpc: '2.0', id: 92, method: 'tools/list' }, 'operator', transport.sessionId);
+  assert.equal(changedSubject.status, 403);
+  await changedSubject.json();
+  env.identities.set('operator', { id: 6, login: 'operator', is_admin: true });
+  assert.equal((await client.listTools()).tools.length, 4);
+  env.identities.set('operator', { id: 6, login: 'operator', is_admin: false });
+  const revoked = await env.post({ jsonrpc: '2.0', id: 93, method: 'tools/list' }, 'operator', transport.sessionId);
+  assert.equal(revoked.status, 403);
+  await revoked.json();
+  env.identities.set('operator', { id: 6, login: 'operator', is_admin: true });
+});
+
+test('sessions cannot switch between assignment and catalog authorization for the same user', async t => {
+  const login = 'requirement_specifier_8';
+  const env = await fixture(t, { catalogOperator: login });
+  env.identities.set('operator', { id: 1, login, is_admin: false });
+  const { client: agent, transport: agentTransport } = await env.connect('operator');
+  assert.deepEqual((await agent.listTools()).tools.map(tool => tool.name), [toolName]);
+  env.identities.set('operator', { id: 1, login, is_admin: true });
+  const promoted = await env.post({ jsonrpc: '2.0', id: 94, method: 'tools/list' }, 'operator', agentTransport.sessionId);
+  assert.equal(promoted.status, 403);
+  await promoted.json();
+  const { client, transport } = await env.connect('operator');
+  assert.equal((await client.listTools()).tools.length, 4);
+  env.identities.set('operator', { id: 1, login, is_admin: false });
+  const demoted = await env.post({ jsonrpc: '2.0', id: 95, method: 'tools/list' }, 'operator', transport.sessionId);
+  assert.equal(demoted.status, 403);
+  await demoted.json();
+  env.identities.set('operator', { id: 1, login, is_admin: true });
 });
 
 test('binds every session request to the verified user and rechecks revoked tokens', async t => {

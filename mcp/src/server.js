@@ -12,8 +12,13 @@ const { AnalysisJobs } = require('./analysis_jobs');
 const { backendVersions } = require('./analysis');
 const { createAuthentication } = require('./auth');
 const { FormalizationExecutor, ExecutionError } = require('./executor');
+const { version: serverVersion } = require('../package.json');
 
 const toolName = 'formalize_requirements';
+const catalogMethods = new Set([
+  'initialize', 'notifications/initialized', 'notifications/cancelled', 'ping',
+  'tools/list', 'resources/list', 'resources/templates/list'
+]);
 const duration = z.int().positive().max(2147483647);
 const settingsSchema = z.strictObject({
   host: z.string().min(1).default('127.0.0.1'),
@@ -89,9 +94,10 @@ async function startServer(options) {
 
   async function createSession(caller) {
     const id = randomUUID();
-    const server = new McpServer({ name: 'fret-alphase', version: '0.2.0' });
+    const server = new McpServer({ name: 'fret-alphase', version: serverVersion });
     const session = { server, caller, controller: new AbortController(), jobs: new Set(), requests: new Map(), timer: null };
     const tool = server.registerTool(toolName, {
+      title: 'Formalize requirements',
       description: 'Compile FRETish into requested temporal formulas and per-requirement diagnostics. Optional variables (name/type: bool, int, real) enable strict declaration/type checking for one component; [] declares no variables. Omission leaves declared types unchecked. formalized means all requested representations were generated; retain the input with the output. Durations are discrete steps. Compilation does not establish analysis readiness, realizability, source fidelity, temporal refinement or implementation correctness.',
       inputSchema: formalizeInput,
       outputSchema: formalizeOutput,
@@ -114,17 +120,17 @@ async function startServer(options) {
         if (extra.signal.aborted) session.transport.closeSSEStream(extra.requestId);
       }
     });
-    if (!caller.allowedTools.has(toolName)) tool.disable();
-    for (const [name, description, inputSchema, action] of [
-      ['start_realizability_check', 'Start a durable component-level FRET/Kind 2 analysis. Explicit input/output variables, assumptions and discrete time model are required. Repeating the same request_id and input returns the same job. Disconnecting does not cancel analysis.', analysisInput,
+    if (!caller.catalogOnly && !caller.allowedTools.has(toolName)) tool.disable();
+    for (const [name, title, description, inputSchema, action] of [
+      ['start_realizability_check', 'Start realizability check', 'Start a durable component-level FRET/Kind 2 analysis. Explicit input/output variables, assumptions and discrete time model are required. Repeating the same request_id and input returns the same job. Disconnecting does not cancel analysis.', analysisInput,
         request => analyses.start(request, caller)],
-      ['get_analysis', 'Read the caller-owned analysis input, status and complete evidence, including conflicts and backend traces. Completed evidence survives restart.', analysisReference,
+      ['get_analysis', 'Read analysis', 'Read the caller-owned analysis input, status and complete evidence, including conflicts and backend traces. Completed evidence survives restart.', analysisReference,
         request => analyses.get(request.job_id, caller)],
-      ['cancel_analysis', 'Cancel a caller-owned analysis and wait for its worker and solver process group to terminate.', analysisReference,
+      ['cancel_analysis', 'Cancel analysis', 'Cancel a caller-owned analysis and wait for its worker and solver process group to terminate.', analysisReference,
         request => analyses.cancel(request.job_id, caller)]
     ]) {
       const analysisTool = server.registerTool(name, {
-        description, inputSchema, outputSchema: analysisStatus,
+        title, description, inputSchema, outputSchema: analysisStatus,
         annotations: { readOnlyHint: name === 'get_analysis', destructiveHint: false, idempotentHint: true, openWorldHint: false }
       }, async request => {
         try {
@@ -136,7 +142,7 @@ async function startServer(options) {
           return { isError: true, content: [{ type: 'text', text: JSON.stringify({ code: error.code, message: error.message }) }] };
         }
       });
-      if (!caller.allowedTools.has(name)) analysisTool.disable();
+      if (!caller.catalogOnly && !caller.allowedTools.has(name)) analysisTool.disable();
     }
     const transport = new StreamableHTTPServerTransport({
       sessionIdGenerator: () => id,
@@ -172,7 +178,8 @@ async function startServer(options) {
     if (id) {
       session = sessions.get(id);
       if (!session) return res.status(404).json({ error: 'unknown_session' });
-      if (session.caller.subject !== req.caller.subject || session.caller.login !== req.caller.login) {
+      if (session.caller.subject !== req.caller.subject || session.caller.login !== req.caller.login ||
+          session.caller.catalogOnly !== req.caller.catalogOnly) {
         return res.status(403).json({ error: 'session_owner_mismatch' });
       }
     } else if (req.method === 'POST' && isInitializeRequest(req.body)) {
@@ -180,6 +187,11 @@ async function startServer(options) {
       session = await createSession(req.caller);
     } else {
       return res.status(400).json({ error: 'session_required' });
+    }
+    if (session.caller.catalogOnly && req.method === 'POST' && !catalogMethods.has(req.body?.method)) {
+      return res.status(403).json({
+        error: 'forbidden', error_description: 'Catalog discovery does not grant tool or resource access.'
+      });
     }
     touch(session);
     if (req.method === 'POST' && isJSONRPCRequest(req.body)) {

@@ -38,7 +38,7 @@ Set the actual Forgejo address and roles file for the deployment. Without
 Linux, the pinned backends, and writable persistent storage. Use the Docker image:
 
 ```text
-docker build --file mcp/Dockerfile --tag alphase/fret-mcp:0.2.0 .
+docker build --file mcp/Dockerfile --tag alphase/fret-mcp:0.2.1 .
 ```
 
 Build from the repository root. The image supports **Linux amd64**. Node is pinned
@@ -53,7 +53,7 @@ The service needs these deployment settings (adapt addresses/network to AlphaSE)
 ```yaml
 services:
   fret-mcp:
-    image: alphase/fret-mcp:0.2.0
+    image: alphase/fret-mcp:0.2.1
     init: true
     stop_grace_period: 10s
     environment:
@@ -82,7 +82,7 @@ tested. Store schema version is 1; an incompatible store fails startup.
 Clients send `Authorization: Bearer <Forgejo token>` on every request. The service
 validates it through Forgejo `GET /api/v1/user`. Forgejo supplies identity only;
 requirements and solver results are not read from or written to Forgejo.
-The verified login must be an enabled role plus a positive issue number, such as
+For computation, the verified login must be an enabled role plus a positive issue number, such as
 `approver_8`. Permissions come from the operator-controlled TOML file:
 
 ```toml
@@ -108,6 +108,19 @@ Sessions are bound to the verified identity, and tokens are revalidated on every
 request. Missing/invalid credentials return 401, unauthorized roles or another
 user's session return 403, and unavailable Forgejo authentication returns 503.
 There is no anonymous mode, cached-token fallback or OAuth login flow.
+
+Version 0.2.1 also supports operator capability discovery. Configure
+`environment.FORGEJO_ADMIN_USERNAME` in the same trusted TOML file. Only that exact
+login with Forgejo's verified `is_admin=true` receives a catalog session. Without
+this setting, catalog access is disabled. Other administrators retain their normal
+assignment permissions; an administrator flag alone does not grant catalog access.
+
+The operator can initialize, ping, list the complete tool schemas and metadata,
+and terminate its session. Every tool invocation and resource read is rejected
+before computation, including analysis retrieval and cancellation. Sessions bind
+both the verified user ID/login and the assignment-or-catalog authorization mode;
+changing identity or mode requires a new session. Agent role filtering and
+analysis ownership rules are unchanged.
 
 `POST /mcp` supports initialization, discovery and calls using SSE responses;
 `DELETE /mcp` ends a session. `GET /mcp` returns 405. JSON-RPC batches and browser

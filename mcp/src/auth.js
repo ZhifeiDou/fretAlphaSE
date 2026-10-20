@@ -9,6 +9,7 @@ function createAuthentication({ forgejoBaseUrl, rolesConfigPath, timeoutMs = 500
   }
   const userUrl = `${base.href.replace(/\/$/, '')}/api/v1/user`;
   const config = parse(readFileSync(rolesConfigPath, 'utf8'));
+  const catalogOperator = z.string().trim().min(1).optional().parse(config.environment?.FORGEJO_ADMIN_USERNAME);
   const configuredRoles = z.record(z.string().min(1), z.object({
     enabled: z.boolean(),
     mcp: z.object({ allowed_tools: z.array(z.string().min(1)) }).optional()
@@ -41,12 +42,18 @@ function createAuthentication({ forgejoBaseUrl, rolesConfigPath, timeoutMs = 500
         await response.body?.cancel();
         throw new Error('Forgejo identity lookup failed.');
       }
-      user = z.object({ id: z.int().positive(), login: z.string().trim().min(1) }).parse(await response.json());
+      user = z.object({
+        id: z.int().positive(), login: z.string().trim().min(1), is_admin: z.boolean().optional()
+      }).parse(await response.json());
     } catch {
       // Never downgrade to unauthenticated access or expose tokens/upstream bodies.
       return res.status(503).json({ error: 'authentication_unavailable' });
     }
 
+    if (user.login === catalogOperator && user.is_admin === true) {
+      req.caller = { subject: user.id, login: user.login, catalogOnly: true, allowedTools: new Set() };
+      return next();
+    }
     const assignments = [...roles.keys()].filter(role =>
       user.login.startsWith(`${role}_`) && /^[1-9][0-9]*$/.test(user.login.slice(role.length + 1))
     );
@@ -54,7 +61,7 @@ function createAuthentication({ forgejoBaseUrl, rolesConfigPath, timeoutMs = 500
       return res.status(403).json({ error: 'forbidden', error_description: 'An enabled issue-scoped agent login is required.' });
     }
     const role = assignments[0];
-    req.caller = { subject: user.id, login: user.login, role, allowedTools: roles.get(role) };
+    req.caller = { subject: user.id, login: user.login, role, allowedTools: roles.get(role), catalogOnly: false };
     next();
   };
 }
