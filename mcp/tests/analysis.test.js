@@ -4,9 +4,10 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { tmpdir } = require('node:os');
 const { randomUUID } = require('node:crypto');
+const { setTimeout: delay } = require('node:timers/promises');
 const { analyzeRequirements } = require('../dist/analysis.cjs');
 const { formalizeRequirements } = require('../dist/formalize.cjs');
-const { contentDigest } = require('../src/schemas');
+const { contentDigest, analysisCheckEvidence } = require('../src/schemas');
 
 const linux = { skip: process.platform !== 'linux' && 'Real analysis runs in the Linux Docker image.' };
 function input(guarantees, assumptions = []) {
@@ -37,10 +38,15 @@ async function analyze(t, request) {
     assert.deepEqual(phases, []);
     assert.deepEqual(fs.readdirSync(directory), []);
   }
+  let previousTimeout = Math.floor(request.options.timeout_ms / 1000);
   for (const check of report.checks) {
     assert.equal(check.lustre_digest, contentDigest(check.lustre));
     assert.ok(check.stdout.length);
     assert.equal(check.command[0], 'kind2');
+    const seconds = Number(check.command[check.command.indexOf('--timeout') + 1]);
+    assert.ok(seconds < request.options.timeout_ms / 1000, 'solver must leave preparation/return budget');
+    assert.ok(seconds <= previousTimeout, 'diagnosis must share the decreasing task budget');
+    previousTimeout = seconds;
   }
   return report;
 }
@@ -272,13 +278,75 @@ test('reserved temporal operator names are rejected before solver execution', li
   }
 });
 
-test('a real backend timeout is unknown and preserves its execution evidence', linux, async t => {
+test('a budget without a full solver second returns unknown without launching Kind2', linux, async t => {
   const request = input([
     'Whenever p Controller shall within 5000 ticks satisfy q', 'Controller shall always satisfy !q'
   ]);
   request.options = { timeout_ms: 1000, diagnose: false };
-  const report = await analyze(t, request);
+  const directory = fs.mkdtempSync(path.join(tmpdir(), 'fret-short-budget-'));
+  t.after(() => fs.rmSync(directory, { recursive: true, force: true }));
+  const report = await analyzeRequirements(request, directory);
   assert.equal(report.result, 'unknown', JSON.stringify(report.diagnostics));
-  assert.equal(report.contract_result, 'unknown');
-  assert.match(report.checks[0].stdout, /TimeoutWall|Wallclock timeout/);
+  assert.equal(report.contract_result, null);
+  assert.deepEqual(report.checks, []);
+  assert.deepEqual(report.analyzed_ids, []);
+  assert.equal(report.diagnostics[0].code, 'timeout');
+});
+
+test('slow source acknowledgement consumes budget once and final evidence is drained before return', linux, async t => {
+  const directory = fs.mkdtempSync(path.join(tmpdir(), 'fret-slow-evidence-'));
+  t.after(() => fs.rmSync(directory, { recursive: true, force: true }));
+  const request = input(['Controller shall always satisfy q']);
+  request.options = { timeout_ms: 6000, diagnose: false };
+  const deadline = process.hrtime.bigint() + 6000000000n;
+  let preparedCount = 0;
+  let preparedAcknowledged;
+  const snapshots = [];
+  const report = await analyzeRequirements(request, directory, undefined, {
+    deadline_ns: deadline.toString(),
+    persist: async update => {
+      if (!update.check) return;
+      if (update.check.started_at === null) {
+        preparedCount += 1;
+        assert.deepEqual(update.check.command, []);
+        await delay(1200);
+        preparedAcknowledged = process.hrtime.bigint();
+      } else await delay(50);
+      snapshots.push(update.check);
+    }
+  });
+  assert.equal(preparedCount, 1, 'source persistence must not loop waiting for a sub-second acknowledgement');
+  assert.equal(report.result, 'realizable');
+  assert.equal(report.checks.length, 1);
+  const command = report.checks[0].command;
+  const seconds = Number(command[command.indexOf('--timeout') + 1]);
+  assert.ok(seconds >= 1);
+  assert.ok(seconds <= Math.floor(Number(deadline - preparedAcknowledged) / 1000000000) - 1);
+  const final = snapshots.at(-1);
+  assert.equal(final.output_complete, true);
+  assert.equal(final.exit_code, 0);
+  assert.equal(final.signal, null);
+  assert.ok(final.finished_at);
+  assert.deepEqual(final.command, command);
+  assert.equal(final.stdout, report.checks[0].stdout);
+  assert.equal(final.lustre_digest, report.checks[0].lustre_digest);
+});
+
+test('generated-input and UTF-8 diagnostic prefixes enforce their byte and completeness limits', () => {
+  const original = 'x'.repeat(1024 * 1024) + '😀';
+  const check = {
+    name: 'FretContract.lus', requirement_ids: ['G0'], command: ['kind2'],
+    started_at: '2026-10-23T00:00:00.000Z', finished_at: null,
+    toolchain: { fret: 'sha256:' + 'a'.repeat(64), adapter: '0.3.0', kind2: 'kind2 v2.2.0', z3: 'Z3 version 4.14.1 - 64 bit' },
+    lustre: original.slice(0, 1024 * 1024), lustre_digest: contentDigest(original),
+    lustre_bytes: Buffer.byteLength(original), lustre_truncated: true,
+    stdout: 'é'.repeat(32768), stderr: '', stdout_truncated: true, stderr_truncated: false,
+    exit_code: null, signal: null, output_complete: false
+  };
+  assert.deepEqual(analysisCheckEvidence.parse(check), check);
+  assert.throws(() => analysisCheckEvidence.parse({ ...check, stdout: check.stdout + 'x' }), /65536/);
+  assert.throws(() => analysisCheckEvidence.parse({ ...check, lustre: check.lustre + 'é' }), /1048576/);
+  assert.throws(() => analysisCheckEvidence.parse({ ...check, lustre_truncated: false }), /size\/digest/);
+  assert.throws(() => analysisCheckEvidence.parse({ ...check, output_complete: true }), /normal process exit/);
+  assert.throws(() => analysisCheckEvidence.parse({ ...check, exit_code: 0 }), /Unfinished check/);
 });

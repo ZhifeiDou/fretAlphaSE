@@ -2,11 +2,25 @@ const { fork } = require('node:child_process');
 
 if (process.argv.includes('--compute')) {
   const { analyzeRequirements } = require('./analysis');
-  process.once('message', async ({ input, workDirectory }) => {
+  let sequence = 0;
+  const pending = new Map();
+  process.on('message', message => {
+    if (message.ack !== undefined) {
+      pending.get(message.ack)?.();
+      pending.delete(message.ack);
+    }
+  });
+  const persist = update => new Promise((resolve, reject) => {
+    const update_id = ++sequence;
+    pending.set(update_id, resolve);
+    process.send({ ...update, update_id }, error => {
+      if (error) { pending.delete(update_id); reject(error); }
+    });
+  });
+  process.once('message', async ({ input, workDirectory, deadline_ns }) => {
     let response;
     try {
-      response = { report: await analyzeRequirements(input, workDirectory,
-        phase => process.send({ phase })) };
+      response = { report: await analyzeRequirements(input, workDirectory, undefined, { deadline_ns, persist }) };
     } catch (error) {
       response = { error: { code: 'analysis_error', message: error.message } };
     }
@@ -29,8 +43,11 @@ if (process.argv.includes('--compute')) {
       execArgv: ['--max-old-space-size=256'], stdio: ['ignore', 'ignore', 'ignore', 'ipc'] });
     let response;
     child.on('message', message => {
-      if (message.phase) send(message);
+      if (message.update_id !== undefined) send(message);
       else response = message;
+    });
+    process.on('message', message => {
+      if (message.ack !== undefined) child.send(message, error => { if (error) lostParent(); });
     });
     child.on('error', error => {
       response = { error: { code: 'worker_error', message: error.message } };

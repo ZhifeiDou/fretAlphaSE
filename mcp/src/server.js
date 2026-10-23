@@ -7,7 +7,7 @@ const { McpServer } = require('@modelcontextprotocol/sdk/server/mcp.js');
 const { StreamableHTTPServerTransport } = require('@modelcontextprotocol/sdk/server/streamableHttp.js');
 const { hostHeaderValidation } = require('@modelcontextprotocol/sdk/server/middleware/hostHeaderValidation.js');
 const { isInitializeRequest, isJSONRPCRequest } = require('@modelcontextprotocol/sdk/types.js');
-const { formalizeInput, formalizeOutput, analysisInput, analysisReference, analysisStatus } = require('./schemas');
+const { formalizeInput, formalizeOutput, analysisInput, analysisReference, analysisRead, analysisView } = require('./schemas');
 const { AnalysisJobs } = require('./analysis_jobs');
 const { backendVersions } = require('./analysis');
 const { createAuthentication } = require('./auth');
@@ -123,14 +123,14 @@ async function startServer(options) {
     if (!caller.catalogOnly && !caller.allowedTools.has(toolName)) tool.disable();
     for (const [name, title, description, inputSchema, action] of [
       ['start_realizability_check', 'Start realizability check', 'Start a durable component-level FRET/Kind 2 analysis. Explicit input/output variables, assumptions and discrete time model are required. Repeating the same request_id and input returns the same job. Disconnecting does not cancel analysis.', analysisInput,
-        request => analyses.start(request, caller)],
-      ['get_analysis', 'Read analysis', 'Read the caller-owned analysis input, status and complete evidence, including conflicts and backend traces. Completed evidence survives restart.', analysisReference,
-        request => analyses.get(request.job_id, caller)],
+        request => analyses.read({ job_id: analyses.start(request, caller).job_id }, caller)],
+      ['get_analysis', 'Read analysis', 'Read caller-owned analysis status or one digest-bound UTF-8 page of terminal evidence. Completed evidence survives restart.', analysisRead,
+        request => analyses.read(request, caller)],
       ['cancel_analysis', 'Cancel analysis', 'Cancel a caller-owned analysis and wait for its worker and solver process group to terminate.', analysisReference,
-        request => analyses.cancel(request.job_id, caller)]
+        async request => { await analyses.cancel(request.job_id, caller); return analyses.read(request, caller); }]
     ]) {
       const analysisTool = server.registerTool(name, {
-        title, description, inputSchema, outputSchema: analysisStatus,
+        title, description, inputSchema, outputSchema: analysisView,
         annotations: { readOnlyHint: name === 'get_analysis', destructiveHint: false, idempotentHint: true, openWorldHint: false }
       }, async request => {
         try {

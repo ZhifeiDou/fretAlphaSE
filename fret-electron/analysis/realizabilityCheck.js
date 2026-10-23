@@ -60,17 +60,76 @@ export function checkRealizabilityJKind(filePath, options, callback) {
   })
 }
 
-export function runKind2(filePath, options, execution = {}) {
-  const command = ['--lus_main', path.basename(filePath, path.extname(filePath)), ...options, filePath];
+export async function runKind2(filePath, options, execution = {}) {
+  const deadline = execution.deadline_ns ? BigInt(execution.deadline_ns) : null;
+  let command;
+  const evidence = {
+    command: [], started_at: null, finished_at: null,
+    stdout: '', stderr: '', stdout_truncated: false, stderr_truncated: false,
+    exit_code: null, signal: null, output_complete: false
+  };
+  // Persist the generated input before computing a solver timeout. The empty
+  // command/start fields explicitly identify preparation, not an observed run.
+  await execution.observe?.({ ...evidence });
+  // Kind2 accepts whole seconds. Reserve one second for parsing, durable
+  // acknowledgement and final delivery before the parent's hard deadline.
+  const seconds = deadline === null ? null : Math.floor(
+    (Number(deadline - process.hrtime.bigint()) / 1000000 - 1000) / 1000);
+  if (seconds !== null && seconds < 1) {
+    const error = new Error('No complete solver second remains before the analysis return reserve.');
+    error.code = 'analysis_budget_exhausted';
+    throw error;
+  }
+  command = ['--lus_main', path.basename(filePath, path.extname(filePath)), ...options,
+    ...(seconds === null ? [] : ['--timeout', String(seconds)]), filePath];
   return new Promise(resolve => {
     const child = spawn('kind2', command, { cwd: execution.cwd, windowsHide: true });
     let stdout = '';
     let stderr = '';
     let failure;
+    const prefixes = { stdout: Buffer.alloc(0), stderr: Buffer.alloc(0) };
+    let pendingEvidence;
+    let observing = false;
+    let observed = Promise.resolve();
+    const flush = () => {
+      if (observing || !pendingEvidence) return;
+      observing = true;
+      // Coalesce stream updates while a durable snapshot is being acknowledged.
+      // The queue contains at most the in-flight snapshot and one replacement.
+      observed = (async () => {
+        while (pendingEvidence) {
+          const snapshot = pendingEvidence;
+          pendingEvidence = null;
+          await execution.observe(snapshot);
+        }
+      })().catch(error => { failure ??= error; pendingEvidence = null; child.kill('SIGKILL'); })
+        .finally(() => { observing = false; flush(); });
+    };
+    const publish = () => {
+      if (!execution.observe) return;
+      pendingEvidence = { ...evidence };
+      flush();
+    };
+    child.once('spawn', () => {
+      evidence.command = ['kind2', ...command];
+      evidence.started_at = new Date().toISOString();
+      publish();
+    });
     const collect = (chunk, stream) => {
       if (failure) return;
       if (stream === 'stdout') stdout += chunk;
       else stderr += chunk;
+      const previous = prefixes[stream];
+      const remaining = 65536 - previous.length;
+      if (remaining > 0) prefixes[stream] = Buffer.concat([previous, chunk.subarray(0, remaining)]);
+      const truncated = evidence[`${stream}_truncated`] || chunk.length > remaining;
+      if (remaining > 0 || truncated !== evidence[`${stream}_truncated`]) {
+        // Streaming decode drops an incomplete final UTF-8 sequence instead of
+        // inserting a replacement character beyond the byte-limited prefix.
+        evidence[stream] = new TextDecoder('utf-8', { ignoreBOM: true }).decode(prefixes[stream], { stream: true });
+        evidence[`${stream}_truncated`] = truncated;
+        publish();
+      }
       if (Buffer.byteLength(stdout) + Buffer.byteLength(stderr) > 16 * 1024 * 1024) {
         failure = new Error('Kind 2 output exceeded the 16 MiB evidence limit.');
         child.kill('SIGKILL');
@@ -79,7 +138,15 @@ export function runKind2(filePath, options, execution = {}) {
     child.stdout.on('data', chunk => collect(chunk, 'stdout'));
     child.stderr.on('data', chunk => collect(chunk, 'stderr'));
     child.on('error', error => { failure = error; });
-    child.once('close', (code, signal) => {
+    child.once('close', async (code, signal) => {
+      if (evidence.started_at !== null) {
+        Object.assign(evidence, {
+          finished_at: new Date().toISOString(), exit_code: code, signal,
+          output_complete: !signal && !failure && code !== null
+        });
+        publish();
+      }
+      while (observing || pendingEvidence) await observed;
       const output = { result: 'ERROR', environmentResult: null, analysisStarted: false, time: null,
         traceInfo: null, environmentTrace: null, jsonOutput: null, error: null,
         stdout, stderr, exitCode: code, command: ['kind2', ...command] };

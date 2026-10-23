@@ -1,7 +1,7 @@
 const assert = require('node:assert/strict');
 const { test } = require('node:test');
 const http = require('node:http');
-const { mkdtempSync, writeFileSync, readFileSync, readdirSync, rmSync, unlinkSync } = require('node:fs');
+const { mkdtempSync, writeFileSync, readFileSync, readdirSync, rmSync, existsSync, unlinkSync } = require('node:fs');
 const { randomUUID } = require('node:crypto');
 const { tmpdir } = require('node:os');
 const path = require('node:path');
@@ -10,12 +10,36 @@ const { spawn } = require('node:child_process');
 const { Client } = require('@modelcontextprotocol/sdk/client/index.js');
 const { StreamableHTTPClientTransport } = require('@modelcontextprotocol/sdk/client/streamableHttp.js');
 const { startServer } = require('../dist/server.cjs');
+const { contentDigest } = require('../src/schemas');
 
 const toolName = 'formalize_requirements';
 const input = (id = 'R1', symbol = 'enabled') => ({
   requirements: [{ id, fretish: `Controller shall always satisfy ${symbol}` }],
   representations: ['ft-inf', 'pt-smv']
 });
+
+async function readSnapshot(client, view) {
+  assert.notEqual(view.status, 'running');
+  assert.ok(view.snapshot);
+  const pieces = [];
+  let offset = 0;
+  while (offset !== null) {
+    const response = await client.callTool({ name: 'get_analysis', arguments: {
+      job_id: view.job_id, snapshot_digest: view.snapshot.digest, offset
+    }});
+    assert.equal(response.isError, undefined, JSON.stringify(response));
+    const page = response.structuredContent;
+    assert.deepEqual(page.snapshot, view.snapshot);
+    assert.equal(page.page.offset, offset);
+    assert.ok(Buffer.byteLength(page.page.text) <= 65536);
+    pieces.push(Buffer.from(page.page.text, 'utf8'));
+    offset = page.page.next_offset;
+  }
+  const bytes = Buffer.concat(pieces);
+  assert.equal(bytes.length, view.snapshot.bytes);
+  assert.equal(contentDigest(bytes.toString('utf8')), view.snapshot.digest);
+  return JSON.parse(bytes.toString('utf8'));
+}
 
 async function fixture(t, options = {}, busyWorker = false) {
   const { catalogOperator = 'operator', ...serverOptions } = options;
@@ -333,7 +357,7 @@ test('configured admin discovers the complete catalog without tool or resource a
   const { client: agent } = await env.connect('admin-agent');
   assert.deepEqual((await agent.listTools()).tools.map(tool => tool.name), [toolName]);
   const { client, transport } = await env.connect('operator');
-  assert.deepEqual(client.getServerVersion(), { name: 'fret-alphase', version: '0.2.1' });
+  assert.deepEqual(client.getServerVersion(), { name: 'fret-alphase', version: '0.3.0' });
   const { tools } = await client.listTools();
   assert.deepEqual(tools.map(tool => tool.name), [
     toolName, 'start_realizability_check', 'get_analysis', 'cancel_analysis'
@@ -621,6 +645,9 @@ test('an approver can run real analysis through MCP and retrieve evidence after 
   assert.equal(response.isError, undefined, JSON.stringify(response));
   const job = response.structuredContent;
   assert.equal(job.status, 'running');
+  assert.equal(job.last_phase, 'preparing');
+  assert.equal(job.snapshot, null);
+  assert.equal(job.page, null);
   await initial.transport.terminateSession();
   await initial.client.close();
   const reconnect = await env.connect('viewer');
@@ -635,12 +662,19 @@ test('an approver can run real analysis through MCP and retrieve evidence after 
     assert.ok(Date.now() < deadline, 'MCP analysis did not complete');
     if (finished.status === 'running') await delay(30);
   } while (finished.status === 'running');
+  finished = await readSnapshot(reconnect.client, finished);
   assert.equal(finished.status, 'completed', JSON.stringify(finished.error));
   assert.equal(finished.report.result, 'unrealizable');
   assert.deepEqual(finished.report.diagnosis.conflicts, [['R-positive', 'R-negative']]);
   assert.ok(finished.report.checks[0].counterexample.contract.length);
   assert.match(finished.report_digest, /^sha256:/);
   assert.deepEqual(finished.input, args);
+  assert.equal(finished.report.toolchain.adapter, '0.3.0');
+  assert.equal(finished.diagnostics.last_phase, 'diagnosing');
+  assert.equal(finished.diagnostics.checkpoint, null);
+  assert.equal(finished.diagnostics.checkpoint_digest, null);
+  assert.equal(finished.diagnostics.last_check.output_complete, true);
+  assert.match(finished.diagnostics.last_check.lustre_digest, /^sha256:/);
   // This second approver has tool permission, but does not own the job.
   env.identities.set('second-reviewer', { id: 12, login: 'approver_9' });
   const other = await env.connect('second-reviewer');
@@ -651,4 +685,103 @@ test('an approver can run real analysis through MCP and retrieve evidence after 
   }
   const author = await env.connect('author');
   assert.equal((await author.client.callTool({ name: 'start_realizability_check', arguments: args })).isError, true);
+});
+
+test('MCP preserves preparation-timeout diagnostics across authenticated retrieval', {
+  skip: process.platform !== 'linux' && 'Analysis jobs require Linux.'
+}, async t => {
+  const env = await fixture(t, { analysisDirectory: true });
+  const { client } = await env.connect('viewer');
+  const args = {
+    request_id: randomUUID(), component: 'Controller',
+    requirements: [{ id: 'short', fretish: 'Controller shall always satisfy q', kind: 'guarantee', source_refs: ['source:short'] }],
+    variables: [{ name: 'q', type: 'bool', role: 'output', meaning: 'Controlled output' }],
+    time_model: { kind: 'discrete_steps', description: 'One controller evaluation per step.' },
+    options: { timeout_ms: 1, diagnose: false }
+  };
+  const started = await client.callTool({ name: 'start_realizability_check', arguments: args });
+  assert.equal(started.isError, undefined, JSON.stringify(started));
+  const deadline = Date.now() + 5000;
+  let job = started.structuredContent;
+  while (job.status === 'running') {
+    assert.ok(Date.now() < deadline, 'preparation timeout was not persisted');
+    await delay(20);
+    const response = await client.callTool({ name: 'get_analysis', arguments: { job_id: job.job_id } });
+    assert.equal(response.isError, undefined, JSON.stringify(response));
+    job = response.structuredContent;
+  }
+  job = await readSnapshot(client, job);
+  assert.equal(job.status, 'timed_out');
+  assert.equal(job.report, null);
+  assert.equal(job.report_digest, null);
+  assert.equal(job.diagnostics.last_phase, 'preparing');
+  assert.equal(job.diagnostics.last_check, null);
+  assert.equal(job.diagnostics.checkpoint, null);
+  assert.equal(job.input_digest, contentDigest(job.input));
+});
+
+test('maximum generated-input evidence uses bounded digest-bound SSE pages', {
+  skip: process.platform !== 'linux' && 'Analysis jobs require Linux.'
+}, async t => {
+  const directory = mkdtempSync(path.join(tmpdir(), 'fret-large-evidence-'));
+  t.after(() => rmSync(directory, { recursive: true, force: true }));
+  const worker = path.join(directory, 'prepared.cjs');
+  const acknowledged = path.join(directory, 'prepared-acknowledged');
+  writeFileSync(worker, `
+    const fs = require('node:fs');
+    const path = require('node:path');
+    const { createHash } = require('node:crypto');
+    process.once('message', ({ input, workDirectory }) => {
+      // Controlled preparation evidence only: no solver runs or final report.
+      const lustre = 'x'.repeat(1024 * 1024);
+      fs.writeFileSync(path.join(workDirectory, 'FretContract.lus'), lustre);
+      process.send({ phase: 'checking' });
+      process.on('message', message => {
+        if (message.ack === 1) fs.writeFileSync(${JSON.stringify(acknowledged)}, 'ready');
+      });
+      process.send({ update_id: 1, check: {
+        name: 'FretContract.lus', requirement_ids: input.requirements.map(item => item.id), command: [],
+        started_at: null, finished_at: null,
+        toolchain: { fret: 'sha256:' + 'a'.repeat(64), adapter: '0.3.0', kind2: 'kind2 v2.2.0', z3: 'Z3 version 4.14.1 - 64 bit' },
+        lustre, lustre_digest: 'sha256:' + createHash('sha256').update(lustre).digest('hex'),
+        lustre_bytes: Buffer.byteLength(lustre), lustre_truncated: false,
+        stdout: '', stderr: '', stdout_truncated: false, stderr_truncated: false,
+        exit_code: null, signal: null, output_complete: false
+      }});
+      setInterval(() => {}, 1000);
+    });
+  `);
+  const env = await fixture(t, { analysisDirectory: true, analysisWorkerPath: worker });
+  const { client, transport } = await env.connect('viewer');
+  const started = await client.callTool({ name: 'start_realizability_check', arguments: {
+    request_id: randomUUID(), component: 'Controller',
+    requirements: [{ id: 'large', fretish: 'Controller shall always satisfy q', kind: 'guarantee', source_refs: ['source:large'] }],
+    variables: [{ name: 'q', type: 'bool', role: 'output', meaning: 'Controlled output' }],
+    time_model: { kind: 'discrete_steps', description: 'One controller evaluation per step.' },
+    options: { timeout_ms: 15000, diagnose: false }
+  }});
+  const job_id = started.structuredContent.job_id;
+  const deadline = Date.now() + 5000;
+  while (!existsSync(acknowledged)) {
+    assert.ok(Date.now() < deadline, 'large prepared evidence was not persisted');
+    await delay(20);
+  }
+  const cancelled = await client.callTool({ name: 'cancel_analysis', arguments: { job_id } });
+  assert.equal(cancelled.isError, undefined, JSON.stringify(cancelled));
+  const view = cancelled.structuredContent;
+  assert.equal(view.status, 'cancelled');
+  assert.equal(view.page, null);
+  assert.ok(view.snapshot.bytes > 1024 * 1024);
+  const response = await env.post({ jsonrpc: '2.0', id: 901, method: 'tools/call',
+    params: { name: 'get_analysis', arguments: { job_id, snapshot_digest: view.snapshot.digest, offset: 0 } } }, 'viewer', transport.sessionId);
+  assert.match(response.headers.get('content-type'), /^text\/event-stream/);
+  const bytes = await response.text();
+  assert.ok(Buffer.byteLength(bytes) < 1024 * 1024);
+  const result = await readSnapshot(client, view);
+  assert.equal(result.job_id, job_id);
+  assert.equal(result.report, null);
+  assert.equal(result.diagnostics.last_check.lustre.length, 1024 * 1024);
+  assert.equal(result.diagnostics.last_check.lustre_digest, contentDigest(result.diagnostics.last_check.lustre));
+  assert.equal((await client.callTool({ name: 'cancel_analysis', arguments: { job_id } })).structuredContent.snapshot.digest,
+    view.snapshot.digest);
 });

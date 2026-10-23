@@ -38,7 +38,7 @@ Set the actual Forgejo address and roles file for the deployment. Without
 Linux, the pinned backends, and writable persistent storage. Use the Docker image:
 
 ```text
-docker build --file mcp/Dockerfile --tag alphase/fret-mcp:0.2.1 .
+docker build --file mcp/Dockerfile --tag alphase/fret-mcp:0.3.0 .
 ```
 
 Build from the repository root. The image supports **Linux amd64**. Node is pinned
@@ -53,7 +53,7 @@ The service needs these deployment settings (adapt addresses/network to AlphaSE)
 ```yaml
 services:
   fret-mcp:
-    image: alphase/fret-mcp:0.2.1
+    image: alphase/fret-mcp:0.3.0
     init: true
     stop_grace_period: 10s
     environment:
@@ -75,7 +75,10 @@ preserves results across container replacement. A bind-mounted data directory
 must be writable by UID 1000. Each store belongs to one service instance, enforced
 by a SQLite exclusive lock. Node 22.17's built-in SQLite emits an experimental API
 warning; the image fixes that Node version, and persistence/restart behavior is
-tested. Store schema version is 1; an incompatible store fails startup.
+tested. Store schema version is 2. A version-1 store is rejected with an
+explicit version error; it is not silently migrated or deleted. Use a new
+analysis volume for protocol 0.3.0 and retain the old volume for its historical
+records.
 
 ## Authentication and permissions
 
@@ -219,6 +222,7 @@ Use the official MCP client from the `mcp` package (set `FRET_CLIENT_TOKEN`):
 const { Client } = require('@modelcontextprotocol/sdk/client/index.js');
 const { StreamableHTTPClientTransport } = require('@modelcontextprotocol/sdk/client/streamableHttp.js');
 const { setTimeout: delay } = require('node:timers/promises');
+const { createHash } = require('node:crypto');
 
 async function analyze(input) {
   const client = new Client({ name: 'approver', version: '1.0.0' });
@@ -237,7 +241,40 @@ async function analyze(input) {
       await delay(500);
       job = await call('get_analysis', { job_id: job.job_id });
     }
-    return job;
+    const snapshot = job.snapshot;
+    if (!snapshot || !Number.isSafeInteger(snapshot.bytes) || snapshot.bytes < 1 ||
+        snapshot.bytes > 64 * 1024 * 1024 || snapshot.page_bytes !== 65536) {
+      throw new Error('Missing or oversized job snapshot.');
+    }
+    const chunks = [];
+    let offset = 0;
+    while (offset < snapshot.bytes && chunks.length < 1025) {
+      const part = await call('get_analysis', {
+        job_id: job.job_id, snapshot_digest: snapshot.digest, offset
+      });
+      const page = part.page;
+      if (part.job_id !== job.job_id || part.request_id !== input.request_id ||
+          part.input_digest !== job.input_digest || part.snapshot?.digest !== snapshot.digest ||
+          part.snapshot.bytes !== snapshot.bytes || page?.offset !== offset) {
+        throw new Error('Snapshot identity or offset changed.');
+      }
+      const bytes = Buffer.from(page.text, 'utf8');
+      const next = offset + bytes.length;
+      if (!bytes.length || bytes.length > snapshot.page_bytes || next > snapshot.bytes ||
+          page.next_offset !== (next === snapshot.bytes ? null : next)) {
+        throw new Error('Invalid snapshot page.');
+      }
+      chunks.push(bytes);
+      offset = next;
+    }
+    const bytes = Buffer.concat(chunks);
+    if (offset !== snapshot.bytes || 'sha256:' + createHash('sha256').update(bytes).digest('hex') !== snapshot.digest) {
+      throw new Error('Incomplete snapshot or digest mismatch.');
+    }
+    const complete = JSON.parse(bytes.toString('utf8'));
+    if (complete.job_id !== job.job_id || complete.request_id !== input.request_id ||
+        complete.input_digest !== job.input_digest) throw new Error('Job identity changed.');
+    return complete;
   } finally {
     try { await transport.terminateSession(); } finally { await client.close(); }
   }
@@ -327,10 +364,14 @@ that ID returns `request_conflict`. To rerun a cancelled or finished analysis,
 submit a new request ID. There is no queue; exhausted capacity returns `busy`.
 
 Analysis jobs use a separate Linux process group and a UUID workspace under the
-configured data directory. The total wall-clock budget includes startup, model
-preparation and all diagnosis queries. A worker has a 256 MiB V8 old-space limit,
-which is not a total solver/OS memory limit. Use container resource limits for the
-whole service when deploying it.
+configured data directory. One monotonic total deadline covers startup, model
+preparation, the primary check and all diagnosis queries. Each Kind2 invocation
+uses only its remaining budget, rounded down to solver seconds after reserving
+one second for output parsing and result delivery. A check is not started when
+another full solver second cannot fit. The parent retains the total hard deadline
+and process-group termination as a fallback. A worker has a 256 MiB V8 old-space
+limit, which is not a total solver/OS memory limit. Use container resource limits
+for the whole service when deploying it.
 
 An analysis continues across HTTP disconnect, MCP cancellation of the submission
 request, session deletion and reconnect. Use `cancel_analysis` to stop it.
@@ -342,9 +383,60 @@ disconnect terminates the worker group. Restart marks unfinished records
 Job states are `running`, `completed`, `cancelled`, `timed_out`, `interrupted`,
 `error`. Running phases are `preparing`, `checking`, `diagnosing`; no fabricated
 percentage is returned. Cancelled/timed-out/interrupted jobs have no final report.
-Only a complete report is committed, before temporary workspace cleanup. Reports
-are retained in SQLite without an automatic expiry; deleting the persistent
-volume deletes that evidence. Never share one data directory between replicas.
+Only a complete report is committed, before temporary workspace cleanup. A
+completed computation can still have an `unknown` result; lifecycle completion
+never means verification passed.
+
+Protocol 0.3.0 adds a required `diagnostics` object:
+
+- `last_phase` and `phase_started_at` retain the last running phase after the
+  job becomes terminal.
+- `last_check` first persists the prepared source before a solver is launched.
+  Its empty `command` and null `started_at` mean that no launch has been observed,
+  not proof that a process could never have started. After launch, it records the
+  actual command and start, observed finish, exit code/signal and output
+  completeness, with the requirement IDs and toolchain. It retains
+  the generated Lustre prefix, full input byte count and full SHA-256 digest.
+  Lustre capture is limited to 1 MiB; stdout and stderr are each limited to
+  64 KiB. Separate truncation flags identify prefixes rather than full evidence.
+- `checkpoint` and `checkpoint_digest` retain a primary-check report snapshot
+  acknowledged by the persistent store before optional diagnosis begins. A
+  completed job clears this duplicate snapshot and uses its final report.
+
+The four existing MCP tools keep Streamable HTTP's SSE response mode and its
+cancellation lifecycle. Analysis start/read/cancel replies are small status views:
+`job_id`, `request_id`, `input_digest`, `status`, `phase`, timestamps, `last_phase`,
+`phase_started_at`, `snapshot`, and `page`. Running views have no snapshot. A
+terminal view identifies the exact persisted UTF-8 job JSON by `snapshot.digest`,
+`snapshot.bytes`, and `snapshot.page_bytes` (65536).
+
+Read a terminal snapshot using the same `get_analysis` tool with
+`{job_id, snapshot_digest, offset}`. The digest and byte offset are supplied
+together. Each reply has `page: {offset, next_offset, text}`; pages contain complete
+UTF-8 characters, and `next_offset` is null only at the exact end. The owner check
+and fixed digest apply to every page. The service reads slices of the persisted
+terminal row rather than reparsing its full JSON for every page. It creates no
+additional snapshot handles or cleanup obligation. Running jobs cannot be read
+as fixed snapshots, and a mismatched digest is an error rather than a silent retry.
+
+Consumers must check page identity, continuous byte offsets, total length and the
+SHA-256 of the concatenated UTF-8 bytes before decoding the full job. AlphaSE's
+FRET client performs that reconstruction automatically for terminal jobs, with a
+64 MiB total-read budget and at most 1025 pages. Incomplete or oversized reads
+remain errors, not verification results. Individual 64 KiB pages fit the client's
+existing SSE event budget even with MCP text/structured-content duplication;
+neither the SDK nor its event-size limit is changed.
+
+Diagnostic snapshots are saved before workspace cleanup. A timeout or restart
+can leave an unfinished invocation with incomplete output; its diagnostics must
+not be promoted to a final report or successful verification. A saved primary
+conclusion remains inspectable when later diagnosis fails, without pretending
+that the whole job finished successfully. All snapshots remain bound to the
+original exact input and backend identities.
+
+Reports and diagnostic snapshots are retained in SQLite without automatic
+expiry; deleting the persistent volume deletes that evidence. Never share one
+data directory between replicas.
 
 Compilation calls keep their shorter lifecycle: timeout, MCP cancellation, lost
 HTTP connection and session deletion terminate that call's worker. They are not
@@ -379,7 +471,7 @@ with the test/source directories mounted read-only. For example, from the root:
 docker run --rm --init --network none `
   --mount "type=bind,source=$PWD/mcp/tests,target=/opt/fret-mcp/tests,readonly" `
   --mount "type=bind,source=$PWD/mcp/src,target=/opt/fret-mcp/src,readonly" `
-  alphase/fret-mcp:0.2.0 node --test `
+  alphase/fret-mcp:0.3.0 node --test `
   tests/analysis.test.js tests/analysis-lifecycle.test.js tests/mcp.test.js `
   tests/historical-models.test.js
 ```

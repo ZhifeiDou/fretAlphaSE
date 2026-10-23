@@ -2,7 +2,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { randomUUID } = require('node:crypto');
 const { fork } = require('node:child_process');
-const { analysisInput, analysisReport, analysisStatus, contentDigest } = require('./schemas');
+const { analysisInput, analysisRead, analysisReport, analysisStatus, analysisCheckEvidence, analysisView, contentDigest } = require('./schemas');
 const { ExecutionError } = require('./executor');
 
 class AnalysisJobs {
@@ -18,15 +18,17 @@ class AnalysisJobs {
     try {
       this.db.exec('PRAGMA locking_mode=EXCLUSIVE; PRAGMA synchronous=FULL; BEGIN EXCLUSIVE;');
       const version = this.db.prepare('PRAGMA user_version').get().user_version;
-      if (![0, 1].includes(version)) throw new Error(`Unsupported analysis store version: ${version}`);
+      if (![0, 2].includes(version)) {
+        throw new Error(`Unsupported analysis store version: ${version}; FRET 0.3 requires a new analysis store.`);
+      }
       if (version === 0 && this.db.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='jobs'").get()) {
         throw new Error('The analysis store has no supported schema version.');
       }
       this.db.exec(`
         CREATE TABLE IF NOT EXISTS jobs (
           id TEXT PRIMARY KEY, owner TEXT NOT NULL, request_id TEXT NOT NULL,
-          input_digest TEXT NOT NULL, data TEXT NOT NULL, UNIQUE(owner, request_id)
-        ); PRAGMA user_version=1; COMMIT;`);
+          input_digest TEXT NOT NULL, data TEXT NOT NULL, view TEXT NOT NULL, UNIQUE(owner, request_id)
+        ); PRAGMA user_version=2; COMMIT;`);
       for (const row of this.db.prepare('SELECT id, data FROM jobs').all()) {
         const job = analysisStatus.parse(JSON.parse(row.data));
         if (job.status === 'running') {
@@ -46,8 +48,23 @@ class AnalysisJobs {
 
   owner(caller) { return JSON.stringify([caller.subject, caller.login]); }
 
+  serialize(job) {
+    const value = analysisStatus.parse(job);
+    const data = JSON.stringify(value);
+    const view = analysisView.parse({
+      job_id: value.job_id, request_id: value.request_id, input_digest: value.input_digest,
+      status: value.status, phase: value.phase, created_at: value.created_at, finished_at: value.finished_at,
+      last_phase: value.diagnostics.last_phase, phase_started_at: value.diagnostics.phase_started_at,
+      snapshot: value.status === 'running' ? null :
+        { digest: contentDigest(data), bytes: Buffer.byteLength(data, 'utf8'), page_bytes: 65536 },
+      page: null
+    });
+    return { data, view: JSON.stringify(view) };
+  }
+
   save(job) {
-    this.db.prepare('UPDATE jobs SET data=? WHERE id=?').run(JSON.stringify(analysisStatus.parse(job)), job.job_id);
+    const { data, view } = this.serialize(job);
+    this.db.prepare('UPDATE jobs SET data=?, view=? WHERE id=?').run(data, view, job.job_id);
   }
 
   clean(job) {
@@ -66,6 +83,47 @@ class AnalysisJobs {
     return analysisStatus.parse(JSON.parse(row.data));
   }
 
+  read(request, caller) {
+    if (this.failure) throw new ExecutionError('storage_error', this.failure.message);
+    const input = analysisRead.parse(request);
+    const row = this.db.prepare('SELECT owner, view FROM jobs WHERE id=?').get(input.job_id);
+    if (!row || row.owner !== this.owner(caller)) {
+      throw new ExecutionError('analysis_not_found', 'No analysis owned by this caller has that identity.');
+    }
+    const view = analysisView.parse(JSON.parse(row.view));
+    if (input.offset === undefined) return view;
+    if (!view.snapshot || input.snapshot_digest !== view.snapshot.digest) {
+      throw new ExecutionError('snapshot_mismatch', 'No terminal snapshot has the requested digest.');
+    }
+    if (input.offset >= view.snapshot.bytes) throw new ExecutionError('invalid_offset', 'Snapshot byte offset is outside the stored evidence.');
+    const { bytes } = this.db.prepare('SELECT substr(CAST(data AS BLOB), ?, 65536) AS bytes FROM jobs WHERE id=?')
+      .get(input.offset + 1, input.job_id);
+    let text;
+    try {
+      // Streaming decode drops only an incomplete final codepoint. BOMs are
+      // ordinary snapshot bytes, including when a page starts inside a string.
+      text = new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(bytes, { stream: true });
+    } catch {
+      throw new ExecutionError('invalid_offset', 'Snapshot byte offset is not a UTF-8 character boundary.');
+    }
+    const next = input.offset + Buffer.byteLength(text, 'utf8');
+    view.page = { offset: input.offset, next_offset: next < view.snapshot.bytes ? next : null, text };
+    return analysisView.parse(view);
+  }
+
+  validateReport(value, input) {
+    const report = analysisReport.parse(value);
+    const ids = input.requirements.map(item => item.id);
+    if (report.input_digest !== contentDigest(input) ||
+        JSON.stringify(report.requested_ids) !== JSON.stringify(ids) ||
+        report.analyzed_ids.some(id => !ids.includes(id)) ||
+        (['realizable', 'unrealizable'].includes(report.result) &&
+          JSON.stringify(report.analyzed_ids) !== JSON.stringify(ids))) {
+      throw new Error('The analysis result does not match its exact input.');
+    }
+    return report;
+  }
+
   start(request, caller) {
     if (this.failure) throw new ExecutionError('storage_error', this.failure.message);
     if (this.closed) throw new ExecutionError('shutting_down', 'The service is shutting down.');
@@ -79,12 +137,19 @@ class AnalysisJobs {
     }
     if (this.active.size >= this.maxAnalyses) throw new ExecutionError('busy', 'All analysis slots are in use.');
     if (input.options.timeout_ms > this.timeoutMs) throw new ExecutionError('timeout_limit', 'Requested timeout exceeds the server analysis budget.');
+    const started = process.hrtime.bigint();
+    const deadline = started + BigInt(input.options.timeout_ms) * 1000000n;
+    const createdAt = new Date().toISOString();
     const job = {
       job_id: randomUUID(), request_id: input.request_id, input_digest: inputDigest,
-      status: 'running', phase: 'preparing', created_at: new Date().toISOString(), finished_at: null,
-      report_digest: null, report: null, error: null, input
+      status: 'running', phase: 'preparing', created_at: createdAt, finished_at: null,
+      report_digest: null, report: null, error: null, input,
+      diagnostics: { last_phase: 'preparing', phase_started_at: createdAt,
+        last_check: null, checkpoint: null, checkpoint_digest: null }
     };
-    this.db.prepare('INSERT INTO jobs VALUES(?,?,?,?,?)').run(job.job_id, owner, input.request_id, inputDigest, JSON.stringify(job));
+    const serialized = this.serialize(job);
+    this.db.prepare('INSERT INTO jobs VALUES(?,?,?,?,?,?)')
+      .run(job.job_id, owner, input.request_id, inputDigest, serialized.data, serialized.view);
     const workDirectory = path.join(this.workRoot, job.job_id);
     let child;
     try {
@@ -109,17 +174,46 @@ class AnalysisJobs {
       failure ??= { status, error: { code, message } };
       killGroup();
     };
-    const timer = setTimeout(() => stop('timed_out', 'timeout', 'Analysis exceeded its total wall-clock budget.'), input.options.timeout_ms);
+    const timer = setTimeout(() => stop('timed_out', 'timeout', 'Analysis exceeded its total wall-clock budget.'),
+      Math.max(0, Number(deadline - process.hrtime.bigint()) / 1000000));
     const active = { stop, done: null };
     active.done = new Promise(resolve => {
       child.on('message', message => {
         if (failure) return;
-        if (['checking', 'diagnosing'].includes(message.phase)) {
-          job.phase = message.phase;
+        if (message.phase || message.check || message.checkpoint) {
+          try {
+            if (message.phase) {
+              if (!['checking', 'diagnosing'].includes(message.phase) ||
+                  (message.phase === 'diagnosing' && job.diagnostics.checkpoint?.result !== 'unrealizable')) {
+                throw new Error('Worker supplied an invalid analysis phase transition.');
+              }
+              job.phase = message.phase;
+              job.diagnostics.last_phase = message.phase;
+              job.diagnostics.phase_started_at = new Date().toISOString();
+            } else if (message.check) {
+              const check = analysisCheckEvidence.parse(message.check);
+              const ids = input.requirements.map(item => item.id);
+              if (check.requirement_ids.some(id => !ids.includes(id))) {
+                throw new Error('Worker check evidence changes the requested scope.');
+              }
+              job.diagnostics.last_check = check;
+            } else {
+              const report = this.validateReport(message.checkpoint, input);
+              if (report.checks.length !== 1 ||
+                  JSON.stringify(report.checks[0].requirement_ids) !==
+                    JSON.stringify(input.requirements.map(item => item.id))) {
+                throw new Error('Worker checkpoint is not the complete primary contract check.');
+              }
+              job.diagnostics.checkpoint = report;
+              job.diagnostics.checkpoint_digest = contentDigest(report);
+            }
+          } catch (error) { stop('error', 'invalid_worker_evidence', error.message); return; }
           try { this.save(job); }
-          catch (error) {
-            this.failure = error;
-            stop('error', 'storage_error', error.message);
+          catch (error) { this.failure = error; stop('error', 'storage_error', error.message); return; }
+          if (message.update_id !== undefined) {
+            child.send({ ack: message.update_id }, error => {
+              if (error) stop('error', 'worker_error', error.message);
+            });
           }
         } else response = message;
       });
@@ -132,13 +226,9 @@ class AnalysisJobs {
           else if (response?.error) { job.status = 'error'; job.error = response.error; }
           else {
             if (code !== 0 || signal) throw new Error('Analysis worker exited abnormally.');
-            const report = analysisReport.parse(response?.report);
-            if (report.input_digest !== inputDigest || JSON.stringify(report.requested_ids) !== JSON.stringify(input.requirements.map(item => item.id)) ||
-                report.analyzed_ids.some(id => !report.requested_ids.includes(id)) ||
-                (['realizable', 'unrealizable'].includes(report.result) && JSON.stringify(report.analyzed_ids) !== JSON.stringify(report.requested_ids))) {
-              throw new Error('The analysis result does not match its exact input.');
-            }
+            const report = this.validateReport(response?.report, input);
             job.status = 'completed'; job.report = report; job.report_digest = contentDigest(report);
+            job.diagnostics.checkpoint = null; job.diagnostics.checkpoint_digest = null;
           }
         } catch (error) {
           job.status = 'error'; job.error = { code: 'invalid_worker_result', message: error.message };
@@ -158,7 +248,7 @@ class AnalysisJobs {
       });
     });
     this.active.set(job.job_id, active);
-    child.send({ input, workDirectory }, error => {
+    child.send({ input, workDirectory, deadline_ns: deadline.toString() }, error => {
       if (error) stop('error', 'worker_error', error.message);
     });
     return this.get(job.job_id, caller);

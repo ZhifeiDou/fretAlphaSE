@@ -33,11 +33,15 @@ function backendVersions() {
   if (!/^kind2 v2\.2\.0$/.test(kind2) || !/^Z3 version 4\.14\.1\b/.test(z3)) {
     throw new Error('This analysis adapter requires Kind 2 2.2.0 and Z3 4.14.1.');
   }
-  return { fret: FRET_SOURCE_DIGEST, adapter: '0.2.0', kind2, z3 };
+  return { fret: FRET_SOURCE_DIGEST, adapter: '0.3.0', kind2, z3 };
 }
 
-async function analyzeRequirements(request, workDirectory, progress = () => {}) {
+async function analyzeRequirements(request, workDirectory, progress = () => {}, execution = {}) {
   const input = analysisInput.parse(request);
+  const deadline = execution.deadline_ns ? BigInt(execution.deadline_ns) :
+    process.hrtime.bigint() + BigInt(input.options.timeout_ms) * 1000000n;
+  const persist = async update => { await execution.persist?.(update); };
+  const phase = async value => { progress(value); await persist({ phase: value }); };
   const variableTypes = new Map(input.variables.map(variable => [variable.name, variable.type]));
   const formalization = formalizeRequirements({ requirements: input.requirements.map(({ id, fretish }) => ({ id, fretish })),
     representations: ['pt-lustre', 'pt-smv', 'ft-inf', 'ft-fin'],
@@ -111,9 +115,20 @@ async function analyzeRequirements(request, workDirectory, progress = () => {}) 
   }
   const checkContract = async (filePath, engine, options) => {
     if (engine !== 'kind2') throw new Error('Only the pinned Kind 2 backend is supported.');
-    const output = await runKind2(filePath, options, { cwd: workDirectory });
     const lustre = fs.readFileSync(filePath, 'utf8');
     const present = contract.properties.filter(item => new RegExp(`\\b${item.reqid}\\b`).test(lustre)).map(item => propertyIds.get(item.reqid));
+    const sourceBytes = Buffer.from(lustre, 'utf8');
+    const source = {
+      name: path.basename(filePath), requirement_ids: present, toolchain: report.toolchain,
+      lustre: sourceBytes.length > 1024 * 1024 ?
+        new TextDecoder('utf-8', { ignoreBOM: true }).decode(sourceBytes.subarray(0, 1024 * 1024), { stream: true }) : lustre,
+      lustre_digest: contentDigest(lustre), lustre_bytes: sourceBytes.length,
+      lustre_truncated: sourceBytes.length > 1024 * 1024
+    };
+    const output = await runKind2(filePath, options, {
+      cwd: workDirectory, deadline_ns: deadline.toString(),
+      observe: evidence => persist({ check: { ...source, ...evidence } })
+    });
     report.checks.push({ name: path.basename(filePath), requirement_ids: present,
       result: output.result, environment_result: output.environmentResult, lustre, lustre_digest: contentDigest(lustre), command: output.command,
       stdout: output.stdout, stderr: output.stderr, exit_code: output.exitCode,
@@ -121,8 +136,8 @@ async function analyzeRequirements(request, workDirectory, progress = () => {}) 
     if (output.result === 'ERROR') throw new Error(output.error);
     return output;
   };
-  const options = ['-json', '--enable', 'CONTRACTCK', '--timeout', String(Math.max(1, Math.ceil(input.options.timeout_ms / 1000)))];
-  progress('checking');
+  const options = ['-json', '--enable', 'CONTRACTCK'];
+  await phase('checking');
   try {
     const filePath = path.join(workDirectory, 'FretContract.lus');
     fs.writeFileSync(filePath, renderContract(contract), 'utf8');
@@ -139,8 +154,11 @@ async function analyzeRequirements(request, workDirectory, progress = () => {}) 
       diagnostic(null, 'unknown_environment', 'The backend did not establish environment realizability.');
     }
     if (report.result === 'realizable' && input.options.diagnose) report.diagnosis.status = 'not_needed';
+    // Optional conflict diagnosis may run out of time. Persist the completed
+    // primary check first, and await durable acknowledgement before starting it.
+    await persist({ checkpoint: analysisReport.parse(report) });
     if (report.result === 'unrealizable' && input.options.diagnose) {
-      progress('diagnosing');
+      await phase('diagnosing');
       const engine = new DiagnosisEngine(contract, 'kind2', options, { workDirectory, renderContract, checkContract });
       try {
         const [error, result] = await engine.main();
@@ -148,11 +166,14 @@ async function analyzeRequirements(request, workDirectory, progress = () => {}) 
         else if (result[0] !== 'UNREALIZABLE') throw new Error('Diagnosis disagrees with the original analysis.');
         else report.diagnosis = { status: 'completed', message: null,
           conflicts: result[1].Conflicts.map(conflict => conflict.Conflict.map(id => propertyIds.get(id))) };
-      } catch (error) { report.diagnosis = { status: 'error', conflicts: [], message: error.message }; }
+      } catch (error) {
+        report.diagnosis = { status: error.code === 'analysis_budget_exhausted' ? 'unknown' : 'error',
+          conflicts: [], message: error.message };
+      }
     }
   } catch (error) {
-    report.result = 'error';
-    diagnostic(null, 'backend_error', error.message);
+    report.result = error.code === 'analysis_budget_exhausted' ? 'unknown' : 'error';
+    diagnostic(null, error.code === 'analysis_budget_exhausted' ? 'timeout' : 'backend_error', error.message);
   }
   return analysisReport.parse(report);
 }

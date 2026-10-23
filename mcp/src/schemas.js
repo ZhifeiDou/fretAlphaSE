@@ -94,6 +94,13 @@ const analysisInput = z.strictObject({
 });
 
 const analysisReference = z.strictObject({ job_id: z.uuid() });
+const analysisRead = analysisReference.extend({ snapshot_digest: digest.optional(), offset: z.int().nonnegative().optional() })
+  .superRefine((value, context) => {
+    if ((value.snapshot_digest === undefined) !== (value.offset === undefined)) {
+      context.addIssue({ code: 'custom', message: 'Snapshot digest and byte offset must be supplied together.' });
+    }
+  });
+const analysisToolchain = z.strictObject({ fret: text, adapter: text, kind2: text, z3: text });
 const analysisReport = z.strictObject({
   schema_version: z.literal(1),
   input_digest: digest,
@@ -104,7 +111,7 @@ const analysisReport = z.strictObject({
   analyzed_ids: z.array(requirementId),
   diagnostics: z.array(z.strictObject({ id: requirementId.nullable(), code: text, message: text })),
   formalization: formalizeOutput,
-  toolchain: z.strictObject({ fret: text, adapter: text, kind2: text, z3: text }),
+  toolchain: analysisToolchain,
   time_model: analysisInput.shape.time_model,
   assumption_ids: z.array(requirementId),
   guarantee_ids: z.array(requirementId),
@@ -121,6 +128,43 @@ const analysisReport = z.strictObject({
     message: z.string().nullable()
   })
 });
+const boundedUtf8 = limit => z.string().refine(value => Buffer.byteLength(value, 'utf8') <= limit,
+  `Evidence exceeds its ${limit} byte limit.`);
+const analysisCheckEvidence = z.strictObject({
+  name: text.max(255), requirement_ids: z.array(requirementId), command: z.array(z.string()).max(128),
+  started_at: z.iso.datetime().nullable(), finished_at: z.iso.datetime().nullable(), toolchain: analysisToolchain,
+  lustre: boundedUtf8(1024 * 1024), lustre_digest: digest, lustre_bytes: z.int().nonnegative(),
+  lustre_truncated: z.boolean(), stdout: boundedUtf8(65536), stderr: boundedUtf8(65536),
+  stdout_truncated: z.boolean(), stderr_truncated: z.boolean(),
+  exit_code: z.int().nullable(), signal: z.string().nullable(), output_complete: z.boolean()
+}).superRefine((value, context) => {
+  const captured = Buffer.byteLength(value.lustre, 'utf8');
+  if (value.lustre_truncated ? captured >= value.lustre_bytes :
+    captured !== value.lustre_bytes || contentDigest(value.lustre) !== value.lustre_digest) {
+    context.addIssue({ code: 'custom', path: ['lustre'], message: 'Generated source evidence differs from its size/digest.' });
+  }
+  if (value.output_complete && (value.finished_at === null || value.signal !== null || value.exit_code === null)) {
+    context.addIssue({ code: 'custom', path: ['output_complete'], message: 'Complete output requires an observed normal process exit.' });
+  }
+  if (value.finished_at === null && (value.exit_code !== null || value.signal !== null)) {
+    context.addIssue({ code: 'custom', path: ['finished_at'], message: 'Unfinished check cannot claim a process exit.' });
+  }
+  if ((value.started_at === null) !== (value.command.length === 0) ||
+      (value.started_at === null && (value.finished_at !== null || value.output_complete ||
+        value.stdout.length || value.stderr.length || value.stdout_truncated || value.stderr_truncated))) {
+    context.addIssue({ code: 'custom', path: ['started_at'], message: 'Prepared input cannot claim observed solver execution.' });
+  }
+});
+const analysisDiagnostics = z.strictObject({
+  last_phase: z.enum(['preparing', 'checking', 'diagnosing']), phase_started_at: z.iso.datetime(),
+  last_check: analysisCheckEvidence.nullable(), checkpoint: analysisReport.nullable(),
+  checkpoint_digest: digest.nullable()
+}).superRefine((value, context) => {
+  if (value.checkpoint === null ? value.checkpoint_digest !== null :
+    value.checkpoint_digest !== contentDigest(value.checkpoint)) {
+    context.addIssue({ code: 'custom', path: ['checkpoint_digest'], message: 'Checkpoint differs from its digest.' });
+  }
+});
 const analysisStatus = z.strictObject({
   job_id: z.uuid(), request_id: z.uuid(), input_digest: digest,
   status: z.enum(['running', 'completed', 'cancelled', 'timed_out', 'interrupted', 'error']),
@@ -128,7 +172,52 @@ const analysisStatus = z.strictObject({
   created_at: z.iso.datetime(), finished_at: z.iso.datetime().nullable(),
   report_digest: digest.nullable(), report: analysisReport.nullable(),
   error: z.strictObject({ code: text, message: text }).nullable(),
-  input: analysisInput
+  input: analysisInput,
+  diagnostics: analysisDiagnostics
+}).superRefine((job, context) => {
+  const problem = (path, message) => context.addIssue({ code: 'custom', path, message });
+  const ids = job.input.requirements.map(item => item.id);
+  if (job.input_digest !== contentDigest(job.input)) problem(['input_digest'], 'Job input digest differs from its input.');
+  if (job.status !== 'completed' && (job.report !== null || job.report_digest !== null)) {
+    problem(['report'], 'Unfinished analysis cannot carry a final report.');
+  }
+  const checkpoint = job.diagnostics.checkpoint;
+  if (job.status === 'completed' && checkpoint !== null) problem(['diagnostics', 'checkpoint'], 'Final report replaces the primary checkpoint.');
+  if (job.diagnostics.last_phase === 'diagnosing' && job.status !== 'completed' && checkpoint?.result !== 'unrealizable') {
+    problem(['diagnostics', 'last_phase'], 'Diagnosis requires a persisted unrealizable primary check.');
+  }
+  if (checkpoint && (checkpoint.input_digest !== job.input_digest ||
+      JSON.stringify(checkpoint.requested_ids) !== JSON.stringify(ids) || checkpoint.checks.length !== 1 ||
+      JSON.stringify(checkpoint.checks[0].requirement_ids) !== JSON.stringify(ids))) {
+    problem(['diagnostics', 'checkpoint'], 'Checkpoint must bind the entire exact primary input.');
+  }
+  const checkIds = job.diagnostics.last_check?.requirement_ids ?? [];
+  if (new Set(checkIds).size !== checkIds.length || checkIds.some(id => !ids.includes(id))) {
+    problem(['diagnostics', 'last_check', 'requirement_ids'], 'Check evidence is outside the exact input.');
+  }
+});
+const analysisView = z.strictObject({
+  job_id: z.uuid(), request_id: z.uuid(), input_digest: digest,
+  status: analysisStatus.shape.status, phase: analysisStatus.shape.phase,
+  created_at: z.iso.datetime(), finished_at: z.iso.datetime().nullable(),
+  last_phase: analysisDiagnostics.shape.last_phase, phase_started_at: z.iso.datetime(),
+  snapshot: z.strictObject({ digest, bytes: z.int().positive(), page_bytes: z.literal(65536) }).nullable(),
+  page: z.strictObject({ offset: z.int().nonnegative(), next_offset: z.int().positive().nullable(),
+    text: boundedUtf8(65536) }).nullable()
+}).superRefine((value, context) => {
+  const running = value.status === 'running';
+  if (running !== (value.finished_at === null) || running === (value.phase === 'finished') ||
+      running !== (value.snapshot === null) || (running && value.page !== null)) {
+    context.addIssue({ code: 'custom', message: 'Running/terminal analysis view metadata disagrees.' });
+  }
+  if (value.page && value.snapshot) {
+    const next = value.page.offset + Buffer.byteLength(value.page.text, 'utf8');
+    if (!value.page.text.length || value.page.offset >= value.snapshot.bytes || next > value.snapshot.bytes ||
+        value.page.next_offset !== (next < value.snapshot.bytes ? next : null)) {
+      context.addIssue({ code: 'custom', path: ['page'], message: 'Snapshot page does not advance its exact byte offset.' });
+    }
+  }
 });
 
-module.exports = { formalizeInput, formalizeOutput, analysisInput, analysisReference, analysisReport, analysisStatus, contentDigest };
+module.exports = { formalizeInput, formalizeOutput, analysisInput, analysisReference, analysisRead, analysisReport, analysisStatus,
+  analysisCheckEvidence, analysisDiagnostics, analysisView, contentDigest };
