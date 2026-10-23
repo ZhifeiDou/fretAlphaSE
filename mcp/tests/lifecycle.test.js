@@ -25,12 +25,12 @@ function busyFixture(t, options = {}) {
   writeFileSync(file, `
     const fs = require('node:fs');
     const path = require('node:path');
-    const { formalizeRequirements } = require(${JSON.stringify(path.resolve(__dirname, '../dist/formalize.cjs'))});
     process.once('message', request => {
       const id = request.requirements[0].id;
       fs.writeFileSync(path.join(__dirname, id + '.ready'), String(process.pid));
       if (id === 'busy') { while (true) {} }
       if (id === 'crash') process.exit(2);
+      const { formalizeRequirements } = require(${JSON.stringify(path.resolve(__dirname, '../dist/formalize.cjs'))});
       const result = formalizeRequirements(request);
       if (id === 'wrong') result.results[0].id = 'another-request';
       process.send({ result }, () => process.disconnect());
@@ -85,8 +85,15 @@ test('timeout kills a CPU-bound process before rejecting and releases capacity',
   await rejected;
   assertExited(child);
   assert.equal(executor.workers.size, 0);
-  const output = await executor.run(input('after-timeout'));
-  assert.equal(output.results[0].status, 'formalized');
+  unlinkSync(path.join(directory, 'busy.ready'));
+  const next = executor.run(input('busy'));
+  const reclaimed = assert.rejects(next, { code: 'timeout' });
+  const replacement = [...executor.workers][0].child;
+  await waitReady(directory);
+  assert.notEqual(replacement.pid, child.pid);
+  await reclaimed;
+  assertExited(replacement);
+  assert.equal(executor.workers.size, 0);
 });
 
 test('cancelling a busy worker leaves a concurrent real formalization intact', async t => {

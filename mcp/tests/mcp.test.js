@@ -1,7 +1,7 @@
 const assert = require('node:assert/strict');
 const { test } = require('node:test');
 const http = require('node:http');
-const { mkdtempSync, writeFileSync, readFileSync, readdirSync, rmSync } = require('node:fs');
+const { mkdtempSync, writeFileSync, readFileSync, readdirSync, rmSync, unlinkSync } = require('node:fs');
 const { randomUUID } = require('node:crypto');
 const { tmpdir } = require('node:os');
 const path = require('node:path');
@@ -90,12 +90,12 @@ async function fixture(t, options = {}, busyWorker = false) {
     writeFileSync(options.workerPath, `
       const fs = require('node:fs');
       const path = require('node:path');
-      const { formalizeRequirements } = require(${JSON.stringify(path.resolve(__dirname, '../dist/formalize.cjs'))});
       process.once('message', request => {
         if (request.requirements[0].id === 'busy') {
           fs.writeFileSync(path.join(__dirname, 'busy.pid'), String(process.pid));
           while (true) {}
         }
+        const { formalizeRequirements } = require(${JSON.stringify(path.resolve(__dirname, '../dist/formalize.cjs'))});
         process.send({ result: formalizeRequirements(request) }, () => process.disconnect());
       });
     `);
@@ -460,7 +460,13 @@ test('MCP timeout is a tool error and is returned only after the worker exits', 
   assert.equal(result.structuredContent, undefined);
   assert.equal(JSON.parse(result.content[0].text).code, 'timeout');
   assert.throws(() => process.kill(pid, 0), { code: 'ESRCH' });
-  assert.equal((await client.callTool({ name: toolName, arguments: input() })).structuredContent.results[0].status, 'formalized');
+  unlinkSync(path.join(env.directory, 'busy.pid'));
+  const next = client.callTool({ name: toolName, arguments: input('busy') });
+  const replacement = await waitForPid(env.directory);
+  assert.notEqual(replacement, pid);
+  const retried = await next;
+  assert.equal(JSON.parse(retried.content[0].text).code, 'timeout');
+  assert.throws(() => process.kill(replacement, 0), { code: 'ESRCH' });
 });
 
 test('MCP cancellation stops a busy worker and keeps another session usable', async t => {
