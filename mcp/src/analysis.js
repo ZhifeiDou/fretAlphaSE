@@ -8,6 +8,7 @@ const { createContract } = require('../../fret-electron/analysis/contractBuilder
 const { runKind2 } = require('../../fret-electron/analysis/realizabilityCheck');
 const DiagnosisEngine = require('../../fret-electron/analysis/DiagnosisEngine');
 const { formalizeRequirements } = require('./formalize');
+const { compileInvariant } = require('./invariant_compilation');
 const { analysisInput, analysisReport, contentDigest } = require('./schemas');
 
 // Use the same FRET templates as the desktop exporter, without its database or
@@ -33,7 +34,7 @@ function backendVersions() {
   if (!/^kind2 v2\.2\.0$/.test(kind2) || !/^Z3 version 4\.14\.1\b/.test(z3)) {
     throw new Error('This analysis adapter requires Kind 2 2.2.0 and Z3 4.14.1.');
   }
-  return { fret: FRET_SOURCE_DIGEST, adapter: '0.3.0', kind2, z3 };
+  return { fret: FRET_SOURCE_DIGEST, adapter: '0.4.0', kind2, z3 };
 }
 
 async function analyzeRequirements(request, workDirectory, progress = () => {}, execution = {}) {
@@ -51,12 +52,15 @@ async function analyzeRequirements(request, workDirectory, progress = () => {}, 
     contract_result: null, environment_result: null,
     requested_ids: input.requirements.map(item => item.id), analyzed_ids: [], diagnostics: [], formalization,
     toolchain: backendVersions(), time_model: input.time_model,
+    compilation: { semantics: 'pt_invariant', source_semantics: 'ft_inf', relation: 'unsupported', clauses: [] },
     assumption_ids: input.requirements.filter(item => item.kind === 'assumption').map(item => item.id),
     guarantee_ids: input.requirements.filter(item => item.kind === 'guarantee').map(item => item.id),
     variable_mapping: {}, checks: [],
     diagnosis: { status: input.options.diagnose ? 'not_run' : 'not_requested', conflicts: [], message: null }
   };
   const diagnostic = (id, code, message) => report.diagnostics.push({ id, code, message });
+  const semanticDiagnostics = [];
+  const semanticDiagnostic = (id, code, message) => semanticDiagnostics.push({ id, code, message });
   for (const variable of input.variables) {
     if (predefinedVars.includes(variable.name)) {
       diagnostic(null, 'reserved_variable', `${variable.name} is reserved by FRET and cannot be declared as a product variable.`);
@@ -99,13 +103,29 @@ async function analyzeRequirements(request, workDirectory, progress = () => {}, 
       }
       contract.delays.push(String(duration));
     }
+    const optimized = compileInvariant({
+      ptSmv: result.formulas.find(formula => formula.representation === 'pt-smv')?.formula,
+      ptLustre: lustre.formula,
+      ftInf: result.formulas.find(formula => formula.representation === 'ft-inf')?.formula,
+      variables: variableTypes.keys()
+    });
+    report.compilation.clauses.push({ id: item.id, kind: item.kind, relation: optimized.relation,
+      original_pt_lustre: lustre.formula, optimized_pt_lustre: optimized.formula, rules: optimized.rules });
+    if (optimized.relation === 'unsupported') {
+      semanticDiagnostic(item.id, 'unsupported_analysis_semantics',
+        'The analysis compiler cannot establish the relation between this PT-invariant contract and its infinite-future formula. Formalization remains available.');
+    } else if (item.kind === 'assumption' && optimized.relation !== 'equivalent') {
+      semanticDiagnostic(item.id, 'unsupported_analysis_semantics',
+        'An environment assumption must be equivalent to its infinite-future formula; a stronger PT assumption would restrict the source input domain.');
+    }
     const reqid = `fret_r_${index}`;
     propertyIds.set(reqid, item.id);
     // Rename identifiers in the generated expression in one pass. Product IDs
     // and source prose are never inserted into executable Lustre or comments.
-    const value = lustre.formula.replace(/\b[a-zA-Z_][a-zA-Z0-9_]*\b/g, (name, offset, formula) =>
+    const value = optimized.formula.replace(/\b[a-zA-Z_][a-zA-Z0-9_]*\b/g, (name, offset, formula) =>
       /^\s*\(/.test(formula.slice(offset + name.length)) ? name : symbolMapping.get(name) ?? (name === 'FTP' ? '__FTP' : name));
-    contract.properties.push({ reqid, kind: item.kind, value, fullText: reqid });
+    contract.properties.push({ reqid, kind: item.kind, value,
+      fullText: `${reqid}; PT-invariant; rules: ${optimized.rules.join(',') || 'none'}` });
   }
   contract.delays = [...new Set(contract.delays)].sort((a, b) => Number(a) - Number(b));
   if (report.diagnostics.length) {
@@ -113,6 +133,13 @@ async function analyzeRequirements(request, workDirectory, progress = () => {}, 
       'unsupported_duration', 'unsupported_function', 'unsupported_operator'].includes(item.code)) ? 'unsupported' : 'invalid';
     return analysisReport.parse(report);
   }
+  if (semanticDiagnostics.length) {
+    report.result = 'unsupported';
+    report.diagnostics.push(...semanticDiagnostics);
+    return analysisReport.parse(report);
+  }
+  report.compilation.relation = report.compilation.clauses.some(item => item.relation === 'sufficient') ?
+    'sufficient' : 'equivalent';
   const checkContract = async (filePath, engine, options) => {
     if (engine !== 'kind2') throw new Error('Only the pinned Kind 2 backend is supported.');
     const lustre = fs.readFileSync(filePath, 'utf8');
@@ -153,6 +180,12 @@ async function analyzeRequirements(request, workDirectory, progress = () => {}, 
       report.result = 'unknown';
       diagnostic(null, 'unknown_environment', 'The backend did not establish environment realizability.');
     }
+    if (report.result === 'unrealizable' && report.compilation.relation === 'sufficient') {
+      report.result = 'unknown';
+      diagnostic(null, 'inconclusive_infinite_contract',
+        'Kind 2 found the stronger PT-invariant contract unrealizable. This does not establish that the original infinite-future guarantees are unrealizable.');
+      report.diagnosis.message = 'Conflict diagnosis is not inferred for the weaker infinite-future guarantees.';
+    }
     if (report.result === 'realizable' && input.options.diagnose) report.diagnosis.status = 'not_needed';
     // Optional conflict diagnosis may run out of time. Persist the completed
     // primary check first, and await durable acknowledgement before starting it.
@@ -178,4 +211,4 @@ async function analyzeRequirements(request, workDirectory, progress = () => {}, 
   return analysisReport.parse(report);
 }
 
-module.exports = { analyzeRequirements, backendVersions, renderContract };
+module.exports = { analyzeRequirements, backendVersions, renderContract, compileInvariant };

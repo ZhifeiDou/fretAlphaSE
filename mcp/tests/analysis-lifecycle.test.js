@@ -122,7 +122,7 @@ test('request identities are idempotent and access is bound to the authenticated
   assert.equal(jobs.start(structuredClone(input), owner).job_id, first.job_id);
   assert.throws(() => jobs.start({ ...input, component: 'Different' }, owner), { code: 'request_conflict' });
   assert.throws(() => jobs.get(first.job_id, other), { code: 'analysis_not_found' });
-  await assert.rejects(jobs.cancel(first.job_id, other), { code: 'analysis_not_found' });
+  await assert.rejects(jobs.cancel({ job_id: first.job_id }, other), { code: 'analysis_not_found' });
   assert.equal((await completed(jobs, first.job_id)).status, 'completed');
 });
 
@@ -131,12 +131,12 @@ test('cancellation kills the worker and child process without cancelling another
   const busy = jobs.start(request('busy'), owner);
   await waitUntil(() => fs.existsSync(path.join(directory, 'pids.json')), 'worker not ready');
   const otherJob = jobs.start(request('other'), owner);
-  const cancelled = await jobs.cancel(busy.job_id, owner);
+  const cancelled = await jobs.cancel({ job_id: busy.job_id }, owner);
   assert.equal(cancelled.status, 'cancelled');
   assert.equal(cancelled.report, null);
   await assertGroupStopped(directory);
   assert.equal((await completed(jobs, otherJob.job_id)).report.result, 'realizable');
-  assert.deepEqual(await jobs.cancel(busy.job_id, owner), cancelled);
+  assert.deepEqual(await jobs.cancel({ job_id: busy.job_id }, owner), cancelled);
 });
 
 test('timeout includes subprocess shutdown and releases capacity', linux, async t => {
@@ -186,7 +186,7 @@ test('a primary checkpoint survives cancelled diagnosis, cleanup and service res
   assert.equal(progress.diagnostics.checkpoint.result, 'unrealizable');
   assert.equal(progress.diagnostics.checkpoint_digest, contentDigest(progress.diagnostics.checkpoint));
   assert.deepEqual(progress.diagnostics.checkpoint.checks[0].requirement_ids, ['checkpoint-busy']);
-  const cancelled = await jobs.cancel(running.job_id, owner);
+  const cancelled = await jobs.cancel({ job_id: running.job_id }, owner);
   assert.equal(cancelled.status, 'cancelled');
   assert.equal(cancelled.report, null);
   assert.equal(cancelled.report_digest, null);
@@ -207,7 +207,7 @@ test('failed terminal persistence retains recoverable files and the acknowledged
   await waitUntil(() => fs.existsSync(path.join(directory, 'diagnosing')), 'primary check was not acknowledged');
   const checkpoint = jobs.get(running.job_id, owner).diagnostics.checkpoint_digest;
   t.mock.method(jobs, 'save', () => { throw new Error('controlled durable-store failure'); });
-  await assert.rejects(jobs.cancel(running.job_id, owner), { code: 'storage_error' });
+  await assert.rejects(jobs.cancel({ job_id: running.job_id }, owner), { code: 'storage_error' });
   const work = path.join(settings.analysisDirectory, 'work', running.job_id);
   assert.ok(fs.existsSync(path.join(work, 'FretContract.lus')), 'failed persistence must not delete recoverable source');
   t.mock.restoreAll();
@@ -267,7 +267,7 @@ test('hard timeout retains byte-limited multibyte solver evidence without invent
   assert.equal(check.lustre_bytes, Buffer.byteLength(check.lustre));
   assert.deepEqual(check.requirement_ids, ['flood']);
   assert.ok(check.command.includes('--timeout'));
-  assert.equal(check.toolchain.adapter, '0.3.0');
+  assert.equal(check.toolchain.adapter, '0.4.0');
   const pid = Number(fs.readFileSync(marker, 'utf8'));
   await waitUntil(() => {
     try { process.kill(pid, 0); return false; } catch (error) { return error.code === 'ESRCH'; }

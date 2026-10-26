@@ -38,7 +38,7 @@ Set the actual Forgejo address and roles file for the deployment. Without
 Linux, the pinned backends, and writable persistent storage. Use the Docker image:
 
 ```text
-docker build --file mcp/Dockerfile --tag alphase/fret-mcp:0.3.0 .
+docker build --file mcp/Dockerfile --tag alphase/fret-mcp:0.4.0 .
 ```
 
 Build from the repository root. The image supports **Linux amd64**. Node is pinned
@@ -53,7 +53,7 @@ The service needs these deployment settings (adapt addresses/network to AlphaSE)
 ```yaml
 services:
   fret-mcp:
-    image: alphase/fret-mcp:0.3.0
+    image: alphase/fret-mcp:0.4.0
     init: true
     stop_grace_period: 10s
     environment:
@@ -77,8 +77,10 @@ by a SQLite exclusive lock. Node 22.17's built-in SQLite emits an experimental A
 warning; the image fixes that Node version, and persistence/restart behavior is
 tested. Store schema version is 2. A version-1 store is rejected with an
 explicit version error; it is not silently migrated or deleted. Use a new
-analysis volume for protocol 0.3.0 and retain the old volume for its historical
-records.
+analysis volume when moving from store version 1 to protocol 0.3.0 or newer, and
+retain the old volume for its historical records. Protocol 0.4.0 keeps store
+version 2 and reads existing 0.3.0 snapshots without adding fields or rewriting
+their bytes or digests.
 
 ## Authentication and permissions
 
@@ -314,6 +316,32 @@ The standalone `formalize_requirements` tool checks declared types when
 `variables` is supplied. Its `formalized` status alone does not establish
 readiness for analysis; retain the request to identify which checks ran.
 
+This adapter checks a past-time (PT) Lustre contract as an invariant at every
+step. FRET's PT formulas describe truth at a finite trace endpoint; they are not
+interchangeable with its infinite-future (`ft-inf`) formulas. Version 0.4 accepts
+analysis only when its AST compiler proves each environment assumption equivalent
+to the `ft-inf` formula, and each guarantee equivalent or a sufficient, stronger
+condition. Unknown relations stop before the solver with `unsupported` and an
+`unsupported_analysis_semantics` diagnostic. Compilation still returns all requested
+representations. In particular, timed/next formulas outside the supported structural
+rules remain compilable but cannot currently claim an infinite-time analysis result.
+
+The compiler removes only two proven invariant patterns: `G(H(psi))` becomes
+`G(psi)` for a current-state expression; the eventual-response monitor becomes an
+immediate-response implication under the outer invariant. The latter is sufficient
+for `G(trigger -> F response)`, but excludes delayed responses that the future
+formula allows. Only complete, structurally matching ASTs are rewritten, including
+top-level conjunctions; input domains, variable roles and assumptions are unchanged.
+Both rules preserve every finite prefix of the PT invariant. Stronger eventual
+monitors are never accepted as environment assumptions.
+
+`report.compilation` records the PT-invariant analysis semantics, the relation to
+`ft-inf`, and each clause's explicit role, original PT Lustre, optimized expression
+and rule identifiers. `formalization` retains the original four representations;
+backend evidence retains the actual optimized Lustre. A negative result from a
+merely sufficient PT check is `unknown`, with its raw backend result preserved and
+no source-level conflict diagnosis. It does not prove the future formula impossible.
+
 This adapter analyzes FRET's past-time Lustre contracts. It does not accept
 arbitrary Lustre assignments, custom function implementations, internal variables,
 external model imports, probabilistic analysis or component decomposition. Built-in
@@ -327,9 +355,9 @@ The overall `report.result` is:
 
 | Result | Meaning |
 | --- | --- |
-| `realizable` | Kind 2 established contract and environment realizability for this submitted model. |
-| `unrealizable` | The contract is unrealizable under the submitted realizable environment. |
-| `unknown` | A required backend check is inconclusive or timed out. |
+| `realizable` | Kind 2 realized the checked PT contract under an equivalent environment; its guarantees imply the submitted infinite-future formulas. |
+| `unrealizable` | An equivalent PT contract is unrealizable under the submitted realizable environment. |
+| `unknown` | A required check is inconclusive/timed out, or a stronger PT contract failed without proving the future formula impossible. |
 | `invalid` | Invalid input/formalization, or an unrealizable environment assumption set. |
 | `unsupported` | An input feature cannot be analyzed by this adapter. |
 | `error` | Backend or adapter failure, with diagnostics. |
@@ -349,7 +377,7 @@ already obtained contract result; an incomplete diagnosis cannot erase that resu
 ## Evidence and task lifecycle
 
 Every job records the exact input, a canonical SHA-256 input digest, requested and
-actually analyzed IDs, generated formulas, FRET source digest, adapter/backend
+actually analyzed IDs, generated formulas, compiler source digest (FRET plus MCP bridge), adapter/backend
 versions, declared time model, assumptions, variable mapping, and diagnostics.
 Every backend check retains the generated Lustre and its digest, command, exit
 code, stdout/stderr and raw contract/environment traces. Temporary file paths in
@@ -375,7 +403,26 @@ for the whole service when deploying it.
 
 An analysis continues across HTTP disconnect, MCP cancellation of the submission
 request, session deletion and reconnect. Use `cancel_analysis` to stop it.
-Cancellation kills its worker/solver process group and waits for worker exit.
+Cancellation accepts exactly one selector: `{job_id}` or
+`{request: <the complete original analysis input>}`. The request selector is for
+lost start acknowledgements as well as known jobs; it performs an owner-bound
+lookup, never a start. The same owner and request ID with different canonical
+input returns `request_conflict`.
+
+An exact request that has not started is recorded immediately as `cancelled`,
+with `error.code: "cancelled_before_start"`, the full input, a null report and a
+normal digest-bound terminal snapshot. It allocates no worker, workspace or
+execution slot, even while every slot is occupied. A delayed start with that
+same owner, request ID and input returns this terminal record instead of running.
+Its `last_phase: "preparing"` denotes the initial request state; null check and
+checkpoint evidence and `cancelled_before_start` identify that no worker ran.
+Rerunning requires a fresh request ID.
+
+For a running job, cancellation kills its worker/solver process group and waits
+for worker exit and slot release before returning the same small analysis view.
+An already committed completed result remains completed; cancellation does not
+overwrite its report, snapshot or digest. Read terminal input and evidence with
+`get_analysis` and its returned snapshot identity, for either selector.
 `SIGTERM`/`SIGINT` interrupt active jobs and close the store; an unexpected parent
 disconnect terminates the worker group. Restart marks unfinished records
 `interrupted`; it does not automatically rerun them. Container init reaps children.
@@ -471,7 +518,7 @@ with the test/source directories mounted read-only. For example, from the root:
 docker run --rm --init --network none `
   --mount "type=bind,source=$PWD/mcp/tests,target=/opt/fret-mcp/tests,readonly" `
   --mount "type=bind,source=$PWD/mcp/src,target=/opt/fret-mcp/src,readonly" `
-  alphase/fret-mcp:0.3.0 node --test `
+  alphase/fret-mcp:0.4.0 node --test `
   tests/analysis.test.js tests/analysis-lifecycle.test.js tests/mcp.test.js `
   tests/historical-models.test.js
 ```

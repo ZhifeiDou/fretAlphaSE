@@ -94,6 +94,14 @@ const analysisInput = z.strictObject({
 });
 
 const analysisReference = z.strictObject({ job_id: z.uuid() });
+const analysisCancellation = z.strictObject({
+  job_id: z.uuid().optional(),
+  request: analysisInput.optional()
+}).superRefine((value, context) => {
+  if ((value.job_id === undefined) === (value.request === undefined)) {
+    context.addIssue({ code: 'custom', message: 'Supply exactly one of job_id or the exact analysis request.' });
+  }
+}).describe('Cancel by exactly one selector: job_id, or request containing the complete original analysis input.');
 const analysisRead = analysisReference.extend({ snapshot_digest: digest.optional(), offset: z.int().nonnegative().optional() })
   .superRefine((value, context) => {
     if ((value.snapshot_digest === undefined) !== (value.offset === undefined)) {
@@ -111,6 +119,16 @@ const analysisReport = z.strictObject({
   analyzed_ids: z.array(requirementId),
   diagnostics: z.array(z.strictObject({ id: requirementId.nullable(), code: text, message: text })),
   formalization: formalizeOutput,
+  compilation: z.strictObject({
+    semantics: z.literal('pt_invariant'), source_semantics: z.literal('ft_inf'),
+    relation: z.enum(['equivalent', 'sufficient', 'unsupported']),
+    clauses: z.array(z.strictObject({
+      id: requirementId, kind: z.enum(['assumption', 'guarantee']),
+      relation: z.enum(['equivalent', 'sufficient', 'unsupported']),
+      original_pt_lustre: text, optimized_pt_lustre: text,
+      rules: z.array(z.enum(['historical_current', 'eventual_monitor_current']))
+    }))
+  }).optional(),
   toolchain: analysisToolchain,
   time_model: analysisInput.shape.time_model,
   assumption_ids: z.array(requirementId),
@@ -127,6 +145,29 @@ const analysisReport = z.strictObject({
     conflicts: z.array(z.array(requirementId).min(1)),
     message: z.string().nullable()
   })
+}).superRefine((value, context) => {
+  if (value.toolchain.adapter !== '0.4.0') return;
+  const compilation = value.compilation;
+  const problem = message => context.addIssue({ code: 'custom', path: ['compilation'], message });
+  if (!compilation) { problem('FRET 0.4 reports require explicit compilation semantics.'); return; }
+  if (compilation.relation === 'unsupported') {
+    if (!['invalid', 'unsupported', 'error'].includes(value.result)) problem('Unsupported semantics cannot carry an analysis verdict.');
+    if (value.checks.length || value.analyzed_ids.length) problem('Unsupported semantics must stop before analysis.');
+    return;
+  }
+  const clauses = compilation.clauses;
+  if (JSON.stringify(clauses.map(item => item.id)) !== JSON.stringify(value.requested_ids) ||
+      clauses.some(item => item.kind === 'assumption' ? item.relation !== 'equivalent' : item.relation === 'unsupported') ||
+      clauses.some(item => !(item.kind === 'assumption' ? value.assumption_ids : value.guarantee_ids).includes(item.id))) {
+    problem('Supported compilation must cover every requested clause with a safe relation and its explicit role.');
+  }
+  const relation = clauses.some(item => item.relation === 'sufficient') ? 'sufficient' : 'equivalent';
+  if (compilation.relation !== relation) problem('Aggregate compilation relation differs from its clauses.');
+  if (compilation.relation === 'sufficient' &&
+      (value.result === 'unrealizable' || value.diagnosis.conflicts.length ||
+       (value.contract_result === 'unrealizable' && value.environment_result === 'realizable' && value.result !== 'unknown'))) {
+    problem('A negative sufficient PT check cannot establish infinite-future unrealizability or conflicts.');
+  }
 });
 const boundedUtf8 = limit => z.string().refine(value => Buffer.byteLength(value, 'utf8') <= limit,
   `Evidence exceeds its ${limit} byte limit.`);
@@ -219,5 +260,5 @@ const analysisView = z.strictObject({
   }
 });
 
-module.exports = { formalizeInput, formalizeOutput, analysisInput, analysisReference, analysisRead, analysisReport, analysisStatus,
+module.exports = { formalizeInput, formalizeOutput, analysisInput, analysisReference, analysisCancellation, analysisRead, analysisReport, analysisStatus,
   analysisCheckEvidence, analysisDiagnostics, analysisView, contentDigest };

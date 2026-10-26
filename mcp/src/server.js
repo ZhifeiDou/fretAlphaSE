@@ -7,7 +7,7 @@ const { McpServer } = require('@modelcontextprotocol/sdk/server/mcp.js');
 const { StreamableHTTPServerTransport } = require('@modelcontextprotocol/sdk/server/streamableHttp.js');
 const { hostHeaderValidation } = require('@modelcontextprotocol/sdk/server/middleware/hostHeaderValidation.js');
 const { isInitializeRequest, isJSONRPCRequest } = require('@modelcontextprotocol/sdk/types.js');
-const { formalizeInput, formalizeOutput, analysisInput, analysisReference, analysisRead, analysisView } = require('./schemas');
+const { formalizeInput, formalizeOutput, analysisInput, analysisCancellation, analysisRead, analysisView } = require('./schemas');
 const { AnalysisJobs } = require('./analysis_jobs');
 const { backendVersions } = require('./analysis');
 const { createAuthentication } = require('./auth');
@@ -126,8 +126,8 @@ async function startServer(options) {
         request => analyses.read({ job_id: analyses.start(request, caller).job_id }, caller)],
       ['get_analysis', 'Read analysis', 'Read caller-owned analysis status or one digest-bound UTF-8 page of terminal evidence. Completed evidence survives restart.', analysisRead,
         request => analyses.read(request, caller)],
-      ['cancel_analysis', 'Cancel analysis', 'Cancel a caller-owned analysis and wait for its worker and solver process group to terminate.', analysisReference,
-        async request => { await analyses.cancel(request.job_id, caller); return analyses.read(request, caller); }]
+      ['cancel_analysis', 'Cancel analysis', 'Cancel by exactly one of job_id or request containing the complete original analysis input. An unstarted request is durably cancelled without a worker; a running cancellation waits for worker termination and slot release. A completed result is retained.', analysisCancellation,
+        async request => { const job = await analyses.cancel(request, caller); return analyses.read({ job_id: job.job_id }, caller); }]
     ]) {
       const analysisTool = server.registerTool(name, {
         title, description, inputSchema, outputSchema: analysisView,

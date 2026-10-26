@@ -5,9 +5,12 @@ const webpack = require('webpack');
 
 const sourceRoot = path.resolve(__dirname, '../fret-electron');
 const sourceHash = createHash('sha256');
-for (const directory of ['app/parser', 'support', 'analysis']) {
-  for (const file of fs.readdirSync(path.join(sourceRoot, directory), { recursive: true }).sort()) {
-    const absolute = path.join(sourceRoot, directory, file);
+for (const [directory, root] of [
+  ...['app/parser', 'support', 'analysis'].map(directory => [directory, path.join(sourceRoot, directory)]),
+  ['mcp/src', path.join(__dirname, 'src')]
+]) {
+  for (const file of fs.readdirSync(root, { recursive: true }).sort()) {
+    const absolute = path.join(root, file);
     if (fs.statSync(absolute).isFile()) {
       sourceHash.update(`${directory}/${file.replaceAll('\\', '/')}\0`);
       sourceHash.update(fs.readFileSync(absolute));

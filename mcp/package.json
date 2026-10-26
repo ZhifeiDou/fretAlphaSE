@@ -1,6 +1,6 @@
 {
   "name": "@fret-alphase/mcp",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "private": true,
   "description": "FRET formalization, realizability and diagnosis for AlphaSE over MCP",
   "type": "commonjs",

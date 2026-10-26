@@ -2,7 +2,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { randomUUID } = require('node:crypto');
 const { fork } = require('node:child_process');
-const { analysisInput, analysisRead, analysisReport, analysisStatus, analysisCheckEvidence, analysisView, contentDigest } = require('./schemas');
+const { analysisInput, analysisCancellation, analysisRead, analysisReport, analysisStatus, analysisCheckEvidence, analysisView, contentDigest } = require('./schemas');
 const { ExecutionError } = require('./executor');
 
 class AnalysisJobs {
@@ -124,32 +124,44 @@ class AnalysisJobs {
     return report;
   }
 
-  start(request, caller) {
-    if (this.failure) throw new ExecutionError('storage_error', this.failure.message);
-    if (this.closed) throw new ExecutionError('shutting_down', 'The service is shutting down.');
-    const input = analysisInput.parse(request);
-    const inputDigest = contentDigest(input);
-    const owner = this.owner(caller);
-    const previous = this.db.prepare('SELECT id, input_digest FROM jobs WHERE owner=? AND request_id=?').get(owner, input.request_id);
-    if (previous) {
-      if (previous.input_digest !== inputDigest) throw new ExecutionError('request_conflict', 'request_id is already bound to different input.');
-      return this.get(previous.id, caller);
+  findRequest(input, caller) {
+    const previous = this.db.prepare('SELECT id, input_digest FROM jobs WHERE owner=? AND request_id=?')
+      .get(this.owner(caller), input.request_id);
+    if (!previous) return null;
+    if (previous.input_digest !== contentDigest(input)) {
+      throw new ExecutionError('request_conflict', 'request_id is already bound to different input.');
     }
-    if (this.active.size >= this.maxAnalyses) throw new ExecutionError('busy', 'All analysis slots are in use.');
-    if (input.options.timeout_ms > this.timeoutMs) throw new ExecutionError('timeout_limit', 'Requested timeout exceeds the server analysis budget.');
-    const started = process.hrtime.bigint();
-    const deadline = started + BigInt(input.options.timeout_ms) * 1000000n;
+    return this.get(previous.id, caller);
+  }
+
+  createJob(input, caller, status) {
     const createdAt = new Date().toISOString();
+    const cancelled = status === 'cancelled';
     const job = {
-      job_id: randomUUID(), request_id: input.request_id, input_digest: inputDigest,
-      status: 'running', phase: 'preparing', created_at: createdAt, finished_at: null,
-      report_digest: null, report: null, error: null, input,
-      diagnostics: { last_phase: 'preparing', phase_started_at: createdAt,
+      job_id: randomUUID(), request_id: input.request_id, input_digest: contentDigest(input),
+      status, phase: cancelled ? 'finished' : 'preparing', created_at: createdAt,
+      finished_at: cancelled ? createdAt : null, report_digest: null, report: null,
+      error: cancelled ? { code: 'cancelled_before_start', message: 'Cancelled by the analysis owner before execution started.' } : null,
+      input, diagnostics: { last_phase: 'preparing', phase_started_at: createdAt,
         last_check: null, checkpoint: null, checkpoint_digest: null }
     };
     const serialized = this.serialize(job);
     this.db.prepare('INSERT INTO jobs VALUES(?,?,?,?,?,?)')
-      .run(job.job_id, owner, input.request_id, inputDigest, serialized.data, serialized.view);
+      .run(job.job_id, this.owner(caller), input.request_id, job.input_digest, serialized.data, serialized.view);
+    return job;
+  }
+
+  start(request, caller) {
+    if (this.failure) throw new ExecutionError('storage_error', this.failure.message);
+    if (this.closed) throw new ExecutionError('shutting_down', 'The service is shutting down.');
+    const input = analysisInput.parse(request);
+    const previous = this.findRequest(input, caller);
+    if (previous) return previous;
+    if (this.active.size >= this.maxAnalyses) throw new ExecutionError('busy', 'All analysis slots are in use.');
+    if (input.options.timeout_ms > this.timeoutMs) throw new ExecutionError('timeout_limit', 'Requested timeout exceeds the server analysis budget.');
+    const started = process.hrtime.bigint();
+    const deadline = started + BigInt(input.options.timeout_ms) * 1000000n;
+    const job = this.createJob(input, caller, 'running');
     const workDirectory = path.join(this.workRoot, job.job_id);
     let child;
     try {
@@ -161,7 +173,12 @@ class AnalysisJobs {
     } catch (error) {
       job.status = 'error'; job.phase = 'finished'; job.finished_at = new Date().toISOString();
       job.error = { code: 'worker_start_failed', message: error.message };
-      this.save(job); this.clean(job);
+      try { this.save(job); }
+      catch (failure) {
+        this.failure = failure;
+        throw new ExecutionError('storage_error', failure.message);
+      }
+      this.clean(job);
       return this.get(job.job_id, caller);
     }
     let response;
@@ -254,14 +271,21 @@ class AnalysisJobs {
     return this.get(job.job_id, caller);
   }
 
-  async cancel(id, caller) {
-    this.get(id, caller);
-    const active = this.active.get(id);
+  async cancel(request, caller) {
+    if (this.failure) throw new ExecutionError('storage_error', this.failure.message);
+    if (this.closed) throw new ExecutionError('shutting_down', 'The service is shutting down.');
+    const selector = analysisCancellation.parse(request);
+    // Lookup and a not-yet-started cancellation are synchronous durable writes.
+    // A competing start must observe this same owner/request/input binding.
+    const job = selector.request
+      ? this.findRequest(selector.request, caller) ?? this.createJob(selector.request, caller, 'cancelled')
+      : this.get(selector.job_id, caller);
+    const active = this.active.get(job.job_id);
     if (active) {
       active.stop('cancelled', 'cancelled', 'Cancelled by the analysis owner.');
       await active.done;
     }
-    return this.get(id, caller);
+    return this.get(job.job_id, caller);
   }
 
   async close() {

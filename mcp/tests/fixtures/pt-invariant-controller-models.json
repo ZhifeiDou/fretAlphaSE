@@ -1,0 +1,624 @@
+[
+  {
+    "name": "controller-14",
+    "input": {
+      "component": "AutoRCCar",
+      "requirements": [
+        {
+          "id": "SRS-2-12:received_value",
+          "fretish": "Whenever (operation_running & ultrasonic_reception) AutoRCCar shall immediately satisfy (received_ultrasonic_distance = supplied_ultrasonic_distance & measurement_available & avoidance_available)",
+          "kind": "guarantee",
+          "source_refs": [
+            "source:archived-controller-regression"
+          ]
+        },
+        {
+          "id": "SRS-2-13:forward_motion",
+          "fretish": "Whenever (car_connected & steer_requested & !stop_invoked & request_longitudinal = 1 & request_turn = 0) AutoRCCar shall eventually satisfy (stop_invoked | car_forward)",
+          "kind": "guarantee",
+          "source_refs": [
+            "source:archived-controller-regression"
+          ]
+        },
+        {
+          "id": "SRS-2-13:backward_motion",
+          "fretish": "Whenever (car_connected & steer_requested & !stop_invoked & request_longitudinal = -1 & request_turn = 0) AutoRCCar shall eventually satisfy (stop_invoked | car_backward)",
+          "kind": "guarantee",
+          "source_refs": [
+            "source:archived-controller-regression"
+          ]
+        },
+        {
+          "id": "SRS-2-13:left_motion",
+          "fretish": "Whenever (car_connected & steer_requested & !stop_invoked & request_longitudinal = 0 & request_turn = 1) AutoRCCar shall eventually satisfy (stop_invoked | car_turning_left)",
+          "kind": "guarantee",
+          "source_refs": [
+            "source:archived-controller-regression"
+          ]
+        },
+        {
+          "id": "SRS-2-13:right_motion",
+          "fretish": "Whenever (car_connected & steer_requested & !stop_invoked & request_longitudinal = 0 & request_turn = -1) AutoRCCar shall eventually satisfy (stop_invoked | car_turning_right)",
+          "kind": "guarantee",
+          "source_refs": [
+            "source:archived-controller-regression"
+          ]
+        },
+        {
+          "id": "SRS-2-13:forward_left_motion",
+          "fretish": "Whenever (car_connected & steer_requested & !stop_invoked & request_longitudinal = 1 & request_turn = 1) AutoRCCar shall eventually satisfy (stop_invoked | (car_forward & car_turning_left))",
+          "kind": "guarantee",
+          "source_refs": [
+            "source:archived-controller-regression"
+          ]
+        },
+        {
+          "id": "SRS-2-13:forward_right_motion",
+          "fretish": "Whenever (car_connected & steer_requested & !stop_invoked & request_longitudinal = 1 & request_turn = -1) AutoRCCar shall eventually satisfy (stop_invoked | (car_forward & car_turning_right))",
+          "kind": "guarantee",
+          "source_refs": [
+            "source:archived-controller-regression"
+          ]
+        },
+        {
+          "id": "SRS-2-13:backward_left_motion",
+          "fretish": "Whenever (car_connected & steer_requested & !stop_invoked & request_longitudinal = -1 & request_turn = 1) AutoRCCar shall eventually satisfy (stop_invoked | (car_backward & car_turning_left))",
+          "kind": "guarantee",
+          "source_refs": [
+            "source:archived-controller-regression"
+          ]
+        },
+        {
+          "id": "SRS-2-13:backward_right_motion",
+          "fretish": "Whenever (car_connected & steer_requested & !stop_invoked & request_longitudinal = -1 & request_turn = -1) AutoRCCar shall eventually satisfy (stop_invoked | (car_backward & car_turning_right))",
+          "kind": "guarantee",
+          "source_refs": [
+            "source:archived-controller-regression"
+          ]
+        },
+        {
+          "id": "SRS-2-13:motion_observation_domain",
+          "fretish": "AutoRCCar shall always satisfy (!(car_forward & car_backward) & !(car_turning_left & car_turning_right) & (!(car_forward | car_backward | car_turning_left | car_turning_right) | car_moving))",
+          "kind": "guarantee",
+          "source_refs": [
+            "source:archived-controller-regression"
+          ]
+        },
+        {
+          "id": "SRS-2-14:effective_stop",
+          "fretish": "Whenever stop_invoked AutoRCCar shall eventually satisfy !car_moving",
+          "kind": "guarantee",
+          "source_refs": [
+            "source:archived-controller-regression"
+          ]
+        },
+        {
+          "id": "SRS-2-20:camera_judgment",
+          "fretish": "Whenever (camera_judgment_completed & camera_reference_applicable) AutoRCCar shall immediately satisfy ((camera_reference_safe & camera_judged_safe & !camera_judged_unsafe) | (!camera_reference_safe & !camera_judged_safe & camera_judged_unsafe))",
+          "kind": "guarantee",
+          "source_refs": [
+            "source:archived-controller-regression"
+          ]
+        },
+        {
+          "id": "SRS-2-21:ultrasonic_judgment",
+          "fretish": "Whenever (autonomous_running & ultrasonic_judgment_completed & ultrasonic_reference_applicable) AutoRCCar shall immediately satisfy ((ultrasonic_reference_safe & ultrasonic_judged_safe & !ultrasonic_judged_unsafe) | (!ultrasonic_reference_safe & !ultrasonic_judged_safe & ultrasonic_judged_unsafe))",
+          "kind": "guarantee",
+          "source_refs": [
+            "source:archived-controller-regression"
+          ]
+        },
+        {
+          "id": "SRS-2-21:autonomous_is_operation",
+          "fretish": "Whenever autonomous_running AutoRCCar shall immediately satisfy operation_running",
+          "kind": "guarantee",
+          "source_refs": [
+            "source:archived-controller-regression"
+          ]
+        }
+      ],
+      "variables": [
+        {
+          "name": "operation_running",
+          "type": "bool",
+          "role": "output",
+          "meaning": "Independent observation that the actual system is in ongoing operation, not an offline replay. This product-state observation does not claim that operation starts or persists."
+        },
+        {
+          "name": "ultrasonic_reception",
+          "type": "bool",
+          "role": "output",
+          "meaning": "An actual ultrasonic-distance reception completes at this observation, whether correctly or incorrectly; it is not defined by successful value preservation or downstream availability. Never receiving is not excluded by an assumption."
+        },
+        {
+          "name": "supplied_ultrasonic_distance",
+          "type": "real",
+          "role": "input",
+          "meaning": "Independent observation of the sensor-supplied numeric distance for the update whose actual reception is observed, in the same unspecified unit as received_ultrasonic_distance. Not an implementation-reported expected result; no relationship to camera_distance is inferred."
+        },
+        {
+          "name": "received_ultrasonic_distance",
+          "type": "real",
+          "role": "output",
+          "meaning": "Numeric distance actually made available from the observed reception, in the same unit as the source value; unconstrained outside reception observations. Scalar equality models value preservation, not a protocol or physical calibration."
+        },
+        {
+          "name": "measurement_available",
+          "type": "bool",
+          "role": "output",
+          "meaning": "The actual received update is accessible to distance-measurement processing at this observation, not merely present in an independent oracle or offline recording."
+        },
+        {
+          "name": "avoidance_available",
+          "type": "bool",
+          "role": "output",
+          "meaning": "The actual received update is accessible to collision-avoidance processing at this observation; this does not assert that it influences control or prevents collision."
+        },
+        {
+          "name": "car_connected",
+          "type": "bool",
+          "role": "input",
+          "meaning": "Independent observation that the Arduino control interface is connected to the same actual RC car observed at OBS-2-car_motion; not an acknowledgment of successful motion."
+        },
+        {
+          "name": "steer_requested",
+          "type": "bool",
+          "role": "input",
+          "meaning": "A motion request actually occurs through RCControl.steer at this observation, regardless of its outcome. Its semantic longitudinal/turning attributes are request_longitudinal and request_turn; multiple invocations retain distinct observations unless genuinely coincident with stop."
+        },
+        {
+          "name": "request_longitudinal",
+          "type": "int",
+          "role": "input",
+          "meaning": "Semantic attribute of the observed request: 1 denotes forward, -1 backward, 0 no requested longitudinal component. These are formal observation codes, not wire bytes, API arguments or neural output labels. Values outside this set are outside these supported-action projections; basic left/right use 0, compound actions use 1 or -1."
+        },
+        {
+          "name": "request_turn",
+          "type": "int",
+          "role": "input",
+          "meaning": "Semantic attribute of the same observed request: 1 denotes left turn, -1 right turn, 0 no requested turning component. Codes do not choose an API/wire/neural encoding. Basic forward/backward use 0; compound requests use 1 or -1. Scalar pairs define cases directly, so a compound request is not an independent label that can also denote a basic request."
+        },
+        {
+          "name": "car_forward",
+          "type": "bool",
+          "role": "output",
+          "meaning": "Independent physical observation at OBS-2-car_motion of this actual car moving longitudinally forward at this observation, including during a turn; not a command, success flag or simulated state."
+        },
+        {
+          "name": "car_backward",
+          "type": "bool",
+          "role": "output",
+          "meaning": "Independent physical observation at OBS-2-car_motion of the same actual car moving longitudinally backward, including during a turn; not inferred from the requested action."
+        },
+        {
+          "name": "car_turning_left",
+          "type": "bool",
+          "role": "output",
+          "meaning": "Independent physical observation of the same car executing a left-turning maneuver at OBS-2-car_motion, whether forward or backward; denotes actual turning motion, not a stationary wheel angle or a reported command."
+        },
+        {
+          "name": "car_turning_right",
+          "type": "bool",
+          "role": "output",
+          "meaning": "Independent physical observation of the same car executing a right-turning maneuver at OBS-2-car_motion, whether forward or backward; independent of request labels and incompatible with actual left-turning motion at the same observation."
+        },
+        {
+          "name": "car_moving",
+          "type": "bool",
+          "role": "output",
+          "meaning": "Independent observation of actual physical RC-car motion at OBS-2-car_motion; true while the actual car is moving and false while stationary. Not a stop return value, command message, internally simulated car or claimed success."
+        },
+        {
+          "name": "stop_invoked",
+          "type": "bool",
+          "role": "input",
+          "meaning": "RCControl.stop is actually invoked at the observed public stop boundary, including emergency invocations originating within ultrasonic avoidance. This boundary input is independent of success, ordinary drive commands and any safe/unsafe judgment; all such invocations are included."
+        },
+        {
+          "name": "camera_judgment_completed",
+          "type": "bool",
+          "role": "output",
+          "meaning": "The actual object-detection system completes a camera-associated distance-safety judgment at this observation, including an erroneous judgment. Completion does not imply correctness; the clause does not establish that judgments are ever produced."
+        },
+        {
+          "name": "camera_reference_applicable",
+          "type": "bool",
+          "role": "input",
+          "meaning": "Independent scene/distance/criterion evidence classifies this actual camera-associated measurement on the safe or unsafe side of the applicable distance criterion. Not the product's safe flag; false denotes measurements outside that independently established classification domain, not failed product outputs."
+        },
+        {
+          "name": "camera_reference_safe",
+          "type": "bool",
+          "role": "input",
+          "meaning": "When reference_applicable holds, independent application of the applicable camera-distance criterion classifies this measurement as safe (true) or unsafe (false). The unsafe case is its complement, not an independent conflicting label. No relationship to the ultrasonic criterion is inferred. The criterion's distance/calibration relation is not encoded and remains an explicit gap."
+        },
+        {
+          "name": "camera_judged_safe",
+          "type": "bool",
+          "role": "output",
+          "meaning": "The actual camera-distance judgment identifies this measurement as safe, independently observed at OBS-2-distance_safety. This indicator may be erroneous; it does not define reference safety."
+        },
+        {
+          "name": "camera_judged_unsafe",
+          "type": "bool",
+          "role": "output",
+          "meaning": "The actual camera-distance judgment identifies this measurement as unsafe. The guarantee requires exactly one of safe/unsafe for applicable completed judgments; this is not an assumption excluding invalid outputs."
+        },
+        {
+          "name": "autonomous_running",
+          "type": "bool",
+          "role": "output",
+          "meaning": "The actual launched autonomous-driving program is running with the real connected car; not import readiness or a separate simulation. This projection does not establish launch progress or its end-to-end data/control relations."
+        },
+        {
+          "name": "ultrasonic_judgment_completed",
+          "type": "bool",
+          "role": "output",
+          "meaning": "An actual threshold judgment of the received ultrasonic measurement completes at this observation, including an erroneous judgment. It does not assert correctness or physical avoidance and need not coincide with receipt."
+        },
+        {
+          "name": "ultrasonic_reference_applicable",
+          "type": "bool",
+          "role": "input",
+          "meaning": "Independent measurement/obstacle evidence classifies this actual received ultrasonic measurement against its applicable safety threshold. Not a gate based on product correctness; the reference distance-to-threshold mapping and safe physical operating domain remain an explicit gap."
+        },
+        {
+          "name": "ultrasonic_reference_safe",
+          "type": "bool",
+          "role": "input",
+          "meaning": "When the ultrasonic reference is applicable, independent application of the applicable threshold classifies this received measurement as safe (true) or unsafe (false). Unsafe is the complement, not an independent label; this input is distinct from camera safety and is not derived from the implementation's reported judgment."
+        },
+        {
+          "name": "ultrasonic_judged_safe",
+          "type": "bool",
+          "role": "output",
+          "meaning": "The actual ultrasonic threshold judgment identifies the measurement as safe, independently observed at OBS-2-collision_avoidance; not a definition of reference safety or avoidance success."
+        },
+        {
+          "name": "ultrasonic_judged_unsafe",
+          "type": "bool",
+          "role": "output",
+          "meaning": "The actual ultrasonic threshold judgment identifies the measurement as unsafe. The guarantee, not an assumption, enforces exactly one safe/unsafe result on applicable completed judgments."
+        }
+      ],
+      "time_model": {
+        "kind": "discrete_steps",
+        "description": "Shared AutoRCCar trace: each step is an ordered observation of actual running-system events and their contemporaneous attributes; retain invocation, receipt, judgment and physical-motion observations, including coincident events. No fixed sampling period or physical duration is assumed. Immediately compares attributes at one observation; eventually permits unbounded later observations, including the current one. Attribute pairing, observation completeness and implementation conformance require the cited independent verification, not assumptions."
+      },
+      "options": {
+        "timeout_ms": 5000,
+        "diagnose": true
+      },
+      "request_id": "8c5c02f4-67de-5769-a94d-39b7e6043df6"
+    },
+    "expected_equivalent": 5,
+    "expected_sufficient": 9
+  },
+  {
+    "name": "controller-15",
+    "input": {
+      "component": "AutoRCCar",
+      "requirements": [
+        {
+          "id": "SRS-2-12:received_value",
+          "fretish": "Whenever (operation_running & ultrasonic_reception) AutoRCCar shall immediately satisfy (received_ultrasonic_distance = supplied_ultrasonic_distance & measurement_available & avoidance_available)",
+          "kind": "guarantee",
+          "source_refs": [
+            "source:archived-controller-regression"
+          ]
+        },
+        {
+          "id": "SRS-2-13:forward_motion",
+          "fretish": "Whenever (car_connected & steer_requested & !stop_invoked & request_longitudinal = 1 & request_turn = 0) AutoRCCar shall eventually satisfy (stop_invoked | car_forward)",
+          "kind": "guarantee",
+          "source_refs": [
+            "source:archived-controller-regression"
+          ]
+        },
+        {
+          "id": "SRS-2-13:backward_motion",
+          "fretish": "Whenever (car_connected & steer_requested & !stop_invoked & request_longitudinal = -1 & request_turn = 0) AutoRCCar shall eventually satisfy (stop_invoked | car_backward)",
+          "kind": "guarantee",
+          "source_refs": [
+            "source:archived-controller-regression"
+          ]
+        },
+        {
+          "id": "SRS-2-13:left_motion",
+          "fretish": "Whenever (car_connected & steer_requested & !stop_invoked & request_longitudinal = 0 & request_turn = 1) AutoRCCar shall eventually satisfy (stop_invoked | car_turning_left)",
+          "kind": "guarantee",
+          "source_refs": [
+            "source:archived-controller-regression"
+          ]
+        },
+        {
+          "id": "SRS-2-13:right_motion",
+          "fretish": "Whenever (car_connected & steer_requested & !stop_invoked & request_longitudinal = 0 & request_turn = -1) AutoRCCar shall eventually satisfy (stop_invoked | car_turning_right)",
+          "kind": "guarantee",
+          "source_refs": [
+            "source:archived-controller-regression"
+          ]
+        },
+        {
+          "id": "SRS-2-13:forward_left_motion",
+          "fretish": "Whenever (car_connected & steer_requested & !stop_invoked & request_longitudinal = 1 & request_turn = 1) AutoRCCar shall eventually satisfy (stop_invoked | (car_forward & car_turning_left))",
+          "kind": "guarantee",
+          "source_refs": [
+            "source:archived-controller-regression"
+          ]
+        },
+        {
+          "id": "SRS-2-13:forward_right_motion",
+          "fretish": "Whenever (car_connected & steer_requested & !stop_invoked & request_longitudinal = 1 & request_turn = -1) AutoRCCar shall eventually satisfy (stop_invoked | (car_forward & car_turning_right))",
+          "kind": "guarantee",
+          "source_refs": [
+            "source:archived-controller-regression"
+          ]
+        },
+        {
+          "id": "SRS-2-13:backward_left_motion",
+          "fretish": "Whenever (car_connected & steer_requested & !stop_invoked & request_longitudinal = -1 & request_turn = 1) AutoRCCar shall eventually satisfy (stop_invoked | (car_backward & car_turning_left))",
+          "kind": "guarantee",
+          "source_refs": [
+            "source:archived-controller-regression"
+          ]
+        },
+        {
+          "id": "SRS-2-13:backward_right_motion",
+          "fretish": "Whenever (car_connected & steer_requested & !stop_invoked & request_longitudinal = -1 & request_turn = -1) AutoRCCar shall eventually satisfy (stop_invoked | (car_backward & car_turning_right))",
+          "kind": "guarantee",
+          "source_refs": [
+            "source:archived-controller-regression"
+          ]
+        },
+        {
+          "id": "SRS-2-13:motion_observation_domain",
+          "fretish": "AutoRCCar shall always satisfy (!(car_forward & car_backward) & !(car_turning_left & car_turning_right) & (!(car_forward | car_backward | car_turning_left | car_turning_right) | car_moving))",
+          "kind": "guarantee",
+          "source_refs": [
+            "source:archived-controller-regression"
+          ]
+        },
+        {
+          "id": "SRS-2-14:effective_stop",
+          "fretish": "Whenever stop_invoked AutoRCCar shall eventually satisfy !car_moving",
+          "kind": "guarantee",
+          "source_refs": [
+            "source:archived-controller-regression"
+          ]
+        },
+        {
+          "id": "SRS-2-16:launch_starts_operation",
+          "fretish": "Whenever (launch_requested & environment_available & hardware_available & script_resolves) AutoRCCar shall eventually satisfy autonomous_running",
+          "kind": "guarantee",
+          "source_refs": [
+            "source:archived-controller-regression"
+          ]
+        },
+        {
+          "id": "SRS-2-20:camera_judgment",
+          "fretish": "Whenever (camera_judgment_completed & camera_reference_applicable) AutoRCCar shall immediately satisfy ((camera_reference_safe & camera_judged_safe & !camera_judged_unsafe) | (!camera_reference_safe & !camera_judged_safe & camera_judged_unsafe))",
+          "kind": "guarantee",
+          "source_refs": [
+            "source:archived-controller-regression"
+          ]
+        },
+        {
+          "id": "SRS-2-21:ultrasonic_judgment",
+          "fretish": "Whenever (autonomous_running & ultrasonic_judgment_completed & ultrasonic_reference_applicable) AutoRCCar shall immediately satisfy ((ultrasonic_reference_safe & ultrasonic_judged_safe & !ultrasonic_judged_unsafe) | (!ultrasonic_reference_safe & !ultrasonic_judged_safe & ultrasonic_judged_unsafe))",
+          "kind": "guarantee",
+          "source_refs": [
+            "source:archived-controller-regression"
+          ]
+        },
+        {
+          "id": "SRS-2-21:autonomous_is_operation",
+          "fretish": "Whenever autonomous_running AutoRCCar shall immediately satisfy operation_running",
+          "kind": "guarantee",
+          "source_refs": [
+            "source:archived-controller-regression"
+          ]
+        }
+      ],
+      "variables": [
+        {
+          "name": "operation_running",
+          "type": "bool",
+          "role": "output",
+          "meaning": "Independent observation that the actual system is in ongoing operation, not an offline replay. This product-state observation does not claim that operation starts or persists."
+        },
+        {
+          "name": "ultrasonic_reception",
+          "type": "bool",
+          "role": "output",
+          "meaning": "An actual ultrasonic-distance reception completes at this observation, whether correctly or incorrectly; it is not defined by successful value preservation or downstream availability. Never receiving is not excluded by an assumption."
+        },
+        {
+          "name": "supplied_ultrasonic_distance",
+          "type": "real",
+          "role": "input",
+          "meaning": "Independent observation of the sensor-supplied numeric distance for the update whose actual reception is observed, in the same unspecified unit as received_ultrasonic_distance. Not an implementation-reported expected result; no relationship to camera_distance is inferred."
+        },
+        {
+          "name": "received_ultrasonic_distance",
+          "type": "real",
+          "role": "output",
+          "meaning": "Numeric distance actually made available from the observed reception, in the same unit as the source value; unconstrained outside reception observations. Scalar equality models value preservation, not a protocol or physical calibration."
+        },
+        {
+          "name": "measurement_available",
+          "type": "bool",
+          "role": "output",
+          "meaning": "The actual received update is accessible to distance-measurement processing at this observation, not merely present in an independent oracle or offline recording."
+        },
+        {
+          "name": "avoidance_available",
+          "type": "bool",
+          "role": "output",
+          "meaning": "The actual received update is accessible to collision-avoidance processing at this observation; this does not assert that it influences control or prevents collision."
+        },
+        {
+          "name": "car_connected",
+          "type": "bool",
+          "role": "input",
+          "meaning": "Independent observation that the Arduino control interface is connected to the same actual RC car observed at OBS-2-car_motion; not an acknowledgment of successful motion."
+        },
+        {
+          "name": "steer_requested",
+          "type": "bool",
+          "role": "input",
+          "meaning": "A motion request actually occurs through RCControl.steer at this observation, regardless of its outcome. Its semantic longitudinal/turning attributes are request_longitudinal and request_turn; multiple invocations retain distinct observations unless genuinely coincident with stop."
+        },
+        {
+          "name": "request_longitudinal",
+          "type": "int",
+          "role": "input",
+          "meaning": "Semantic attribute of the observed request: 1 denotes forward, -1 backward, 0 no requested longitudinal component. These are formal observation codes, not wire bytes, API arguments or neural output labels. Values outside this set are outside these supported-action projections; basic left/right use 0, compound actions use 1 or -1."
+        },
+        {
+          "name": "request_turn",
+          "type": "int",
+          "role": "input",
+          "meaning": "Semantic attribute of the same observed request: 1 denotes left turn, -1 right turn, 0 no requested turning component. Codes do not choose an API/wire/neural encoding. Basic forward/backward use 0; compound requests use 1 or -1. Scalar pairs define cases directly, so a compound request is not an independent label that can also denote a basic request."
+        },
+        {
+          "name": "car_forward",
+          "type": "bool",
+          "role": "output",
+          "meaning": "Independent physical observation at OBS-2-car_motion of this actual car moving longitudinally forward at this observation, including during a turn; not a command, success flag or simulated state."
+        },
+        {
+          "name": "car_backward",
+          "type": "bool",
+          "role": "output",
+          "meaning": "Independent physical observation at OBS-2-car_motion of the same actual car moving longitudinally backward, including during a turn; not inferred from the requested action."
+        },
+        {
+          "name": "car_turning_left",
+          "type": "bool",
+          "role": "output",
+          "meaning": "Independent physical observation of the same car executing a left-turning maneuver at OBS-2-car_motion, whether forward or backward; denotes actual turning motion, not a stationary wheel angle or a reported command."
+        },
+        {
+          "name": "car_turning_right",
+          "type": "bool",
+          "role": "output",
+          "meaning": "Independent physical observation of the same car executing a right-turning maneuver at OBS-2-car_motion, whether forward or backward; independent of request labels and incompatible with actual left-turning motion at the same observation."
+        },
+        {
+          "name": "car_moving",
+          "type": "bool",
+          "role": "output",
+          "meaning": "Independent observation of actual physical RC-car motion at OBS-2-car_motion; true while the actual car is moving and false while stationary. Not a stop return value, command message, internally simulated car or claimed success."
+        },
+        {
+          "name": "stop_invoked",
+          "type": "bool",
+          "role": "input",
+          "meaning": "RCControl.stop is actually invoked at the observed public stop boundary, including emergency invocations originating within ultrasonic avoidance. This boundary input is independent of success, ordinary drive commands and any safe/unsafe judgment; all such invocations are included."
+        },
+        {
+          "name": "launch_requested",
+          "type": "bool",
+          "role": "input",
+          "meaning": "Independent observation that the user actually invokes python rc_driver.py at this observation, whether startup succeeds or fails; not a successful-launch acknowledgment."
+        },
+        {
+          "name": "environment_available",
+          "type": "bool",
+          "role": "input",
+          "meaning": "Independent observation at command invocation that the declared Python/dependency environment is available. Availability is assessed independently of the program's response; no assumption requires it on all traces."
+        },
+        {
+          "name": "hardware_available",
+          "type": "bool",
+          "role": "input",
+          "meaning": "Independent observation at command invocation that the required camera, ultrasonic sensor and actual car-control hardware are available for this launch. The car is the same real car observed by the motion/stop assessments; this is not a product-reported success flag or a simulated substitute. Hardware/connection observation consistency requires the cited independent verification."
+        },
+        {
+          "name": "script_resolves",
+          "type": "bool",
+          "role": "input",
+          "meaning": "Independent observation that this invocation's command resolves the provided computer/rc_driver.py script in its launch directory, not a different script. It does not mean imports or startup succeeded, and prescribes no extra root-level script or launcher."
+        },
+        {
+          "name": "autonomous_running",
+          "type": "bool",
+          "role": "output",
+          "meaning": "The actual launched autonomous-driving program is running with the real connected car; not import readiness or a separate simulation. This state observation alone does not establish launch progress or its end-to-end data/control relations."
+        },
+        {
+          "name": "camera_judgment_completed",
+          "type": "bool",
+          "role": "output",
+          "meaning": "The actual object-detection system completes a camera-associated distance-safety judgment at this observation, including an erroneous judgment. Completion does not imply correctness; the clause does not establish that judgments are ever produced."
+        },
+        {
+          "name": "camera_reference_applicable",
+          "type": "bool",
+          "role": "input",
+          "meaning": "Independent scene/distance/criterion evidence classifies this actual camera-associated measurement on the safe or unsafe side of the applicable distance criterion. Not the product's safe flag; false denotes measurements outside that independently established classification domain, not failed product outputs."
+        },
+        {
+          "name": "camera_reference_safe",
+          "type": "bool",
+          "role": "input",
+          "meaning": "When reference_applicable holds, independent application of the applicable camera-distance criterion classifies this measurement as safe (true) or unsafe (false). The unsafe case is its complement, not an independent conflicting label. No relationship to the ultrasonic criterion is inferred. The criterion's distance/calibration relation is not encoded and remains an explicit gap."
+        },
+        {
+          "name": "camera_judged_safe",
+          "type": "bool",
+          "role": "output",
+          "meaning": "The actual camera-distance judgment identifies this measurement as safe, independently observed at OBS-2-distance_safety. This indicator may be erroneous; it does not define reference safety."
+        },
+        {
+          "name": "camera_judged_unsafe",
+          "type": "bool",
+          "role": "output",
+          "meaning": "The actual camera-distance judgment identifies this measurement as unsafe. The guarantee requires exactly one of safe/unsafe for applicable completed judgments; this is not an assumption excluding invalid outputs."
+        },
+        {
+          "name": "ultrasonic_judgment_completed",
+          "type": "bool",
+          "role": "output",
+          "meaning": "An actual threshold judgment of the received ultrasonic measurement completes at this observation, including an erroneous judgment. It does not assert correctness or physical avoidance and need not coincide with receipt."
+        },
+        {
+          "name": "ultrasonic_reference_applicable",
+          "type": "bool",
+          "role": "input",
+          "meaning": "Independent measurement/obstacle evidence classifies this actual received ultrasonic measurement against its applicable safety threshold. Not a gate based on product correctness; the reference distance-to-threshold mapping and safe physical operating domain remain an explicit gap."
+        },
+        {
+          "name": "ultrasonic_reference_safe",
+          "type": "bool",
+          "role": "input",
+          "meaning": "When the ultrasonic reference is applicable, independent application of the applicable threshold classifies this received measurement as safe (true) or unsafe (false). Unsafe is the complement, not an independent label; this input is distinct from camera safety and is not derived from the implementation's reported judgment."
+        },
+        {
+          "name": "ultrasonic_judged_safe",
+          "type": "bool",
+          "role": "output",
+          "meaning": "The actual ultrasonic threshold judgment identifies the measurement as safe, independently observed at OBS-2-collision_avoidance; not a definition of reference safety or avoidance success."
+        },
+        {
+          "name": "ultrasonic_judged_unsafe",
+          "type": "bool",
+          "role": "output",
+          "meaning": "The actual ultrasonic threshold judgment identifies the measurement as unsafe. The guarantee, not an assumption, enforces exactly one safe/unsafe result on applicable completed judgments."
+        }
+      ],
+      "time_model": {
+        "kind": "discrete_steps",
+        "description": "Shared AutoRCCar trace: each step is an ordered observation of actual running-system events and their contemporaneous attributes; retain invocation, receipt, judgment and physical-motion observations, including coincident events. No fixed sampling period or physical duration is assumed. Immediately compares attributes at one observation; eventually permits unbounded later observations, including the current one. Attribute pairing, observation completeness and implementation conformance require the cited independent verification, not assumptions."
+      },
+      "options": {
+        "timeout_ms": 5000,
+        "diagnose": true
+      },
+      "request_id": "6d2a650e-da2c-58ac-9c60-eacc88fcfa45"
+    },
+    "expected_equivalent": 5,
+    "expected_sufficient": 10
+  }
+]

@@ -82,13 +82,27 @@ test('real backend distinguishes realizability from satisfiability', linux, asyn
   assert.deepEqual(bad.diagnosis.conflicts, [['G0']]);
 });
 
-test('real FRET diagnoses a temporal conflict with exact input IDs and backend trace', linux, async t => {
+test('timed formulas remain compilable while current-state conflicts retain exact backend diagnosis', linux, async t => {
   const request = input([
     'Whenever p Controller shall within 2 ticks satisfy q',
     'Controller shall always satisfy !q'
   ]);
   request.requirements[0].id = 'assumption_is_only_part_of_this_guarantee_ID';
-  const report = await analyze(t, request);
+  const unsupported = await analyze(t, request);
+  assert.equal(unsupported.result, 'unsupported');
+  assert.equal(unsupported.diagnostics[0].code, 'unsupported_analysis_semantics');
+  assert.equal(unsupported.diagnostics[0].id, request.requirements[0].id);
+  assert.deepEqual(unsupported.checks, []);
+  assert.deepEqual(unsupported.analyzed_ids, []);
+  assert.deepEqual(unsupported.formalization, formalizeRequirements({
+    requirements: request.requirements.map(({ id, fretish }) => ({ id, fretish })),
+    variables: request.variables.map(({ name, type }) => ({ name, type })),
+    representations: ['pt-lustre', 'pt-smv', 'ft-inf', 'ft-fin']
+  }));
+  const current = structuredClone(request);
+  current.request_id = randomUUID();
+  current.requirements[0].fretish = 'Whenever p Controller shall immediately satisfy q';
+  const report = await analyze(t, current);
   assert.equal(report.result, 'unrealizable');
   assert.deepEqual(report.analyzed_ids, report.requested_ids);
   assert.equal(report.diagnosis.status, 'completed');
@@ -279,9 +293,14 @@ test('reserved temporal operator names are rejected before solver execution', li
 });
 
 test('a budget without a full solver second returns unknown without launching Kind2', linux, async t => {
-  const request = input([
+  const timed = input([
     'Whenever p Controller shall within 5000 ticks satisfy q', 'Controller shall always satisfy !q'
   ]);
+  const unsupported = await analyze(t, timed);
+  assert.equal(unsupported.result, 'unsupported');
+  assert.equal(unsupported.diagnostics[0].code, 'unsupported_analysis_semantics');
+  assert.ok(unsupported.formalization.results.every(item => item.status === 'formalized'));
+  const request = input(['Controller shall always satisfy q']);
   request.options = { timeout_ms: 1000, diagnose: false };
   const directory = fs.mkdtempSync(path.join(tmpdir(), 'fret-short-budget-'));
   t.after(() => fs.rmSync(directory, { recursive: true, force: true }));

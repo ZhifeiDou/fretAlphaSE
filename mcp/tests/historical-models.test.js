@@ -228,6 +228,18 @@ for (const { component, original } of historical.cases) {
     assert.equal(report.input_digest, contentDigest(candidate.input));
     assert.deepEqual(report.requested_ids, original.report.requested_ids);
     assert.deepEqual(report.formalization, preflight(candidate.input));
+    if (component === 'StickyActionEnv') {
+      // This retained clause uses default eventual timing without a trigger.
+      // Its finite-endpoint Once monitor has no supported infinite-time proof.
+      assert.equal(report.result, 'unsupported');
+      assert.equal(report.compilation.relation, 'unsupported');
+      assert.deepEqual(report.diagnostics.map(item => [item.id, item.code]), [
+        ['SRS-9-01:allowed_actions', 'unsupported_analysis_semantics']
+      ]);
+      assert.deepEqual(report.checks, []);
+      assert.deepEqual(report.analyzed_ids, []);
+      return;
+    }
     assert.ok(report.checks.length, JSON.stringify(report.diagnostics));
     assert.deepEqual(report.checks[0].requirement_ids, original.report.requested_ids);
     for (const check of report.checks) {

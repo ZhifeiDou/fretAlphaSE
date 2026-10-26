@@ -9,7 +9,8 @@ const { setTimeout: delay } = require('node:timers/promises');
 const { spawn } = require('node:child_process');
 const { Client } = require('@modelcontextprotocol/sdk/client/index.js');
 const { StreamableHTTPClientTransport } = require('@modelcontextprotocol/sdk/client/streamableHttp.js');
-const { startServer } = require('../dist/server.cjs');
+const bundleDirectory = path.resolve(process.env.FRET_MCP_TEST_BUNDLE_DIR ?? path.join(__dirname, '../dist'));
+const { startServer } = require(path.join(bundleDirectory, 'server.cjs'));
 const { contentDigest } = require('../src/schemas');
 
 const toolName = 'formalize_requirements';
@@ -119,7 +120,7 @@ async function fixture(t, options = {}, busyWorker = false) {
           fs.writeFileSync(path.join(__dirname, 'busy.pid'), String(process.pid));
           while (true) {}
         }
-        const { formalizeRequirements } = require(${JSON.stringify(path.resolve(__dirname, '../dist/formalize.cjs'))});
+        const { formalizeRequirements } = require(${JSON.stringify(path.join(bundleDirectory, 'formalize.cjs'))});
         process.send({ result: formalizeRequirements(request) }, () => process.disconnect());
       });
     `);
@@ -357,7 +358,7 @@ test('configured admin discovers the complete catalog without tool or resource a
   const { client: agent } = await env.connect('admin-agent');
   assert.deepEqual((await agent.listTools()).tools.map(tool => tool.name), [toolName]);
   const { client, transport } = await env.connect('operator');
-  assert.deepEqual(client.getServerVersion(), { name: 'fret-alphase', version: '0.3.0' });
+  assert.deepEqual(client.getServerVersion(), { name: 'fret-alphase', version: '0.4.0' });
   const { tools } = await client.listTools();
   assert.deepEqual(tools.map(tool => tool.name), [
     toolName, 'start_realizability_check', 'get_analysis', 'cancel_analysis'
@@ -591,7 +592,7 @@ test('rejects RPC batches and duplicate active request IDs without replacing a c
 
 test('the built command-line entry starts from another working directory and runs its worker', async t => {
   const env = await fixture(t);
-  const child = spawn(process.execPath, [path.resolve(__dirname, '../dist/server.cjs')], {
+  const child = spawn(process.execPath, [path.join(bundleDirectory, 'server.cjs')], {
     cwd: env.directory,
     env: {
       ...Object.fromEntries(Object.entries(process.env).filter(([key]) => key !== 'MCP_FRET_ANALYSIS_DIR')),
@@ -669,7 +670,7 @@ test('an approver can run real analysis through MCP and retrieve evidence after 
   assert.ok(finished.report.checks[0].counterexample.contract.length);
   assert.match(finished.report_digest, /^sha256:/);
   assert.deepEqual(finished.input, args);
-  assert.equal(finished.report.toolchain.adapter, '0.3.0');
+  assert.equal(finished.report.toolchain.adapter, '0.4.0');
   assert.equal(finished.diagnostics.last_phase, 'diagnosing');
   assert.equal(finished.diagnostics.checkpoint, null);
   assert.equal(finished.diagnostics.checkpoint_digest, null);
@@ -784,4 +785,62 @@ test('maximum generated-input evidence uses bounded digest-bound SSE pages', {
   assert.equal(result.diagnostics.last_check.lustre_digest, contentDigest(result.diagnostics.last_check.lustre));
   assert.equal((await client.callTool({ name: 'cancel_analysis', arguments: { job_id } })).structuredContent.snapshot.digest,
     view.snapshot.digest);
+});
+
+
+test('MCP cancellation seals an exact unstarted request and absorbs a delayed start', {
+  skip: process.platform !== 'linux' && 'Analysis jobs require Linux.'
+}, async t => {
+  const env = await fixture(t, { analysisDirectory: true });
+  const { client } = await env.connect('viewer');
+  assert.deepEqual(client.getServerVersion(), { name: 'fret-alphase', version: '0.4.0' });
+  const cancellationSchema = (await client.listTools()).tools.find(tool => tool.name === 'cancel_analysis').inputSchema;
+  assert.equal(cancellationSchema.type, 'object');
+  assert.ok(cancellationSchema.properties.job_id);
+  assert.ok(cancellationSchema.properties.request);
+  assert.equal(cancellationSchema.additionalProperties, false);
+  const args = {
+    request_id: randomUUID(), component: 'Controller',
+    requirements: [{ id: 'not-started', fretish: 'Controller shall always satisfy q',
+      kind: 'guarantee', source_refs: ['source:original'] }],
+    variables: [{ name: 'q', type: 'bool', role: 'output', meaning: 'Controlled output' }],
+    time_model: { kind: 'discrete_steps', description: 'One controller evaluation per step.' },
+    options: { timeout_ms: 15000, diagnose: false }
+  };
+  const cancelled = await client.callTool({ name: 'cancel_analysis', arguments: { request: args } });
+  assert.equal(cancelled.isError, undefined, JSON.stringify(cancelled));
+  const view = cancelled.structuredContent;
+  assert.equal(view.status, 'cancelled');
+  assert.equal(view.request_id, args.request_id);
+  assert.equal(view.input_digest, contentDigest(args));
+  assert.ok(view.snapshot);
+  assert.equal(view.page, null);
+  const snapshot = await readSnapshot(client, view);
+  assert.deepEqual(snapshot.input, args);
+  assert.equal(snapshot.error.code, 'cancelled_before_start');
+  assert.equal(snapshot.report, null);
+  assert.equal(snapshot.diagnostics.last_check, null);
+  const delayed = await client.callTool({ name: 'start_realizability_check', arguments: args });
+  assert.equal(delayed.isError, undefined, JSON.stringify(delayed));
+  assert.deepEqual(delayed.structuredContent, view);
+  const byId = await client.callTool({ name: 'cancel_analysis', arguments: { job_id: view.job_id } });
+  assert.equal(byId.isError, undefined, JSON.stringify(byId));
+  assert.deepEqual(byId.structuredContent, view);
+  env.identities.set('cancellation-other-owner', { id: 12, login: 'approver_9' });
+  const other = await env.connect('cancellation-other-owner');
+  const forbidden = await other.client.callTool({ name: 'cancel_analysis', arguments: { job_id: view.job_id } });
+  assert.equal(forbidden.isError, true);
+  assert.equal(JSON.parse(forbidden.content[0].text).code, 'analysis_not_found');
+  const separate = await other.client.callTool({ name: 'cancel_analysis', arguments: { request: args } });
+  assert.equal(separate.isError, undefined, JSON.stringify(separate));
+  assert.notEqual(separate.structuredContent.job_id, view.job_id);
+  assert.equal(separate.structuredContent.status, 'cancelled');
+  assert.deepEqual(readdirSync(path.join(env.directory, 'analyses', 'work')), []);
+  const conflict = await client.callTool({ name: 'cancel_analysis',
+    arguments: { request: { ...args, component: 'Changed' } } });
+  assert.equal(conflict.isError, true);
+  assert.equal(JSON.parse(conflict.content[0].text).code, 'request_conflict');
+  for (const selector of [{}, { job_id: view.job_id, request: args }]) {
+    assert.equal((await client.callTool({ name: 'cancel_analysis', arguments: selector })).isError, true);
+  }
 });
